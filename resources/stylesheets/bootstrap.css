@@ -2970,14 +2970,17 @@ input[type="submit"].btn.btn-mini {
 }
 
 .alert {
+  position: fixed;
   padding: 8px 35px 8px 14px;
-  margin-bottom: 24px;
+  margin-top: -40px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #fcf8e3;
   border: 1px solid #fbeed5;
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   border-radius: 0px;
+  width: auto;
+  z-index: 2000;
 }
 
 .alert,
@@ -3008,9 +3011,9 @@ input[type="submit"].btn.btn-mini {
 
 .alert-danger,
 .alert-error {
-  background-color: #d18f8f;
+  background-color: #ddadaf;
   border-color: #cc8490;
-  color: #e0b3b3;
+  color: #dc143c;
 }
 
 .alert-danger h4,

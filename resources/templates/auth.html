@@ -2,6 +2,17 @@
 
 {% block page %}
 {% load static %}
+<script type="text/javascript">
+	function addNotice(notice) {
+	    $('<div class="notice"></div>')
+	        .append('<div class="skin" align="center"></div>')
+	        .append('<a href="#" class="close">close</a>')
+	        .append($('<div class="content"></div>').html(notice))
+	        .hide()
+	        .appendTo('.growl')
+	        .fadeIn(1000);
+	}	
+</script>
 
 <div id="content" role="main">
     <!-- Promo Section -->
@@ -23,11 +34,10 @@
     <div class="row-fluid">
         <ul class="portfolio">
             <li class="span12">
-                <figure>
-                    {{ now_url }}
-                    {{ error_msg }}
+            	<figure>
+				{{ now_url }}
                     {#   TODO: Расширить вывод ошибок                   #}
-                    <figcaption>
+               		<figcaption>
                         <form action="/{{ login_url }}" method="post"> {% csrf_token %}
                             {{ form.as_p }}
                             <button type="submit" class="btn btn-primary" type="button">Подтвердить</button>
