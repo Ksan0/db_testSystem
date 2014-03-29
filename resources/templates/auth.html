@@ -24,9 +24,11 @@
         <ul class="portfolio">
             <li class="span12">
                 <figure>
+                    {{ now_url }}
+                    {{ error_msg }}
                     {#   TODO: Расширить вывод ошибок                   #}
                     <figcaption>
-                        <form action="{% url 'django.contrib.auth.views.login' %}" method="post"> {% csrf_token %}
+                        <form action="/{{ login_url }}" method="post"> {% csrf_token %}
                             {{ form.as_p }}
                             <button type="submit" class="btn btn-primary" type="button">Подтвердить</button>
                         </form>
