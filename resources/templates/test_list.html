@@ -1,0 +1,42 @@
+{% extends "db_autotest/base.html" %}
+
+{% block page %}
+{% load static %}
+
+<section class="section section-alt section-padded">
+    <div class="container-fluid">
+        <div class="section-header">
+            <h1>
+                Выбери
+                <small class="light">тему!</small>
+            </h1>
+        </div>
+        <ul class="inline row-fluid">
+            {% for test in object_list %}
+            <li class="span4">
+                <div class="well blockquote-well">
+                    <a href={% url 'question-list' test.id %}>
+                        <p> {{ test.title }} </p>
+                        <blockquote>
+                            <p>
+                                {{ test.description }}
+                            </p>
+                            <small>
+                               Осталось попыток: {{ test.attempt_amount }}
+                            </small>
+                        </blockquote>
+                    </a>
+{#                    icon#}
+{#                    <div class="round-box box-medium">#}
+{#                        <span class="box-inner">#}
+{#                          <img alt="some image" class="img-circle" src="images/assets/people/man-1-300x300.jpg"/>#}
+{#                        </span>#}
+{#                    </div>#}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+{% endblock %}

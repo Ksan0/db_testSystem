@@ -1,0 +1,49 @@
+{% extends "db_autotest/base.html" %}
+
+{% block page %}
+{% load static %}
+
+<div id="content" role="main">
+    <section class="section section-padded">
+        <div class="container-fluid">
+            <section class="section section-padded">
+                <div class="container-fluid">
+                    <div class="section-header">
+                        <h1>
+                            SQL
+                            <small class="light">TIME!</small>
+                        </h1>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Описание</th>
+                                    <th>Статус</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        {% for question in question_list %}
+                                            <tr>
+                                                <td><a href = {% url 'question-detail' object_list.test.id question.id %}> {{ question.description|truncatechars:60 }}</a></td>
+                                                <td>{{ question.accept }}</td>
+                                            </tr>
+
+
+
+                                        {% endfor %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
