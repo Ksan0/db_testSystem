@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-    <title></title>
+    <title>Login</title>
     <meta content="Bootsrap based theme" name="description"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta content="yes" name="apple-mobile-web-app-capable"/>
@@ -38,6 +38,9 @@
     <script type="text/javascript" src="{% static 'javascripts/switcher.js' %}"></script>
     {% endblock %}
 </head>
+{% if error_msg %}      
+<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
+{% endif %}
 
 <body class='theme-pattern-lghtmesh'>
 {% block head %}
@@ -60,7 +63,7 @@
 
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
-
+			
                             {% if user.is_authenticated %}
                                 <li class=""><a href="/{{ tests_url }}">Тесты</a></li>
                             {% if end_time %}
@@ -86,7 +89,9 @@
                                 </ul>
                             </li>
                             {% else %}
+								{% if is_login_page %}
                             <li class=""><a href="{{ login_url }}">Войти</a></li>
+								{% endif %}
                             {% endif %}
                             <!-- -->
                             <li class=""><a href="#"></a></li>
