@@ -47,12 +47,13 @@ class Attempt(models.Model):
         verbose_name = 'Попытка пользователя'
         verbose_name_plural = 'Попытки пользователей'
 
+
 class UserSession(models.Model):
     user = models.ForeignKey(User)  # относится к юзеру
     rk = models.ForeignKey(RK)  # относится к РК
     attempt = models.SmallIntegerField()  # относится к попытке номер X
 
-    running = models.BooleanField(default=True)
+    running = models.BooleanField(default=True)  # is session running right now?
     registered_at = models.DateTimeField(auto_now_add=True)
 
 
