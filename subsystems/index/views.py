@@ -3,6 +3,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from forms import *
 from db_testSystem.models import *
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def index(request):
+    return render(request, 'ok.html')
 
 
 def login_view(request):

@@ -30,5 +30,5 @@ admin.site.register(RK, RKAdmin)
 
 class AttemptAdmin(admin.ModelAdmin):
     list_display = ('user', 'rk', 'used')
-    list_editable = ('used',)
+
 admin.site.register(Attempt, AttemptAdmin)
