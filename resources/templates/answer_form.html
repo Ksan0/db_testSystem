@@ -15,10 +15,10 @@
         <hr />
         <div class="row-fluid">
           <div class="span8">
-              <form class="contact-form" action={% url 'question-form' test.id question.id %} method="post">
+              <form class="contact-form" action=/question?testid={{ testid }}&queid={{ question.id }} method="post">
                 <div class="controls controls-row">
                   <div class="control-group span12">
-                      {{ form.query }}
+                      {{ form.answer }}
                       <input id="id_question" type="hidden" name="question" value="{{ question.id }}"/>
                       {% csrf_token %}
                   </div>

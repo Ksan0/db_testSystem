@@ -98,3 +98,5 @@ LOGIN_URL = '/login'
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'resources/templates'),
 )
+
+APPEND_SLASH = False
