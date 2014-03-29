@@ -1,0 +1,79 @@
+{% extends "db_autotest/base.html" %}
+
+{% block page %}
+{% load static %}
+    <section class="section section-padded">
+      <div class="container-fluid">
+        <div class="section-header">
+          <h1>
+            <small class="light">SQL TIME!</small>
+          </h1>
+        </div>
+        <p class="lead text-center">
+          {{ question.description }}
+        </p>
+        <hr />
+        <div class="row-fluid">
+          <div class="span8">
+              <form class="contact-form" action={% url 'question-form' test.id question.id %} method="post">
+                <div class="controls controls-row">
+                  <div class="control-group span12">
+                      {{ form.query }}
+                      <input id="id_question" type="hidden" name="question" value="{{ question.id }}"/>
+                      {% csrf_token %}
+                  </div>
+                </div>
+                <div class="controls controls-row">
+                  <div class="control-group span12">
+                    <button class="btn btn-primary" name="submitButton" type="submit">
+                      Финальный ответ
+                    </button>
+                    <div class="btn btn-primary" id="ajax-check-sql">
+                      Проверить выполнение кода
+                    </div>
+
+                  </div>
+                </div>
+              </form>
+          </div>
+          <div class="span4 contact-details">
+            <ul class="icons">
+                <h5>
+                    Все запросы логируются
+                </h5>
+                <p>
+                    на сервере.
+                </p>
+
+                <h5 style="margin-top: 18%">
+                    Будьте бдительными
+                </h5>
+                <p>
+                    и следи за соседом.
+                </p>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="messages"></div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
