@@ -1,0 +1,13 @@
+<html>
+<head> <title> reg </title> </head>
+<body>
+
+    {{ error_msg }}
+    <form action="make/?action=create_user" method="POST">
+        {{ form.as_p }}
+        <input type="submit">
+        {% csrf_token %}
+    </form>
+
+</body>
+</html>
