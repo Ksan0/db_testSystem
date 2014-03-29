@@ -7,6 +7,15 @@ from models import *
 admin.site.unregister(User)
 admin.site.unregister(Group)
 
+class SessionQuestionsAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(SessionQuestions, SessionQuestionsAdmin)
+
+
+class UserSessionAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(UserSession, UserSessionAdmin)
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')

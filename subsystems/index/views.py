@@ -1,9 +1,12 @@
+# coding: utf-8
+
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from forms import *
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
+from random import choice
 
 
 static_context = {
@@ -11,6 +14,8 @@ static_context = {
     'login_url': 'login/',
     'logout_url': 'logout/'
 }
+ATTEMPTES_MAX = 3
+QUESTIONS_COUNT = 10
 
 
 class OutputRKModel(RK):
@@ -20,14 +25,13 @@ class OutputRKModel(RK):
         self.description = sup.description
 
         try:
-            self.attemptes_amount = 3 - Attempt.objects.get(user=user, rk=sup)
+            self.attemptes_amount = ATTEMPTES_MAX - Attempt.objects.get(user=user, rk=sup).used
         except:
-            self.attemptes_amount = 3
-            Attempt.objects.create(user=user, rk=sup, used=1)
+            self.attemptes_amount = ATTEMPTES_MAX
 
 
 @login_required(redirect_field_name='')
-def index(request):
+def index(request, other_context=None):  # list of RK
     template_name = 'test_list.html'
 
     tests = []
@@ -39,7 +43,113 @@ def index(request):
         'tests': tests
     }
     context.update(static_context)
+    if other_context is not None:
+        context.update(other_context)
     return render(request, template_name, context)
+
+
+def question(request):
+    template_name = 'answer_form.html'
+
+    try:
+        rk_id = request.GET['testid']
+    except:
+        return HttpResponseRedirect('/')
+
+    try:
+        que_id = request.GET['queid']
+    except:
+        return HttpResponseRedirect('test')
+
+    context = {
+
+    }
+    context.update(static_context)
+
+    if request.method == 'GET':
+        try:
+            question = Question.objects.get(id=que_id)
+            rk = RK.objects.get(id=rk_id)
+            attempt = Attempt.objects.get(user=request.user, rk=rk)
+            user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
+            session_question = SessionQuestions.objects.get(session=user_session, question=question)
+            # если это все отработало, значит такая сессия действительно существует. Отдадим вопрос
+
+            context.update({
+                'question': question
+            })
+            return render(request, template_name, context)
+        except:
+            return HttpResponseRedirect('test/')
+    else:
+        pass
+
+
+def start_new_session(request, user, rk, attempt):
+    if attempt.used >= ATTEMPTES_MAX:
+        return index(request, {'error_msg': 'no attemptes'})
+
+    indexes = []
+    for obj in Question.objects.filter(rk=rk, is_active=True):
+        indexes.append(obj.id)
+
+    good_indexes = []
+    for i in range(min(QUESTIONS_COUNT, len(indexes))):
+        ch = choice(indexes)
+        good_indexes.append(ch)
+        indexes.remove(ch)
+
+    attempt.used += 1
+    attempt.save()
+    user_session = UserSession.objects.create(user=user, rk=rk, attempt=attempt.used)
+
+    questions = []
+    for id in good_indexes:
+        question = Question.objects.get(id=id)
+        SessionQuestions.objects.create(session=user_session, question=question)
+
+    context = {
+        'question_list': questions,
+        'testid': rk.id
+    }
+    context.update(static_context)
+    return render(request, 'question_list.html', context)
+
+
+
+@login_required(redirect_field_name='')
+def test(request):
+    try:
+        rk_id = request.GET['testid']
+        rk = RK.objects.get(id=rk_id)
+    except:
+        return index(request)
+
+    try:
+        attempt = Attempt.objects.get(user=request.user, rk=rk)
+    except:
+        attempt = Attempt.objects.create(user=request.user, rk=rk, used=0)
+        return start_new_session(request, request.user, rk, attempt)
+
+    try:
+        user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
+    except:
+        return start_new_session(request, request.user, rk, attempt)
+
+    if not user_session.running:
+        return start_new_session(request, request.user, rk, attempt)
+
+    questions_s = SessionQuestions.objects.filter(session=user_session)
+    questions = []
+    for que_s in questions_s:
+        questions.append(que_s.question)
+
+    context = {
+        'question_list': questions,
+        'testid': rk_id
+    }
+    context.update(static_context)
+    return render(request, 'question_list.html', context)
 
 
 def logout_view(request):
@@ -50,29 +160,30 @@ def logout_view(request):
 def login_view(request):
     template_name = 'auth.html'
 
-    if request.user.is_authenticated():
-        if request.user.is_superuser:
-            return HttpResponseRedirect('/admin/')
-        return HttpResponseRedirect('/')
+    context = {
+        'form': LoginForm(),
+        'is_login_page': 'True'
+    }
+    context.update(static_context)
 
     if request.method == 'GET':
-        context = {'form': LoginForm()}
-        context.update(static_context)
+        if request.user.is_authenticated():
+            if request.user.is_superuser:
+                return HttpResponseRedirect('/admin/')
+            return HttpResponseRedirect('/')
         return render(request, template_name, context)
 
     form = LoginForm(request.POST)
+    context.update({'form': form})
     user = authenticate(username=form.data["login"], password=form.data["password"])
+
     if user is None:
-        return render(request, template_name, {
-            'form': form,
-            'error_msg': 'bad login or password'
-        })
+        context.update({'error_msg': 'bad login or password'})
+        return render(request, template_name, context)
 
     if not user.is_active:
-        return render(request, template_name, {
-            'form': form,
-            'error_msg': 'user is disabled'
-        })
+        context.update({'error_msg': 'user is disabled'})
+        return render(request, template_name, context)
 
     login(request, user)
     if user.is_superuser:

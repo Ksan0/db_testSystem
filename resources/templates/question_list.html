@@ -1,4 +1,4 @@
-{% extends "db_autotest/base.html" %}
+{% extends "base.html" %}
 
 {% block page %}
 {% load static %}
@@ -28,8 +28,8 @@
                                     <tr>
                                         {% for question in question_list %}
                                             <tr>
-                                                <td><a href = {% url 'question-detail' object_list.test.id question.id %}> {{ question.description|truncatechars:60 }}</a></td>
-                                                <td>{{ question.accept }}</td>
+                                                <td><a href="/question?testid={{ testid }}&queid={{ question.id }}"> {{ question.description|truncatechars:60 }}</a></td>
+                                                <td>{{ question.description }}</td>
                                             </tr>
 
 
