@@ -6,5 +6,8 @@ RK
 db
 
 статистика
-ssh+
 действия юзера
+
+
+"Проверить" -> ajax post to "ajax/answer?type=test&testid=ID&queid=ID"
+"Финальный ответ" -> ajax post to "ajax/answer/type=answer&testid=ID&queid=ID"
