@@ -5,7 +5,7 @@ from django.db import models
 
 class RK(models.Model):
     title = models.CharField(max_length=250, verbose_name='Название')
-    description = models.TextField(verbose_name='Описание')
+    description = models.TextField(verbose_name='Описание', blank=True)
     
     is_active = models.BooleanField(default=False, verbose_name='Открыт')
     registered_at = models.DateTimeField(auto_now_add=True)
@@ -35,11 +35,17 @@ class Question(models.Model):
         verbose_name_plural = 'Вопросы'
 
 
-class Attemptes(models.Model):
-    user = models.ForeignKey(User)
-    rk = models.ForeignKey(RK)
-    attempt = models.SmallIntegerField(default=0)  # number of attempt was used
+class Attempt(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь')
+    rk = models.ForeignKey(RK, verbose_name='Тест')
+    used = models.SmallIntegerField(default=0, verbose_name='Использовано попыток')
 
+    def __unicode__(self):
+        return u'{0} <-> {1}'.format(self.user.username, self.rk.title)
+
+    class Meta:
+        verbose_name = 'Попытка пользователя'
+        verbose_name_plural = 'Попытки пользователей'
 
 class UserSession(models.Model):
     user = models.ForeignKey(User)  # относится к юзеру
