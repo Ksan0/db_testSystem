@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from forms import *
@@ -6,31 +6,52 @@ from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
 
 
-@login_required
+static_context = {
+    'tests_url': 'tests/',
+    'login_url': 'login/',
+    'logout_url': 'logout/'
+}
+
+
+@login_required(redirect_field_name='')
 def index(request):
-    return render(request, 'ok.html')
+    template_name = 'test_list.html'
+    context = {
+        'user': request.user,
+    }
+    context.update(static_context)
+    return render(request, template_name, context)
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/')
 
 
 def login_view(request):
+    template_name = 'auth.html'
+
     if request.user.is_authenticated():
         if request.user.is_superuser:
-            return HttpResponseRedirect('admin/')
+            return HttpResponseRedirect('/admin/')
         return HttpResponseRedirect('/')
 
     if request.method == 'GET':
-        return render(request, 'login.html', {'login_form': LoginForm()})
+        context = {'form': LoginForm()}
+        context.update(static_context)
+        return render(request, template_name, context)
 
     form = LoginForm(request.POST)
     user = authenticate(username=form.data["login"], password=form.data["password"])
     if user is None:
-        return render(request, 'login.html', {
-            'login_form': form,
+        return render(request, template_name, {
+            'form': form,
             'error_msg': 'bad login or password'
         })
 
     if not user.is_active:
-        return render(request, 'login.html', {
-            'login_form': form,
+        return render(request, template_name, {
+            'form': form,
             'error_msg': 'user is disabled'
         })
 
@@ -38,7 +59,7 @@ def login_view(request):
     if user.is_superuser:
         if 'next' in request.GET:
             return HttpResponseRedirect(request.GET['next'])
-        return HttpResponseRedirect('admin/')
+        return HttpResponseRedirect('/admin/')
 
     if 'next' in request.GET:
         return HttpResponseRedirect(request.GET['next'])

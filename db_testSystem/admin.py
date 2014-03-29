@@ -11,7 +11,7 @@ admin.site.unregister(Group)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')
     list_editable = ('is_active',)
-    fields = ('username', 'password', 'first_name', 'last_name', 'is_active')
+    fields = ('username', 'first_name', 'last_name', 'is_active')
 admin.site.register(User, UserAdmin)
 
 

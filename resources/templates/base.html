@@ -60,15 +60,17 @@
 
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
-                            <li class=""><a href="{% url 'test-list' %}">Тесты</a></li>
+
+                            {% if user.is_authenticated %}
+                                <li class=""><a href="/{{ tests_url }}">Тесты</a></li>
                             {% if end_time %}
 {#                                TODO: счётчик#}
                             <li class=""><a> Окончание : {{ end_time | date:"H i" }}</a></li>
 
                             {% endif %}
-                            <!-- -->
-                            {% if user.is_authenticated %}
-                            <li class="dropdown">
+
+
+                                <li class="dropdown">
                                 <a class="dropdown-toggle" href="#"
                                    data-toggle="dropdown open">{{ user.username }}</a>
                                 <ul class="dropdown-menu">
@@ -79,12 +81,12 @@
 {#                                        <a href="{% url 'gamer-detail' user.id %}">Профиль</a>#}
                                     </li>
                                     <li>
-                                        <a href="{% url 'django.contrib.auth.views.logout' %}">Выйти</a>
+                                        <a href="{{ logout_url }}">Выйти</a>
                                     </li>
                                 </ul>
                             </li>
                             {% else %}
-                            <li class=""><a href="{% url 'django.contrib.auth.views.login' %}">Войти</a></li>
+                            <li class=""><a href="{{ login_url }}">Войти</a></li>
                             {% endif %}
                             <!-- -->
                             <li class=""><a href="#"></a></li>
