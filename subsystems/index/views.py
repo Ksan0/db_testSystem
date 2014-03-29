@@ -7,6 +7,7 @@ from forms import *
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
 from random import choice
+from DB import *
 
 
 static_context = {
@@ -48,6 +49,11 @@ def index(request, other_context=None):  # list of RK
     return render(request, template_name, context)
 
 
+def test_answer(sql_query, right_sql_query):
+    return Review.check_answer(sql_query=sql_query, right_sql_query=right_sql_query)
+
+
+@login_required(redirect_field_name='')
 def question(request):
     template_name = 'answer_form.html'
 
@@ -59,30 +65,45 @@ def question(request):
     try:
         que_id = request.GET['queid']
     except:
-        return HttpResponseRedirect('test')
+        return HttpResponseRedirect('/test/')
 
     context = {
-
+        'form': AnswerForm()
     }
     context.update(static_context)
 
-    if request.method == 'GET':
-        try:
-            question = Question.objects.get(id=que_id)
-            rk = RK.objects.get(id=rk_id)
-            attempt = Attempt.objects.get(user=request.user, rk=rk)
-            user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
-            session_question = SessionQuestions.objects.get(session=user_session, question=question)
-            # если это все отработало, значит такая сессия действительно существует. Отдадим вопрос
-
-            context.update({
-                'question': question
-            })
-            return render(request, template_name, context)
-        except:
-            return HttpResponseRedirect('test/')
-    else:
+    good_ids = False
+    try:
+        question = Question.objects.get(id=que_id)
+        rk = RK.objects.get(id=rk_id)
+        attempt = Attempt.objects.get(user=request.user, rk=rk)
+        user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
+        session_question = SessionQuestions.objects.get(session=user_session, question=question)
+        good_ids = True
+        # если это все отработало, значит такая сессия действительно существует
+    except:
         pass
+
+    if not good_ids:
+        return HttpResponseRedirect('/test/')
+
+    if request.method == 'GET':
+        context.update({
+            'testid': rk_id,
+            'question': question
+        })
+        return render(request, template_name, context)
+    else:
+        form = AnswerForm(request.POST)
+        context.update({'form': form})
+        session_question.last_answer = form.data['answer']
+        session_question.is_right, back = test_answer(form.data['answer'], question.answer)
+        session_question.save()
+
+    return render(request, 't.html', {
+        'msg': session_question.is_right,
+        'callback': back
+    })
 
 
 def start_new_session(request, user, rk, attempt):
