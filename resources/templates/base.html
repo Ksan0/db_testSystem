@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <title></title>
+    <meta content="Bootsrap based theme" name="description"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    {% load static %}
+    <!--[if lt IE 9]>
+    <script src='{% static "http://html5shim.googlecode.com/svn/trunk/html5.js"%}'></script>
+    <script src='{% static "javascripts/PIE.js"%}'></script>
+  <![endif]-->
+    <link href="favicon.ico" rel="shortcut icon"/>
+    <link href='{% static "images/apple-touch-icon-144-precomposed.html" %}' rel="apple-touch-icon-precomposed"
+          sizes="144x144"/>
+    <link href='{% static "images/apple-touch-icon-114-precomposed.html" %}' rel="apple-touch-icon-precomposed"
+          sizes="114x114"/>
+    <link href='{% static "images/apple-touch-icon-72-precomposed.html" %}' rel="apple-touch-icon-precomposed"
+          sizes="72x72"/>
+    <link href='{% static "images/apple-touch-icon-57-precomposed.html" %}' rel="apple-touch-icon-precomposed"/>
+    {% block css %}
+    <link href='{% static "stylesheets/bootstrap.css" %}' media="screen" rel="stylesheet" type="text/css"/>
+    <link href='{% static "stylesheets/responsive.css" %}' media="screen" rel="stylesheet" type="text/css"/>
+    <link href='{% static "stylesheets/font-awesome.css" %}' media="screen" rel="stylesheet" type="text/css"/>
+    <link href='{% static "stylesheets/theme.css" %}' media="screen" rel="stylesheet" type="text/css"/>
+    <link href='{% static "stylesheets/fonts.css" %}' media="screen" rel="stylesheet" type="text/css"/>
+    {% endblock %}
+    {% block js %}
+    <script type="text/javascript" src="{% static 'javascripts/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/jquery.flexslider-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/jquery.form.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/jquery.tweet.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/jquery.form.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/script.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/switcher.js' %}"></script>
+    {% endblock %}
+</head>
+
+<body class='theme-pattern-lghtmesh'>
+{% block head %}
+<div class="wrapper">
+    <!-- Page Header -->
+    <header id="masthead">
+        <nav class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <h1 class="brand">
+                        <a href="http://tp.mail.ru">
+                            ТехноПарк@<span class="light">Mail.ru</span></a>
+                    </h1>
+
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+                            <li class=""><a href="{% url 'test-list' %}">Тесты</a></li>
+                            {% if end_time %}
+{#                                TODO: счётчик#}
+                            <li class=""><a> Окончание : {{ end_time | date:"H i" }}</a></li>
+
+                            {% endif %}
+                            <!-- -->
+                            {% if user.is_authenticated %}
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" href="#"
+                                   data-toggle="dropdown open">{{ user.username }}</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#">Настройки</a>
+                                    </li>
+                                    <li>
+{#                                        <a href="{% url 'gamer-detail' user.id %}">Профиль</a>#}
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'django.contrib.auth.views.logout' %}">Выйти</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% else %}
+                            <li class=""><a href="{% url 'django.contrib.auth.views.login' %}">Войти</a></li>
+                            {% endif %}
+                            <!-- -->
+                            <li class=""><a href="#"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {% endblock %}
+    {% block page %}
+    {% endblock %}
+</div>
+
+<!-- Page Footer -->
+<footer id="footer" role="contentinfo">
+    <div class="wrapper wrapper-transparent">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6 small-screen-center">
+                    <h3>
+                        tech
+              <span class="light">
+                park
+              </span>
+                    </h3>
+                    <p>
+                        <br/>
+                        &copy; Copyright 2014
+                    </p>
+                </div>
+                <div class="span6">
+                    <ul class="unstyled inline text-right small-screen-center big social-icons">
+{#                        <li>#}
+{#                            <a data-iconcolor="#3b5998" href="#">#}
+{#                                <i class="icon-facebook"></i>#}
+{#                            </a>#}
+{#                        </li>#}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
