@@ -12,17 +12,17 @@
             </h1>
         </div>
         <ul class="inline row-fluid">
-            {% for test in object_list %}
+            {% for test in tests %}
             <li class="span4">
                 <div class="well blockquote-well">
-                    <a href={% url 'question-list' test.id %}>
+                    <a href=/test?testid={{ test.id }}>
                         <p> {{ test.title }} </p>
                         <blockquote>
                             <p>
                                 {{ test.description }}
                             </p>
                             <small>
-                               Осталось попыток: {{ test.attempt_amount }}
+                               Осталось попыток: {{ test.attemptes_amount }}
                             </small>
                         </blockquote>
                     </a>
