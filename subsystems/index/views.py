@@ -13,11 +13,30 @@ static_context = {
 }
 
 
+class OutputRKModel(RK):
+    def __init__(self, sup, user):
+        self.id = sup.id
+        self.title = sup.title
+        self.description = sup.description
+
+        try:
+            self.attemptes_amount = 3 - Attempt.objects.get(user=user, rk=sup)
+        except:
+            self.attemptes_amount = 3
+            Attempt.objects.create(user=user, rk=sup, used=1)
+
+
 @login_required(redirect_field_name='')
 def index(request):
     template_name = 'test_list.html'
+
+    tests = []
+    for obj in RK.objects.filter(is_active=True):
+        tests.append(OutputRKModel(obj, request.user))
+
     context = {
         'user': request.user,
+        'tests': tests
     }
     context.update(static_context)
     return render(request, template_name, context)
