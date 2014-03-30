@@ -50,7 +50,8 @@ def admin_statistic(request):
 
     return render(request, 't.html', {'msg': 'ok'})
 
-def user_time_check(user):
+
+def user_time_update(user):
     try:
         session = UserSession.objects.get(user=user, running=True)
     except:
@@ -73,7 +74,7 @@ def index(request, other_context=None):  # list of RK
     context = {
         'user': request.user,
         'tests': tests,
-        'have_time': user_time_check(request.user)
+        'have_time': user_time_update(request.user)
     }
     context.update(static_context)
     if other_context is not None:
@@ -160,7 +161,7 @@ def test_answer(request):
     except:
         pass
 
-    if user_time_check(request.user) <= 0:
+    if user_time_update(request.user) <= 0:
         return render(request, 't.html', {
             'msg': 'no time'
         })
@@ -186,9 +187,9 @@ def test_answer(request):
 def question(request):
     template_name = 'answer_form.html'
 
-    if user_time_check(request.user) <= 0:
+    if user_time_update(request.user) <= 0:
         return index(request, {
-            'error_msg': 'no time'
+            'warn_msg': 'no time'
         })
 
     try:
@@ -240,6 +241,16 @@ def question(request):
 
 
 def start_new_session(request, user, rk, attempt):
+    try:
+        confirm = request.GET['start_confirm']
+    except:
+        confirm = ''
+
+    if confirm != 'yes':
+        return index(request, {
+            'warn_msg': 'no time'
+        })
+
     if attempt.used >= ATTEMPTES_MAX:
         return index(request, {'error_msg': 'no attemptes'})
 
@@ -265,7 +276,8 @@ def start_new_session(request, user, rk, attempt):
 
     context = {
         'question_list': questions,
-        'testid': rk.id
+        'testid': rk.id,
+        'have_time': user_time_update(user)
     }
     context.update(static_context)
     return render(request, 'question_list.html', context)
@@ -291,14 +303,10 @@ def test(request):
     except:
         return start_new_session(request, request.user, rk, attempt)
 
+    have_time = user_time_update(request.user)
+
     if not user_session.running:
         return start_new_session(request, request.user, rk, attempt)
-
-    have_time = user_time_check(request.user)
-    if have_time <= 0:
-        return index(request, {
-            'error_msg': 'no time'
-        })
 
     questions_s = SessionQuestions.objects.filter(session=user_session)
     questions = []
@@ -307,7 +315,8 @@ def test(request):
 
     context = {
         'question_list': questions,
-        'testid': rk_id
+        'testid': rk_id,
+        'have_time': have_time
     }
     context.update(static_context)
     return render(request, 'question_list.html', context)
