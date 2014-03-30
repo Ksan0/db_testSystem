@@ -9,4 +9,5 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^', include('subsystems.index.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^custom-admin/', include('subsystems.custom_admin.urls'))
 )
