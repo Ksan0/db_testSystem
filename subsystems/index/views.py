@@ -9,6 +9,8 @@ from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
 from random import choice
 import string
+from datetime import timedelta, datetime
+from django.utils import timezone
 from DB import *
 
 
@@ -42,6 +44,22 @@ class OutputQuestionModel(Question):
 
 
 @login_required(redirect_field_name='')
+def admin_statistic(request):
+    if not request.user.is_superuser:
+        return HttpResponseRedirect('/')
+
+    return render(request, 't.html', {'msg': 'ok'})
+
+def user_time_check(user):
+    session = UserSession.objects.get(user=user, running=True)
+    have_time = session.registered_at + timedelta(minutes=60) - timezone.now()
+    have_minutes = have_time.total_seconds() / 60
+    if have_minutes <= 0:
+        session.running = False
+        session.save()
+    return int(have_minutes)
+
+@login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
     template_name = 'test_list.html'
 
@@ -51,7 +69,8 @@ def index(request, other_context=None):  # list of RK
 
     context = {
         'user': request.user,
-        'tests': tests
+        'tests': tests,
+        'have_time': user_time_check(request.user)
     }
     context.update(static_context)
     if other_context is not None:
@@ -138,6 +157,11 @@ def test_answer(request):
     except:
         pass
 
+    if user_time_check(request.user) <= 0:
+        return render(request, 't.html', {
+            'msg': 'no time'
+        })
+
     if request.method != 'POST':
         HttpResponseRedirect('/question/?testid={0}&queid={1}')
 
@@ -150,7 +174,6 @@ def test_answer(request):
     session_question.is_right, back, error = test_answer_inside(form.data['answer'], question.answer)
     session_question.save()
 
-
     return render(request, 't.html', {
         'msg': error and 'Syntax error' or back
     })
@@ -159,6 +182,11 @@ def test_answer(request):
 @login_required(redirect_field_name='')
 def question(request):
     template_name = 'answer_form.html'
+
+    if user_time_check(request.user) <= 0:
+        return index(request, {
+            'error_msg': 'no time'
+        })
 
     try:
         rk_id = request.GET['testid']
@@ -262,6 +290,12 @@ def test(request):
 
     if not user_session.running:
         return start_new_session(request, request.user, rk, attempt)
+
+    have_time = user_time_check(request.user)
+    if have_time <= 0:
+        return index(request, {
+            'error_msg': 'no time'
+        })
 
     questions_s = SessionQuestions.objects.filter(session=user_session)
     questions = []
