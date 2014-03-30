@@ -9,5 +9,5 @@ db
 действия юзера
 
 
-"Проверить" -> ajax post to "ajax/answer?type=test&testid=ID&queid=ID"
-"Финальный ответ" -> ajax post to "ajax/answer/type=answer&testid=ID&queid=ID"
+"Проверить" -> ajax method="post" to url="ajax/answer?type=test&testid=ID&queid=ID"
+"Финальный ответ" -> ajax method"post" to url="ajax/answer/type=answer&testid=ID&queid=ID"
