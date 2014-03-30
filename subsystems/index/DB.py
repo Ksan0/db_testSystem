@@ -44,4 +44,4 @@ class Review(object):
         orm = MySqlDB('', 'root', '', 'db_test', 'utf8')
         answer_records, error = orm.select(right_sql_query)
         user_records, error = orm.select(sql_query)
-        return [a.values() for a in user_records] == [a.values() for a in answer_records], user_records
+        return [a.values() for a in user_records] == [a.values() for a in answer_records], user_records, error
