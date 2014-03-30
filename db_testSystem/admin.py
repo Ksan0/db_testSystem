@@ -11,7 +11,25 @@ admin.site.unregister(User)
 admin.site.unregister(Group)
 
 
-class AttemptInline(admin.StackedInline):
+class FakeModel(models.Model):
+    que_descr = models.TextField(verbose_name='Вопрос')
+    que_query = models.TextField(verbose_name='SQL right')
+    ans_query = models.TextField(verbose_name='SQL answer')
+    is_right = models.BooleanField()
+
+
+class UserStatisticInline(admin.StackedInline):
+    model = FakeModel
+    extra = 0
+
+    def get_formset(self, request, obj=None, **kwargs):
+        sessions = UserSession.objects.filter(user=obj)
+
+        self.object = Attempt.objects.filter(user=obj)
+        return super(AttemptInline, self).get_formset(request, obj, **kwargs)
+
+
+class AttemptInline(admin.TabularInline):
     model = Attempt
     extra = 0
 
@@ -43,8 +61,7 @@ class RKAdmin(admin.ModelAdmin):
     list_editable = ('is_active',)
 admin.site.register(RK, RKAdmin)
 
-"""
-class AttemptAdmin(admin.ModelAdmin):
-    list_display = ('user', 'rk', 'used')
-admin.site.register(Attempt, AttemptAdmin)
-"""
+
+admin.site.register(Attempt)
+admin.site.register(UserSession)
+admin.site.register(SessionQuestions)
