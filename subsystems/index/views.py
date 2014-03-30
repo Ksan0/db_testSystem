@@ -7,6 +7,8 @@ from django.core.mail import send_mail
 from forms import *
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
+from scripts import *
+from output_models import *
 from random import choice
 import string
 from datetime import timedelta, datetime
@@ -18,29 +20,9 @@ static_context = {
     'tests_url': '/tests/',
     'login_url': '/login/',
     'logout_url': '/logout/',
-    'pass_restore_url': '/password_restore/'
+    'pass_restore_url': '/password_restore/',
 }
-ATTEMPTES_MAX = 3
-QUESTIONS_COUNT = 10
 
-
-class OutputRKModel(RK):
-    def __init__(self, sup, user):
-        self.id = sup.id
-        self.title = sup.title
-        self.description = sup.description
-
-        try:
-            self.attemptes_amount = ATTEMPTES_MAX - Attempt.objects.get(user=user, rk=sup).used
-        except:
-            self.attemptes_amount = ATTEMPTES_MAX
-
-
-class OutputQuestionModel(Question):
-    def __init__(self, sup, status):
-        self.id = sup.id
-        self.description = sup.description
-        self.status = status
 
 
 @login_required(redirect_field_name='')
@@ -50,17 +32,6 @@ def admin_statistic(request):
 
     return render(request, 't.html', {'msg': 'ok'})
 
-def user_time_check(user):
-    try:
-        session = UserSession.objects.get(user=user, running=True)
-    except:
-        return -1
-    have_time = session.registered_at + timedelta(minutes=60) - timezone.now()
-    have_minutes = have_time.total_seconds() / 60
-    if have_minutes <= 0:
-        session.running = False
-        session.save()
-    return int(have_minutes)
 
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
@@ -73,20 +44,13 @@ def index(request, other_context=None):  # list of RK
     context = {
         'user': request.user,
         'tests': tests,
-        'have_time': user_time_check(request.user)
+        'have_time': user_time_update(request.user)
     }
     context.update(static_context)
     if other_context is not None:
         context.update(other_context)
     return render(request, template_name, context)
 
-
-def test_answer_inside(sql_query, right_sql_query):
-    return Review.check_answer(sql_query=sql_query, right_sql_query=right_sql_query)
-
-
-def toHex(x):
-    return "".join([hex(ord(c))[2:].zfill(2) for c in x])
 
 def password_restore_confirm(request):
     try:
@@ -160,9 +124,13 @@ def test_answer(request):
     except:
         pass
 
-    if user_time_check(request.user) <= 0:
+    if user_time_update(request.user) <= 0:
         return render(request, 't.html', {
             'msg': 'no time'
+        })
+    if not user_session.running:
+        return render(request, 't.html', {
+            'msg': 'session closed'
         })
 
     if request.method != 'POST':
@@ -186,9 +154,9 @@ def test_answer(request):
 def question(request):
     template_name = 'answer_form.html'
 
-    if user_time_check(request.user) <= 0:
+    if user_time_update(request.user) <= 0:
         return index(request, {
-            'error_msg': 'no time'
+            'warn_msg': 'no time'
         })
 
     try:
@@ -199,7 +167,7 @@ def question(request):
     try:
         que_id = request.GET['queid']
     except:
-        return HttpResponseRedirect('/test/')
+        return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
 
     context = {
     }
@@ -217,8 +185,13 @@ def question(request):
     except:
         pass
 
+    if not user_session.running:
+        return index(request, {
+            'warn_msg': 'session closed'
+        })
+
     if not good_ids:
-        return HttpResponseRedirect('/test/')
+        return HttpResponseRedirect('/tests/')
 
     if request.method == 'GET':
         form = AnswerForm()
@@ -240,6 +213,14 @@ def question(request):
 
 
 def start_new_session(request, user, rk, attempt):
+    try:
+        confirm = request.GET['confirm_start']
+    except:
+        confirm = ''
+
+    if confirm != 'yes':
+        return HttpResponseRedirect('/')
+
     if attempt.used >= ATTEMPTES_MAX:
         return index(request, {'error_msg': 'no attemptes'})
 
@@ -265,11 +246,11 @@ def start_new_session(request, user, rk, attempt):
 
     context = {
         'question_list': questions,
-        'testid': rk.id
+        'testid': rk.id,
+        'have_time': user_time_update(user)
     }
     context.update(static_context)
     return render(request, 'question_list.html', context)
-
 
 
 @login_required(redirect_field_name='')
@@ -278,7 +259,7 @@ def test(request):
         rk_id = request.GET['testid']
         rk = RK.objects.get(id=rk_id)
     except:
-        return index(request)
+        return HttpResponseRedirect('/')
 
     try:
         attempt = Attempt.objects.get(user=request.user, rk=rk)
@@ -291,14 +272,10 @@ def test(request):
     except:
         return start_new_session(request, request.user, rk, attempt)
 
+    have_time = user_time_update(request.user)
+
     if not user_session.running:
         return start_new_session(request, request.user, rk, attempt)
-
-    have_time = user_time_check(request.user)
-    if have_time <= 0:
-        return index(request, {
-            'error_msg': 'no time'
-        })
 
     questions_s = SessionQuestions.objects.filter(session=user_session)
     questions = []
@@ -307,15 +284,11 @@ def test(request):
 
     context = {
         'question_list': questions,
-        'testid': rk_id
+        'testid': rk_id,
+        'have_time': have_time
     }
     context.update(static_context)
     return render(request, 'question_list.html', context)
-
-
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect('/')
 
 
 def login_view(request, extra_context=None):
@@ -357,4 +330,9 @@ def login_view(request, extra_context=None):
 
     if 'next' in request.GET:
         return HttpResponseRedirect(request.GET['next'])
+    return HttpResponseRedirect('/')
+
+
+def logout_view(request):
+    logout(request)
     return HttpResponseRedirect('/')
