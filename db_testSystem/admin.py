@@ -1,4 +1,5 @@
 # coding: utf-8
+from django.shortcuts import render
 from django.conf.urls import patterns
 from django.contrib import admin
 from django.contrib.auth.models import Group
@@ -11,17 +12,6 @@ admin.site.unregister(User)
 admin.site.unregister(Group)
 
 
-class UserStatisticInline(admin.StackedInline):
-    model = User
-    extra = 0
-
-    def get_formset(self, request, obj=None, **kwargs):
-        sessions = UserSession.objects.filter(user=obj)
-
-        self.object = sessions
-        return super(UserStatisticInline, self).get_formset(request, obj, **kwargs)
-
-
 class AttemptInline(admin.TabularInline):
     model = Attempt
     extra = 0
@@ -31,11 +21,16 @@ class AttemptInline(admin.TabularInline):
         return super(AttemptInline, self).get_formset(request, obj, **kwargs)
 
 
+"""def user_statistic(obj):
+    return '{{ cl }}'
+user_statistic.short_description = 'Статистика'
+"""
+
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')
     list_editable = ('is_active',)
     fields = ('username', 'first_name', 'last_name', 'is_active')
-    inlines = [AttemptInline, UserStatisticInline]
+    inlines = [AttemptInline]
 
     # def change_view(self, request, object_id, form_url='', extra_context=None):
     #    return HttpResponseRedirect('/abc')
@@ -55,6 +50,21 @@ class RKAdmin(admin.ModelAdmin):
 admin.site.register(RK, RKAdmin)
 
 
-admin.site.register(Attempt)
-admin.site.register(UserSession)
-admin.site.register(SessionQuestions)
+
+class FakeModel(models.Model):
+    class Meta:
+        managed = False
+
+from django.contrib.admin.views.main import ChangeList
+
+class StatisticAdmin(admin.ModelAdmin):
+    list_display = []
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        return HttpResponseRedirect('/ass')
+#admin.site.register(User, StatisticAdmin)
+
+
+# admin.site.register(Attempt)
+# admin.site.register(UserSession)
+# admin.site.register(SessionQuestions)
