@@ -13,7 +13,22 @@ $(function(){
             "/test_answer/?testid="+get.testid+"&queid="+get.queid, //url
             form.serialize(),
             function(data) {      //success method
-                $('#messages').html(data);
+				data = jQuery.parseJSON($.parseHTML(data)[0].data.replace(/ u\'/g, " \'").replace(/: (?=[0-9])/g,": '").replace(/L,/g,"',").replace(/'/g,"\"").replace(/None/g,"\"None\""));
+				var result = "<table class=\"table\">\n<thead>\n<tr>\n";
+				var keys = [];
+				for(var k in data[0]){
+					result+="<th>"+k+"</th>\n";
+				}
+				result+="</tr></thead>\n<tbody>\n";
+				for(var k in data){
+					result+="<tr>";
+					for(var j in data[k]){
+						result+="<th>"+data[k][j]+"</th>";
+					}
+					result+="</tr>\n";
+				}	
+				result +="</tbody>\n</table>";
+				$(".messages").append(result);
             }
         );
 	});
