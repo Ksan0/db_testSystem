@@ -50,21 +50,6 @@ class RKAdmin(admin.ModelAdmin):
 admin.site.register(RK, RKAdmin)
 
 
-
-class FakeModel(models.Model):
-    class Meta:
-        managed = False
-
-from django.contrib.admin.views.main import ChangeList
-
-class StatisticAdmin(admin.ModelAdmin):
-    list_display = []
-
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        return HttpResponseRedirect('/ass')
-#admin.site.register(User, StatisticAdmin)
-
-
 # admin.site.register(Attempt)
 # admin.site.register(UserSession)
 # admin.site.register(SessionQuestions)
