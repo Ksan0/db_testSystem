@@ -26,7 +26,7 @@
 				{{ now_url }}
                     {#   TODO: Расширить вывод ошибок                   #}
                		<figcaption>
-                        <form action="/{{ login_url }}" method="post"> {% csrf_token %}
+                        <form action="{{ login_url }}" method="post"> {% csrf_token %}
                             {{ form.as_p }}
                             <button type="submit" class="btn btn-primary" type="button">Подтвердить</button>
                         </form>
