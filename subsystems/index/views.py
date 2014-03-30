@@ -51,7 +51,10 @@ def admin_statistic(request):
     return render(request, 't.html', {'msg': 'ok'})
 
 def user_time_check(user):
-    session = UserSession.objects.get(user=user, running=True)
+    try:
+        session = UserSession.objects.get(user=user, running=True)
+    except:
+        return -1
     have_time = session.registered_at + timedelta(minutes=60) - timezone.now()
     have_minutes = have_time.total_seconds() / 60
     if have_minutes <= 0:
