@@ -11,9 +11,9 @@ from DB import *
 
 
 static_context = {
-    'tests_url': 'tests/',
+    'tests_url': 'tests',
     'login_url': 'login/',
-    'logout_url': 'logout/'
+    'logout_url': 'logout'
 }
 ATTEMPTES_MAX = 3
 QUESTIONS_COUNT = 10

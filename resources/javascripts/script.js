@@ -7,14 +7,14 @@ $(function(){
     $("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
         $.post(
-            "/test/ajax/attempt-sql/", //url
+            "ajax/answer?type=answer&testid=ID&queid=ID", //url
             form.serialize(),
             function(data) {      //success method
                 $('#messages').html(data);
             }
         );
         return false;
-    });
+});
 
 
 //  $('#ajax-check-sql').click(function(e) {
