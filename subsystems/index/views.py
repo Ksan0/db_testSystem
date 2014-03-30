@@ -63,6 +63,7 @@ def user_time_update(user):
         session.save()
     return int(have_minutes)
 
+
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
     template_name = 'test_list.html'
@@ -165,6 +166,10 @@ def test_answer(request):
         return render(request, 't.html', {
             'msg': 'no time'
         })
+    if not user_session.running:
+        return render(request, 't.html', {
+            'msg': 'session closed'
+        })
 
     if request.method != 'POST':
         HttpResponseRedirect('/question/?testid={0}&queid={1}')
@@ -200,7 +205,7 @@ def question(request):
     try:
         que_id = request.GET['queid']
     except:
-        return HttpResponseRedirect('/test/')
+        return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
 
     context = {
     }
@@ -218,8 +223,13 @@ def question(request):
     except:
         pass
 
+    if not user_session.running:
+        return index(request, {
+            'warn_msg': 'session closed'
+        })
+
     if not good_ids:
-        return HttpResponseRedirect('/test/')
+        return HttpResponseRedirect('/tests/')
 
     if request.method == 'GET':
         form = AnswerForm()
@@ -242,14 +252,12 @@ def question(request):
 
 def start_new_session(request, user, rk, attempt):
     try:
-        confirm = request.GET['start_confirm']
+        confirm = request.GET['confirm_start']
     except:
         confirm = ''
 
     if confirm != 'yes':
-        return index(request, {
-            'warn_msg': 'no time'
-        })
+        return HttpResponseRedirect('/')
 
     if attempt.used >= ATTEMPTES_MAX:
         return index(request, {'error_msg': 'no attemptes'})
@@ -290,7 +298,7 @@ def test(request):
         rk_id = request.GET['testid']
         rk = RK.objects.get(id=rk_id)
     except:
-        return index(request)
+        return HttpResponseRedirect('/')
 
     try:
         attempt = Attempt.objects.get(user=request.user, rk=rk)
