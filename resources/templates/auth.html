@@ -26,9 +26,17 @@
 				{{ now_url }}
                     {#   TODO: Расширить вывод ошибок                   #}
                		<figcaption>
-                        <form action="{{ login_url }}" method="post"> {% csrf_token %}
-                            {{ form.as_p }}
+                        <form class="login_form" action="{{ login_url }}" method="post"> {% csrf_token %}
+                            {{ form_auth.as_p }}
                             <button type="submit" class="btn btn-primary" type="button">Подтвердить</button>
+							<br>
+							<a href="#restore" class="restore_link">Restore Password</a>
+                        </form>
+						<form class="restore_form" action="{{ restore_url }}" method="post" style="display:none"> {% csrf_token %}
+                            {{ form_pass_restore.as_p }}
+                            <button type="submit" class="btn btn-primary" type="button">Подтвердить</button>
+							<br>
+							<a href="#" class="login_link">Back to login</a>
                         </form>
                     </figcaption>
                 </figure>
