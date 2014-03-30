@@ -150,8 +150,9 @@ def test_answer(request):
     session_question.is_right, back, error = test_answer_inside(form.data['answer'], question.answer)
     session_question.save()
 
+
     return render(request, 't.html', {
-        'msg': error and 'ahueli?' or back
+        'msg': error and 'Syntax error' or back
     })
 
 
