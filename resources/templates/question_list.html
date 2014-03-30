@@ -29,7 +29,7 @@
                                         {% for question in question_list %}
                                             <tr>
                                                 <td><a href="/question?testid={{ testid }}&queid={{ question.id }}"> {{ question.description|truncatechars:60 }}</a></td>
-                                                <td>{{ question.description }}</td>
+                                                <td>{% if question.status == 'sended' %} Отправлен {% endif %}</td>
                                             </tr>
 
 

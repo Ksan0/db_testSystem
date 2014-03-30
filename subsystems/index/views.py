@@ -34,6 +34,13 @@ class OutputRKModel(RK):
             self.attemptes_amount = ATTEMPTES_MAX
 
 
+class OutputQuestionModel(Question):
+    def __init__(self, sup, status):
+        self.id = sup.id
+        self.description = sup.description
+        self.status = status
+
+
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
     template_name = 'test_list.html'
@@ -196,17 +203,14 @@ def question(request):
             'question': question
         })
         return render(request, template_name, context)
-    else:
-        form = AnswerForm(request.POST)
-        context.update({'form': form})
-        session_question.last_answer = form.data['answer']
-        session_question.is_right, back = test_answer(form.data['answer'], question.answer)
-        session_question.save()
 
-    return render(request, 't.html', {
-        'msg': session_question.is_right,
-        'callback': back
-    })
+    form = AnswerForm(request.POST)
+    context.update({'form': form})
+    session_question.last_answer = form.data['answer']
+    session_question.is_right, back = test_answer(form.data['answer'], question.answer)
+    session_question.save()
+
+    return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
 
 
 def start_new_session(request, user, rk, attempt):
@@ -267,7 +271,7 @@ def test(request):
     questions_s = SessionQuestions.objects.filter(session=user_session)
     questions = []
     for que_s in questions_s:
-        questions.append(que_s.question)
+        questions.append(OutputQuestionModel(que_s.question, que_s.last_answer == '' and '' or 'sended'))
 
     context = {
         'question_list': questions,
