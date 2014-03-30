@@ -15,28 +15,53 @@
             {% for test in tests %}
             <li class="span4">
                 <div class="well blockquote-well">
-                    <a href=/tests?testid={{ test.id }}>
-                        <p> {{ test.title }} </p>
-                        <blockquote>
-                            <p>
-                                {{ test.description }}
-                            </p>
-                            <small>
-                               Осталось попыток: {{ test.attemptes_amount }}
-                            </small>
-                        </blockquote>
-                    </a>
-{#                    icon#}
-{#                    <div class="round-box box-medium">#}
-{#                        <span class="box-inner">#}
-{#                          <img alt="some image" class="img-circle" src="images/assets/people/man-1-300x300.jpg"/>#}
-{#                        </span>#}
-{#                    </div>#}
+                	<p> {{ test.title }} </p>
+                    <blockquote>
+                    	<p>
+                        	{{ test.description }}
+                        </p>
+                        <small>
+                        	Осталось попыток: {{ test.attemptes_amount }}
+                        </small>
+                    </blockquote>
+					<button type="button" data-target="#confirm" data-toggle="modal">Начать</button>
                 </div>
             </li>
+			<div class="modal hide fade" id="confirm">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3>Вы уверены, что хотите начать прохождение теста?</h3>
+				</div>
+				<div class="modal-body">
+					{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка{% else %}
+					<p>У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 or test.attemptes_amount < 4%}попытки{% else %}попыток{% endif %}
+					{% endif %}!
+					<div class="confirm_button_block" style="margin-top:-5px;float:right">
+						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Закрыть</a>
+						{% if test.attemptes_amount != 0 %}
+						<a href="{{ tests_url }}?testid={{ test.id }}&confirm_start=yes" class="btn btn-primary" style="margin-left:10px">Начать тест</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>                                                                                                                                                 	
             {% endfor %}
         </ul>
     </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 {% endblock %}
