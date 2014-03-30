@@ -39,9 +39,8 @@
     {% endblock %}
 </head>
 {% if error_msg %}      
-<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
+<div id="alert_mess"class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
 {% endif %}
-
 <body class='theme-pattern-lghtmesh'>
 {% block head %}
 <div class="wrapper">
@@ -89,7 +88,7 @@
                                 </ul>
                             </li>
                             {% else %}
-								{% if is_login_page %}
+								{% if not is_login_page %}
                             <li class=""><a href="{{ login_url }}">Войти</a></li>
 								{% endif %}
                             {% endif %}
