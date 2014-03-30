@@ -125,10 +125,6 @@ def test_answer(request):
         queid = request.GET['queid']
     except:
         HttpResponseRedirect('/tests/?testid={0}'.format(testid))
-    try:
-        type = request.GET['type']
-    except:
-        HttpResponseRedirect('/question/?testid={0}&queid={1}'.format(testid, queid))
 
     good_ids = False
     try:
@@ -149,17 +145,15 @@ def test_answer(request):
         HttpResponseRedirect('/')
 
     form = AnswerForm(request.POST)
-    if type == 'answer':
-        session_question.last_answer = form.data['answer']
-        session_question.is_right, back = test_answer_inside(form.data['answer'], question.answer)
-        session_question.save()
-        return render(request, 't.html', {
-            'msg': 'fgkdfjg'
-        })
+
+    session_question.last_answer = form.data['answer']
+    session_question.is_right, back = test_answer_inside(form.data['answer'], question.answer)
+    session_question.save()
 
     return render(request, 't.html', {
-        'msg': 'her obanoo'
+        'msg': back
     })
+
 
 @login_required(redirect_field_name='')
 def question(request):
