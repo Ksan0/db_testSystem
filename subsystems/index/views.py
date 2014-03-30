@@ -14,7 +14,8 @@ from DB import *
 static_context = {
     'tests_url': '/tests/',
     'login_url': '/login/',
-    'logout_url': '/logout/'
+    'logout_url': '/logout/',
+    'pass_restore_url': '/password_restore'
 }
 ATTEMPTES_MAX = 3
 QUESTIONS_COUNT = 10
@@ -54,9 +55,49 @@ def test_answer(sql_query, right_sql_query):
     return Review.check_answer(sql_query=sql_query, right_sql_query=right_sql_query)
 
 
-def password_restore(request):
-    send_mail('Subject here', 'Here is the message.', 'db.testSystem@gmail.com', ['kgfq@mail.ru'])
+def toHex(x):
+    return "".join([hex(ord(c))[2:].zfill(2) for c in x])
 
+def password_restore_confirm(request):
+    try:
+        username = request.GET['login']
+        confirm = request.GET['confirm']
+
+        user = User.objects.get(username=username)
+        passw_hex = toHex(user.password)
+        if confirm != passw_hex:
+            return login_view(request, {
+                'error_msg': 'confirm failed'
+            })
+
+        new_pass = ''.join([random.choice(string.ascii_uppercase) for _ in xrange(12)])
+        user.set_password(new_pass)
+        user.save()
+
+        send_mail('Password restore', 'Ваш новый пароль: {0}'.format(new_pass), 'db.testSystem@gmail.com', ['kgfq@mail.ru'])
+        return login_view(request, {
+            'success_msg': 'confirm success'
+        })
+    except:
+        return login_view(request, {
+            'error_msg': 'confirm failed'
+        })
+
+
+def password_restore(request):
+    try:
+        restore_form = PassRestoreForm(request.POST)
+        username = restore_form.data['login']
+        password = toHex(User.objects.get(username=username).password)
+        msg =   ('Что бы восстановить пароль, перейдите по ссылке\n'
+                'http://localhost:8000/password_restore_confirm?'
+                'login={0}&confirm={1}').format(username, password)
+
+        send_mail('Password restore', msg, 'db.testSystem@gmail.com', ['kgfq@mail.ru'])
+    except:
+        return login_view(request, {
+            'error_msg': 'no user'
+        })
 
 
 @login_required(redirect_field_name='')
@@ -184,14 +225,16 @@ def logout_view(request):
     return HttpResponseRedirect('/')
 
 
-def login_view(request):
+def login_view(request, extra_context=None):
     template_name = 'auth.html'
 
     context = {
         'form_auth': LoginForm(),
-        'form_passRestore': PassRestoreForm(),
+        'form_pass_restore': PassRestoreForm(),
         'is_login_page': 'True'
     }
+    if extra_context is not None:
+        context.update(extra_context)
     context.update(static_context)
 
     if request.method == 'GET':
