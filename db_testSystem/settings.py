@@ -93,10 +93,10 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'resources'),
 )
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/login/'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'resources/templates'),
 )
 
-APPEND_SLASH = False
+# APPEND_SLASH = False
