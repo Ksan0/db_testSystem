@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', logout_view),
     url(r'^tests/$', test),
     url(r'^question/$', question),
+    url(r'^answer/$', answer),
     url(r'^password_restore/$', password_restore),
     url(r'^password_restore_confirm/$', password_restore_confirm),
 )

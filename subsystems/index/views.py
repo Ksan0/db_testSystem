@@ -8,6 +8,7 @@ from forms import *
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
 from random import choice
+import string
 from DB import *
 
 
@@ -15,7 +16,7 @@ static_context = {
     'tests_url': '/tests/',
     'login_url': '/login/',
     'logout_url': '/logout/',
-    'pass_restore_url': '/password_restore'
+    'pass_restore_url': '/password_restore/'
 }
 ATTEMPTES_MAX = 3
 QUESTIONS_COUNT = 10
@@ -70,7 +71,7 @@ def password_restore_confirm(request):
                 'error_msg': 'confirm failed'
             })
 
-        new_pass = ''.join([random.choice(string.ascii_uppercase) for _ in xrange(12)])
+        new_pass = ''.join([choice(string.ascii_uppercase) for _ in xrange(12)])
         user.set_password(new_pass)
         user.save()
 
@@ -94,9 +95,59 @@ def password_restore(request):
                 'login={0}&confirm={1}').format(username, password)
 
         send_mail('Password restore', msg, 'db.testSystem@gmail.com', ['kgfq@mail.ru'])
+
+        request.method = 'GET'
+
+        return login_view(request, {
+            'success_msg': 'look at mail'
+        })
     except:
+        request.method = 'GET'
+
         return login_view(request, {
             'error_msg': 'no user'
+        })
+
+
+def answer(request):
+    try:
+        testid = request.GET['testid']
+    except:
+        HttpResponseRedirect('/')
+    try:
+        queid = request.GET['queid']
+    except:
+        HttpResponseRedirect('/tests/?testid={0}'.format(testid))
+    try:
+        type = request.GET['type']
+    except:
+        HttpResponseRedirect('/question/?testid={0}&queid={1}'.format(testid, queid))
+
+    good_ids = False
+    try:
+        question = Question.objects.get(id=que_id)
+        rk = RK.objects.get(id=rk_id)
+        attempt = Attempt.objects.get(user=request.user, rk=rk)
+        user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
+        session_question = SessionQuestions.objects.get(session=user_session, question=question)
+        good_ids = True
+        # если это все отработало, значит такая сессия действительно существует
+    except:
+        pass
+
+    if request.method != 'POST':
+        HttpResponseRedirect('/question/?testid={0}&queid={1}')
+
+    if not good_ids:
+        HttpResponseRedirect('/')
+
+    form = AnswerForm(request.POST)
+    if type == 'answer':
+        session_question.last_answer = form.data['answer']
+        session_question.is_right, back = test_answer(form.data['answer'], question.answer)
+        session_question.save()
+        return render(request, 't.html', {
+            'msg': 'fgkdfjg'
         })
 
 
@@ -115,7 +166,6 @@ def question(request):
         return HttpResponseRedirect('/test/')
 
     context = {
-        'form': AnswerForm()
     }
     context.update(static_context)
 
@@ -135,7 +185,10 @@ def question(request):
         return HttpResponseRedirect('/test/')
 
     if request.method == 'GET':
+        form = AnswerForm()
+        form.set_value(session_question.last_answer)
         context.update({
+            'form': form,
             'testid': rk_id,
             'question': question
         })
@@ -174,6 +227,7 @@ def start_new_session(request, user, rk, attempt):
     questions = []
     for id in good_indexes:
         question = Question.objects.get(id=id)
+        questions.append(question)
         SessionQuestions.objects.create(session=user_session, question=question)
 
     context = {

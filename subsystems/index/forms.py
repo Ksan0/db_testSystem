@@ -12,3 +12,6 @@ class PassRestoreForm(forms.Form):
 
 class AnswerForm(forms.Form):
     answer = CharField(widget=Textarea())
+
+    def set_value(self, text):
+        self.data['answer'] = text
