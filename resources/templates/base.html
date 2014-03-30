@@ -38,16 +38,36 @@
     <script type="text/javascript" src="{% static 'javascripts/switcher.js' %}"></script>
     {% endblock %}
 </head>
-{% if error_msg %}      
-	{% if error_msg == "bad login or password" %}
-	<div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
-	{% endif %}
-	{% if error_msg == "confirm failed" %}
-    <div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>Не удалось восстановить пароль</div>
+
+{% if error_msg %}
+<div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>
+	{% if error_msg == "login failed" 		%}Извините вы ошиблись с логином или паролем
+	{% elif error_msg == "confirm failed" 	%}Не удалось восстановить пароль
+	{% elif error_msg == "no user" 			%}Такого пользователя не существует
+	{% elif error_msg == "no time" 			%}Время вышло
+	{% elif error_msg == "no attemptes" 	%}Не хватает попыток
+	{% elif error_msg == "session closed"	%}Вы уже закончили сессию
+	{% elif error_msg == "disabled user"    %}Не хватает попыток
+	{% else %}
+		{{ error_msg }}
 	{% endif %}
 {% endif %}
+	
 {% if success_msg %}
-<div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
+<div class="alert alert-success animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>
+	{% if success_msg == "confirm success" 	%}Восстановление прошло успешно, пароль отправлен на почту
+	{% elif success_msg == "look at mail" 	%}Проверьте вашу почту
+	{% else %}
+		{{error_msg}}
+	{% endif %}
+{% endif %}
+{% if warn_msg %}
+<div class="alert alert-success animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>
+	{% if watn_msg == "confirm success" %}Восстановление прошло успешно
+	{% else %}
+		{{ error_msg }}
+	{% endif %}
+</div>
 {% endif %}
 <body class='theme-pattern-lghtmesh'>
 {% block head %}
@@ -74,7 +94,7 @@
                             {% if user.is_authenticated %}
                                 <li class=""><a href="{{ tests_url }}">Тесты</a></li>
                             {% if have_time and have_time > 0 %}
-{#                                TODO: счётчик#}
+
                             <li class=""><a> Осталось: {{ have_time }} min</a></li>
 
                             {% endif %}

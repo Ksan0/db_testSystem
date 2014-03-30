@@ -1,6 +1,7 @@
 $(function(){
 	var form = $('.contact-form');
-		
+	
+//	setTimeout(function() {  }, 1000);	
     $("a.dropdown-toggle").click(function(e) {
       	$(".dropdown-menu").css("display", "block");
     e.PreventDefault();
