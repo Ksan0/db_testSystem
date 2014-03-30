@@ -10,5 +10,4 @@ urlpatterns = patterns('',
     url(r'^test_answer/$', test_answer),
     url(r'^password_restore/$', password_restore),
     url(r'^password_restore_confirm/$', password_restore_confirm),
-    url(r'^admin-statistic/$', admin_statistic),
 )

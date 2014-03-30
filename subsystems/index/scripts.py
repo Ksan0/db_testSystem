@@ -1,8 +1,11 @@
-from DB import Review
-from django.utils import timezone
 from datetime import timedelta
+
+from django.utils import timezone
+
+from subsystems.db_raw_sql_works.DB import Review
 from db_testSystem.models import *
-from system_settings import *
+from db_testSystem.system_settings import *
+
 
 def user_time_update(user):
     try:
@@ -23,3 +26,4 @@ def test_answer_inside(sql_query, right_sql_query):
 
 def toHex(x):
     return "".join([hex(ord(c))[2:].zfill(2) for c in x])
+

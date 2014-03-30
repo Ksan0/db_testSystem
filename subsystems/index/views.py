@@ -23,15 +23,6 @@ static_context = {
 }
 
 
-
-@login_required(redirect_field_name='')
-def admin_statistic(request):
-    if not request.user.is_superuser:
-        return HttpResponseRedirect('/')
-
-    return render(request, 't.html', {'msg': 'ok'})
-
-
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
     template_name = 'test_list.html'

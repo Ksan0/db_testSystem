@@ -1,5 +1,5 @@
 from db_testSystem.models import *
-from system_settings import *
+from db_testSystem.system_settings import *
 
 
 class OutputRKModel(RK):
