@@ -1,3 +1,4 @@
+
 """
 Django settings for db_testSystem project.
 
@@ -48,7 +49,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'db_testSystem.urls'
@@ -60,14 +61,14 @@ WSGI_APPLICATION = 'db_testSystem.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-       'NAME': 'db_testSystem',
-                                              
-       'USER': 'root',
-       'PASSWORD': '',
-       'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-       'PORT': '',                      # Set to empty string for default.
+	'default': {
+		'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+		'NAME': 'db_testSystem',
+                                                            
+		'USER': 'root',
+		'PASSWORD': '',
+		'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+		'PORT': '', # Set to empty string for default.
    }
 }
 
@@ -101,3 +102,11 @@ TEMPLATE_DIRS = (
 )
 
 # APPEND_SLASH = False
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'db.testSystem@gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'db.testsystem@gmail.com'
+EMAIL_HOST_PASSWORD = 'Tech_db_testSystem'
+EMAIL_PORT = 587
