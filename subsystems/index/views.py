@@ -14,6 +14,7 @@ import string
 from datetime import timedelta, datetime
 from django.utils import timezone
 from DB import *
+from user_messages import *
 
 
 static_context = {
@@ -61,7 +62,7 @@ def password_restore_confirm(request):
         passw_hex = toHex(user.password)
         if confirm != passw_hex:
             return login_view(request, {
-                'error_msg': 'confirm failed'
+                'error_msg': CONFIRM_FAILED
             })
 
         new_pass = ''.join([choice(string.ascii_uppercase) for _ in xrange(12)])
@@ -70,11 +71,11 @@ def password_restore_confirm(request):
 
         send_mail('Password restore', 'Ваш новый пароль: {0}'.format(new_pass), 'db.testSystem@gmail.com', ['kgfq@mail.ru'])
         return login_view(request, {
-            'success_msg': 'confirm success'
+            'success_msg': CONFIRM_SUCCESS
         })
     except:
         return login_view(request, {
-            'error_msg': 'confirm failed'
+            'error_msg': CONFIRM_FAILED
         })
 
 
@@ -92,13 +93,13 @@ def password_restore(request):
         request.method = 'GET'
 
         return login_view(request, {
-            'success_msg': 'look at mail'
+            'success_msg': LOOK_AT_MAIL
         })
     except:
         request.method = 'GET'
 
         return login_view(request, {
-            'error_msg': 'no user'
+            'error_msg': NO_USER
         })
 
 
@@ -126,11 +127,11 @@ def test_answer(request):
 
     if user_time_update(request.user) <= 0:
         return render(request, 't.html', {
-            'msg': 'no time'
+            'msg': NO_TIME
         })
     if not user_session.running:
         return render(request, 't.html', {
-            'msg': 'session closed'
+            'msg': SESSION_CLOSED
         })
 
     if request.method != 'POST':
@@ -156,7 +157,7 @@ def question(request):
 
     if user_time_update(request.user) <= 0:
         return index(request, {
-            'warn_msg': 'no time'
+            'warn_msg': NO_TIME
         })
 
     try:
@@ -187,7 +188,7 @@ def question(request):
 
     if not user_session.running:
         return index(request, {
-            'warn_msg': 'session closed'
+            'warn_msg': SESSION_CLOSED
         })
 
     if not good_ids:
@@ -222,7 +223,9 @@ def start_new_session(request, user, rk, attempt):
         return HttpResponseRedirect('/')
 
     if attempt.used >= ATTEMPTES_MAX:
-        return index(request, {'error_msg': 'no attemptes'})
+        return index(request, {
+            'error_msg': NO_ATTEMPTES
+        })
 
     indexes = []
     for obj in Question.objects.filter(rk=rk, is_active=True):
@@ -315,11 +318,11 @@ def login_view(request, extra_context=None):
     user = authenticate(username=form_auth.data["login"], password=form_auth.data["password"])
 
     if user is None:
-        context.update({'error_msg': 'bad login or password'})
+        context.update({'error_msg': LOGIN_FAILED})
         return render(request, template_name, context)
 
     if not user.is_active:
-        context.update({'error_msg': 'user is disabled'})
+        context.update({'error_msg': DISABLED_USER})
         return render(request, template_name, context)
 
     login(request, user)
