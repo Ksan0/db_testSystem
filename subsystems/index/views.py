@@ -116,7 +116,7 @@ def password_restore(request):
         })
 
 
-def answer(request):
+def test_answer(request):
     try:
         testid = request.GET['testid']
     except:
