@@ -7,6 +7,8 @@ from django.core.mail import send_mail
 from forms import *
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
+from scripts import *
+from output_models import *
 from random import choice
 import string
 from datetime import timedelta, datetime
@@ -18,29 +20,9 @@ static_context = {
     'tests_url': '/tests/',
     'login_url': '/login/',
     'logout_url': '/logout/',
-    'pass_restore_url': '/password_restore/'
+    'pass_restore_url': '/password_restore/',
 }
-ATTEMPTES_MAX = 3
-QUESTIONS_COUNT = 10
 
-
-class OutputRKModel(RK):
-    def __init__(self, sup, user):
-        self.id = sup.id
-        self.title = sup.title
-        self.description = sup.description
-
-        try:
-            self.attemptes_amount = ATTEMPTES_MAX - Attempt.objects.get(user=user, rk=sup).used
-        except:
-            self.attemptes_amount = ATTEMPTES_MAX
-
-
-class OutputQuestionModel(Question):
-    def __init__(self, sup, status):
-        self.id = sup.id
-        self.description = sup.description
-        self.status = status
 
 
 @login_required(redirect_field_name='')
@@ -49,19 +31,6 @@ def admin_statistic(request):
         return HttpResponseRedirect('/')
 
     return render(request, 't.html', {'msg': 'ok'})
-
-
-def user_time_update(user):
-    try:
-        session = UserSession.objects.get(user=user, running=True)
-    except:
-        return -1
-    have_time = session.registered_at + timedelta(minutes=60) - timezone.now()
-    have_minutes = have_time.total_seconds() / 60
-    if have_minutes <= 0:
-        session.running = False
-        session.save()
-    return int(have_minutes)
 
 
 @login_required(redirect_field_name='')
@@ -82,13 +51,6 @@ def index(request, other_context=None):  # list of RK
         context.update(other_context)
     return render(request, template_name, context)
 
-
-def test_answer_inside(sql_query, right_sql_query):
-    return Review.check_answer(sql_query=sql_query, right_sql_query=right_sql_query)
-
-
-def toHex(x):
-    return "".join([hex(ord(c))[2:].zfill(2) for c in x])
 
 def password_restore_confirm(request):
     try:
@@ -291,7 +253,6 @@ def start_new_session(request, user, rk, attempt):
     return render(request, 'question_list.html', context)
 
 
-
 @login_required(redirect_field_name='')
 def test(request):
     try:
@@ -328,11 +289,6 @@ def test(request):
     }
     context.update(static_context)
     return render(request, 'question_list.html', context)
-
-
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect('/')
 
 
 def login_view(request, extra_context=None):
@@ -374,4 +330,9 @@ def login_view(request, extra_context=None):
 
     if 'next' in request.GET:
         return HttpResponseRedirect(request.GET['next'])
+    return HttpResponseRedirect('/')
+
+
+def logout_view(request):
+    logout(request)
     return HttpResponseRedirect('/')
