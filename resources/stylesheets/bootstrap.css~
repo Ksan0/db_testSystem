@@ -1846,8 +1846,6 @@ table {
 .table thead th {
   vertical-align: bottom;
   background-color: #656565;
-  text-shadow: 0px 1px 0px #414141;
-  color: #FFF;
 }
 .table caption + thead tr:first-child th,
 .table caption + thead tr:first-child td,
