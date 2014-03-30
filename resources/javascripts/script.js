@@ -3,7 +3,8 @@ $(function(){
 		
     $("a.dropdown-toggle").click(function(e) {
       	$(".dropdown-menu").css("display", "block");
-    });
+    e.PreventDefault();
+	});
 
     $("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
