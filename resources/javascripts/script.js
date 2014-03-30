@@ -1,7 +1,16 @@
 $(function(){
 	var form = $('.contact-form');
 		
-	setInterval("$(\".nav > li:nth-child(2) > a:nth-child(1)\").html(\"Осталось \"+(parseInt($(\".nav > li:nth-child(2) > a:nth-child(1)\")[0].text.match(/\d+/))-1)+\" min\")", 60000);
+	setInterval(function(){
+		console.log(this);
+		var timer = parseInt($(".nav > li:nth-child(2) > a:nth-child(1)")[0].text.match(/\d+/))-1;
+		if (timer > 0)	{
+			$(".nav > li:nth-child(2) > a:nth-child(1)").html("Осталось "+timer+" min");
+		} else {
+			$(".nav > li:nth-child(2) > a:nth-child(1)").html("Время вышло");
+			clearInterval(this);
+		}
+	}, 60000);
 	$("a.dropdown-toggle").click(function(e) {
       	$(".dropdown-menu").css("display", "block");
     e.PreventDefault();
