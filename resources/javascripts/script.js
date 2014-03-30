@@ -1,7 +1,6 @@
 $(function(){
     $("a.dropdown-toggle").click(function(e) {
-      $(this).parent().css({"display":"block"});
-      e.preventDefault();
+      $(".dropdown-menu").css("display", "block");
     });
 
     $("#ajax-check-sql").click(function() {
@@ -14,6 +13,7 @@ $(function(){
             }
         );
 	});
+
     $(".restore_link").click(function() {
 		$(".login_form").css("display","none");
 		$(".restore_form").css("display","block");

@@ -39,6 +39,14 @@
     {% endblock %}
 </head>
 {% if error_msg %}      
+	{% if error_msg == "bad login or password" %}
+	<div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
+	{% endif %}
+	{% if error_msg == "confirm failed" %}
+    <div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
+	{% endif %}
+{% endif %}
+{% if success_msg %}
 <div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>Извините вы ошиблись с логином или паролем</div>
 {% endif %}
 <body class='theme-pattern-lghtmesh'>
@@ -64,7 +72,7 @@
                         <ul class="nav pull-right">
 			
                             {% if user.is_authenticated %}
-                                <li class=""><a href="/{{ tests_url }}">Тесты</a></li>
+                                <li class=""><a href="{{ tests_url }}">Тесты</a></li>
                             {% if end_time %}
 {#                                TODO: счётчик#}
                             <li class=""><a> Окончание : {{ end_time | date:"H i" }}</a></li>
