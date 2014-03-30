@@ -51,6 +51,7 @@
 	{% else %}
 		{{ error_msg }}
 	{% endif %}
+</div>
 {% endif %}
 	
 {% if success_msg %}
@@ -60,7 +61,9 @@
 	{% else %}
 		{{error_msg}}
 	{% endif %}
+</div>
 {% endif %}
+
 {% if warn_msg %}
 <div class="alert alert-success animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>
 	{% if watn_msg == "confirm success" %}Восстановление прошло успешно
