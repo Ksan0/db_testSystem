@@ -10,7 +10,7 @@ $(function(){
         var form = $('.contact-form');
 		var get = parseGetParams();
         $.post(
-            "ajax/answer/?type=answer&testid=get.testid&queid=get.queid", //url
+            "/test_answer/?testid=get.testid&queid=get.queid", //url
             form.serialize(),
             function(data) {      //success method
                 $('#messages').html(data);
