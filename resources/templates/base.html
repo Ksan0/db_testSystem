@@ -73,9 +73,9 @@
 			
                             {% if user.is_authenticated %}
                                 <li class=""><a href="{{ tests_url }}">Тесты</a></li>
-                            {% if end_time %}
+                            {% if have_time and have_time > 0 %}
 {#                                TODO: счётчик#}
-                            <li class=""><a> Окончание : {{ end_time | date:"H i" }}</a></li>
+                            <li class=""><a> Осталось: {{ have_time }} min</a></li>
 
                             {% endif %}
 
