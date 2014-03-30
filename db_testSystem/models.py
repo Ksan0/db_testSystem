@@ -44,8 +44,8 @@ class Attempt(models.Model):
         return u'{0} <-> {1}'.format(self.user.username, self.rk.title)
 
     class Meta:
-        verbose_name = 'Попытка пользователя'
-        verbose_name_plural = 'Попытки пользователей'
+        verbose_name = 'Оставшиеся попытки'
+        verbose_name_plural = 'Оставшиеся попытки'
 
 
 class UserSession(models.Model):
