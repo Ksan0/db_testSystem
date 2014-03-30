@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^tests/$', test),
     url(r'^question/$', question),
     url(r'^password_restore/$', password_restore),
+    url(r'^password_restore_confirm/$', password_restore_confirm),
 )
