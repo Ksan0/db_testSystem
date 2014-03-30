@@ -11,9 +11,9 @@ from DB import *
 
 
 static_context = {
-    'tests_url': 'tests/',
-    'login_url': 'login/',
-    'logout_url': 'logout/'
+    'tests_url': 'tests',
+    'login_url': 'login',
+    'logout_url': 'logout'
 }
 ATTEMPTES_MAX = 3
 QUESTIONS_COUNT = 10
@@ -65,7 +65,7 @@ def question(request):
     try:
         que_id = request.GET['queid']
     except:
-        return HttpResponseRedirect('/test/')
+        return HttpResponseRedirect('/test')
 
     context = {
         'form': AnswerForm()
@@ -85,7 +85,7 @@ def question(request):
         pass
 
     if not good_ids:
-        return HttpResponseRedirect('/test/')
+        return HttpResponseRedirect('/test')
 
     if request.method == 'GET':
         context.update({
@@ -190,7 +190,7 @@ def login_view(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
             if request.user.is_superuser:
-                return HttpResponseRedirect('/admin/')
+                return HttpResponseRedirect('/admin')
             return HttpResponseRedirect('/')
         return render(request, template_name, context)
 
@@ -210,7 +210,7 @@ def login_view(request):
     if user.is_superuser:
         if 'next' in request.GET:
             return HttpResponseRedirect(request.GET['next'])
-        return HttpResponseRedirect('/admin/')
+        return HttpResponseRedirect('/admin')
 
     if 'next' in request.GET:
         return HttpResponseRedirect(request.GET['next'])
