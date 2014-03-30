@@ -6,5 +6,9 @@ class LoginForm(forms.Form):
     password = CharField(widget=PasswordInput())
 
 
+class PassRestoreForm(forms.Form):
+    login = CharField()
+
+
 class AnswerForm(forms.Form):
     answer = CharField(widget=Textarea())
