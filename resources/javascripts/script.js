@@ -1,12 +1,15 @@
 $(function(){
+	var form = $('.contact-form');
+		
     $("a.dropdown-toggle").click(function(e) {
-      $(".dropdown-menu").css("display", "block");
+      	$(".dropdown-menu").css("display", "block");
     });
 
     $("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
+		var get = parseGetParams();
         $.post(
-            "ajax/answer?type=answer&testid=ID&queid=ID", //url
+            "ajax/answer?type=answer&testid=get.testid&queid=get.queid", //url
             form.serialize(),
             function(data) {      //success method
                 $('#messages').html(data);
@@ -26,7 +29,15 @@ $(function(){
 
 });
 
-
+function parseGetParams() { 
+   var $_GET = {}; 
+   var __GET = window.location.search.substring(1).split("&"); 
+   for(var i=0; i<__GET.length; i++) { 
+      var getVar = __GET[i].split("="); 
+      $_GET[getVar[0]] = typeof(getVar[1])=="undefined" ? "" : getVar[1]; 
+   } 
+   return $_GET; 
+} 
 //  $('#ajax-check-sql').click(function(e) {
 //      e.preventDefault();
 //      $.ajax({
