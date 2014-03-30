@@ -15,7 +15,8 @@
             {% for test in tests %}
             <li class="span4">
                 <div class="well blockquote-well">
-                	<p> {{ test.title }} </p>
+                	<a href={% if have_time > 0 %}"{{ tests_url }}?testid={{ test.id }}"{% else %}"#confirm" data-target="#confirm" data-toggle="modal" {% endif %}>
+					<p> {{ test.title }} </p>
                     <blockquote>
                     	<p>
                         	{{ test.description }}
@@ -24,7 +25,7 @@
                         	Осталось попыток: {{ test.attemptes_amount }}
                         </small>
                     </blockquote>
-					<button type="button" data-target="#confirm" data-toggle="modal">Начать</button>
+					</a>
                 </div>
             </li>
 			<div class="modal hide fade" id="confirm">
@@ -33,12 +34,12 @@
 					<h3>Вы уверены, что хотите начать прохождение теста?</h3>
 				</div>
 				<div class="modal-body">
-					{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка{% else %}
-					<p>У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 or test.attemptes_amount < 4%}попытки{% else %}попыток{% endif %}
-					{% endif %}!
+					{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка!{% else %}
+					<p>У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 and test.attemptes_amount < 4%}попытки!{% else %}попыток!{% endif %}
+					{% endif %}
 					<div class="confirm_button_block" style="margin-top:-5px;float:right">
 						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Закрыть</a>
-						{% if test.attemptes_amount != 0 %}
+						{% if test.attemptes_amount > 0 %}
 						<a href="{{ tests_url }}?testid={{ test.id }}&confirm_start=yes" class="btn btn-primary" style="margin-left:10px">Начать тест</a>
 						{% endif %}
 					</div>
