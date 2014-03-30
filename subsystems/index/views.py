@@ -150,6 +150,9 @@ def answer(request):
             'msg': 'fgkdfjg'
         })
 
+    return render(request, 't.html', {
+        'msg': 'her obanoo'
+    })
 
 @login_required(redirect_field_name='')
 def question(request):
