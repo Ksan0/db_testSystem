@@ -1,21 +1,23 @@
 $(function(){
 	var form = $('.contact-form');
 		
-	setInterval(function(){
-		console.log(this);
-		var timer = parseInt($(".nav > li:nth-child(2) > a:nth-child(1)")[0].text.match(/\d+/))-1;
-		if (timer > 0)	{
-			$(".nav > li:nth-child(2) > a:nth-child(1)").html("Осталось "+timer+" min");
+	var Interval = setInterval(function(){
+		var timer = parseInt($(".nav > li:nth-child(2) > a:nth-child(1)")[0].text.match(/\d+/));
+		if (timer-1 > 0)	{
+			$(".nav > li:nth-child(2) > a:nth-child(1)").html("Осталось "+(timer-1)+" min");
 		} else {
 			$(".nav > li:nth-child(2) > a:nth-child(1)").html("Время вышло");
-			clearInterval(this);
+			clearInterval(Interval);
 		}
 	}, 60000);
+	$(".nav > li:nth-child(2) > a:nth-child(1)").html("Осталось "+parseInt($(".nav > li:nth-child(2) > a:nth-child(1)")[0].text.match(/\d+/))+" min");
+
 	$("a.dropdown-toggle").click(function(e) {
       	$(".dropdown-menu").css("display", "block");
     e.PreventDefault();
 	});
-    $("#ajax-check-sql").click(function() {
+    
+$("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
 		var get = parseGetParams();
         $.post(
