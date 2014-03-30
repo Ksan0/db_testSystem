@@ -282,7 +282,10 @@ def test(request):
     questions_s = SessionQuestions.objects.filter(session=user_session)
     questions = []
     for que_s in questions_s:
-        questions.append(OutputQuestionModel(que_s.question, que_s.last_answer == '' and '' or 'sended'))
+        status = ''
+        if que_s.last_answer != '':
+            status = 'sended'
+        questions.append(OutputQuestionModel(que_s.question, status))
 
     context = {
         'question_list': questions,
