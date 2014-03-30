@@ -1,6 +1,6 @@
 $(function(){
     $("a.dropdown-toggle").click(function(e) {
-      $(this).parent().toggleClass('open');
+      $(this).parent().css({"display":"block"});
       e.preventDefault();
     });
 
@@ -13,7 +13,17 @@ $(function(){
                 $('#messages').html(data);
             }
         );
-        return false;
+	});
+    $(".restore_link").click(function() {
+		$(".login_form").css("display","none");
+		$(".restore_form").css("display","block");
+	});
+	
+	$(".login_link").click(function() {
+    	$(".login_form").css("display","block");
+    	$(".restore_form").css("display","none");
+    });
+
 });
 
 
@@ -37,4 +47,3 @@ $(function(){
 //          }
 //      });
 //  })
-})
