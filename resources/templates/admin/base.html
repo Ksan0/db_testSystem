@@ -35,19 +35,19 @@
                 {% if user.has_usable_password %}
                 <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
                 {% endif %}
-                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+                <a href="/logout">{% trans 'Log out' %}</a>
             {% endblock %}
         </div>
         {% endif %}
         {% block nav-global %}{% endblock %}
     </div>
     <!-- END Header -->
-    {% block breadcrumbs %}
+    {# {% block breadcrumbs %} #}
     <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
     {% if title %} &rsaquo; {{ title }}{% endif %}
     </div>
-    {% endblock %}
+    {# {% endblock %} #}
     {% endif %}
 
     {% block messages %}

@@ -11,20 +11,20 @@ admin.site.unregister(User)
 admin.site.unregister(Group)
 
 
-class TryingInline(admin.StackedInline):
+class AttemptInline(admin.StackedInline):
     model = Attempt
     extra = 0
 
     def get_formset(self, request, obj=None, **kwargs):
         self.object = Attempt.objects.filter(user=obj)
-        return super(TryingInline, self).get_formset(request, obj, **kwargs)
+        return super(AttemptInline, self).get_formset(request, obj, **kwargs)
 
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')
     list_editable = ('is_active',)
     fields = ('username', 'first_name', 'last_name', 'is_active')
-    inlines = [TryingInline]
+    inlines = [AttemptInline]
 
     # def change_view(self, request, object_id, form_url='', extra_context=None):
     #    return HttpResponseRedirect('/abc')
