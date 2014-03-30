@@ -11,9 +11,7 @@ from scripts import *
 from output_models import *
 from random import choice
 import string
-from datetime import timedelta, datetime
-from django.utils import timezone
-from DB import *
+from datetime import timedelta
 from user_messages import *
 
 
@@ -276,7 +274,6 @@ def test(request):
         return start_new_session(request, request.user, rk, attempt)
 
     have_time = user_time_update(request.user)
-
     if not user_session.running:
         return start_new_session(request, request.user, rk, attempt)
 
