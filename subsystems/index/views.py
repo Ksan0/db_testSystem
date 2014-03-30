@@ -188,7 +188,8 @@ def login_view(request):
     template_name = 'auth.html'
 
     context = {
-        'form': LoginForm(),
+        'form_auth': LoginForm(),
+        'form_passRestore': PassRestoreForm(),
         'is_login_page': 'True'
     }
     context.update(static_context)
@@ -200,9 +201,9 @@ def login_view(request):
             return HttpResponseRedirect('/')
         return render(request, template_name, context)
 
-    form = LoginForm(request.POST)
-    context.update({'form': form})
-    user = authenticate(username=form.data["login"], password=form.data["password"])
+    form_auth = LoginForm(request.POST)
+    context.update({'form_auth': form_auth})
+    user = authenticate(username=form_auth.data["login"], password=form_auth.data["password"])
 
     if user is None:
         context.update({'error_msg': 'bad login or password'})
