@@ -11,22 +11,15 @@ admin.site.unregister(User)
 admin.site.unregister(Group)
 
 
-class FakeModel(models.Model):
-    que_descr = models.TextField(verbose_name='Вопрос')
-    que_query = models.TextField(verbose_name='SQL right')
-    ans_query = models.TextField(verbose_name='SQL answer')
-    is_right = models.BooleanField()
-
-
 class UserStatisticInline(admin.StackedInline):
-    model = FakeModel
+    model = User
     extra = 0
 
     def get_formset(self, request, obj=None, **kwargs):
         sessions = UserSession.objects.filter(user=obj)
 
-        self.object = Attempt.objects.filter(user=obj)
-        return super(AttemptInline, self).get_formset(request, obj, **kwargs)
+        self.object = sessions
+        return super(UserStatisticInline, self).get_formset(request, obj, **kwargs)
 
 
 class AttemptInline(admin.TabularInline):
@@ -42,7 +35,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')
     list_editable = ('is_active',)
     fields = ('username', 'first_name', 'last_name', 'is_active')
-    inlines = [AttemptInline]
+    inlines = [AttemptInline, UserStatisticInline]
 
     # def change_view(self, request, object_id, form_url='', extra_context=None):
     #    return HttpResponseRedirect('/abc')

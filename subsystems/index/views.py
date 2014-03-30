@@ -59,7 +59,7 @@ def index(request, other_context=None):  # list of RK
     return render(request, template_name, context)
 
 
-def test_answer(sql_query, right_sql_query):
+def test_answer_inside(sql_query, right_sql_query):
     return Review.check_answer(sql_query=sql_query, right_sql_query=right_sql_query)
 
 
@@ -132,8 +132,8 @@ def test_answer(request):
 
     good_ids = False
     try:
-        question = Question.objects.get(id=que_id)
-        rk = RK.objects.get(id=rk_id)
+        question = Question.objects.get(id=queid)
+        rk = RK.objects.get(id=testid)
         attempt = Attempt.objects.get(user=request.user, rk=rk)
         user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
         session_question = SessionQuestions.objects.get(session=user_session, question=question)
@@ -151,7 +151,7 @@ def test_answer(request):
     form = AnswerForm(request.POST)
     if type == 'answer':
         session_question.last_answer = form.data['answer']
-        session_question.is_right, back = test_answer(form.data['answer'], question.answer)
+        session_question.is_right, back = test_answer_inside(form.data['answer'], question.answer)
         session_question.save()
         return render(request, 't.html', {
             'msg': 'fgkdfjg'
