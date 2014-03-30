@@ -2,18 +2,6 @@
 
 {% block page %}
 {% load static %}
-<script type="text/javascript">
-	function addNotice(notice) {
-	    $('<div class="notice"></div>')
-	        .append('<div class="skin" align="center"></div>')
-	        .append('<a href="#" class="close">close</a>')
-	        .append($('<div class="content"></div>').html(notice))
-	        .hide()
-	        .appendTo('.growl')
-	        .fadeIn(1000);
-	}	
-</script>
-
 <div id="content" role="main">
     <!-- Promo Section -->
     <section class="section section-alt">

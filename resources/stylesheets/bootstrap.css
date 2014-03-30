@@ -2972,13 +2972,14 @@ input[type="submit"].btn.btn-mini {
 .alert {
   position: fixed;
   padding: 8px 35px 8px 14px;
-  margin-top: -40px;
+  margin-top: -35px;
+  margin-left: 5px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #fcf8e3;
   border: 1px solid #fbeed5;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  border-radius: 0px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   width: auto;
   z-index: 2000;
 }
