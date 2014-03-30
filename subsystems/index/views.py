@@ -93,6 +93,10 @@ def password_restore(request):
         })
 
 
+def close_session(request):
+    pass
+
+
 def test_answer(request):
     try:
         testid = request.GET['testid']
@@ -115,6 +119,9 @@ def test_answer(request):
     except:
         pass
 
+    if not good_ids:
+        HttpResponseRedirect('/')
+
     if user_time_update(request.user) <= 0:
         return render(request, 't.html', {
             'msg': NO_TIME
@@ -126,9 +133,6 @@ def test_answer(request):
 
     if request.method != 'POST':
         HttpResponseRedirect('/question/?testid={0}&queid={1}')
-
-    if not good_ids:
-        HttpResponseRedirect('/')
 
     form = AnswerForm(request.POST)
 
@@ -212,7 +216,7 @@ def start_new_session(request, user, rk, attempt):
     if confirm != 'yes':
         return HttpResponseRedirect('/')
 
-    if attempt.used >= ATTEMPTES_MAX:
+    if attempt.have <= 0:
         return index(request, {
             'error_msg': NO_ATTEMPTES
         })
@@ -228,6 +232,7 @@ def start_new_session(request, user, rk, attempt):
         indexes.remove(ch)
 
     attempt.used += 1
+    attempt.have -= 1
     attempt.save()
     user_session = UserSession.objects.create(user=user, rk=rk, attempt=attempt.used)
 
@@ -248,6 +253,8 @@ def start_new_session(request, user, rk, attempt):
 
 @login_required(redirect_field_name='')
 def test(request):
+    have_time = user_time_update(request.user)
+
     try:
         rk_id = request.GET['testid']
         rk = RK.objects.get(id=rk_id)
@@ -263,9 +270,12 @@ def test(request):
     try:
         user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
     except:
+        if have_time > 0:
+            return index(request, {
+                'error_msg': ANOTHER_TEST_RUNNING
+            })
         return start_new_session(request, request.user, rk, attempt)
 
-    have_time = user_time_update(request.user)
     if not user_session.running:
         return start_new_session(request, request.user, rk, attempt)
 

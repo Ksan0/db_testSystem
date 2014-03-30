@@ -1,6 +1,7 @@
 # coding: utf-8
 from django.contrib.auth.models import User
 from django.db import models
+from system_settings import *
 
 
 class RK(models.Model):
@@ -38,7 +39,8 @@ class Question(models.Model):
 class Attempt(models.Model):
     user = models.ForeignKey(User, verbose_name='Пользователь')
     rk = models.ForeignKey(RK, verbose_name='Тест')
-    used = models.SmallIntegerField(default=0, verbose_name='Использовано попыток')
+    used = models.SmallIntegerField(default=0)
+    have = models.SmallIntegerField(default=ATTEMPTES_MAX)
 
     def __unicode__(self):
         return u'{0} <-> {1}'.format(self.user.username, self.rk.title)
