@@ -1,12 +1,11 @@
 $(function(){
 	var form = $('.contact-form');
-	
-//	setTimeout(function() {  }, 1000);	
-    $("a.dropdown-toggle").click(function(e) {
+		
+	setInterval("$(\".nav > li:nth-child(2) > a:nth-child(1)\").html(\"Осталось \"+(parseInt($(\".nav > li:nth-child(2) > a:nth-child(1)\")[0].text.match(/\d+/))-1)+\" min\")", 60000);
+	$("a.dropdown-toggle").click(function(e) {
       	$(".dropdown-menu").css("display", "block");
     e.PreventDefault();
 	});
-
     $("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
 		var get = parseGetParams();
@@ -54,7 +53,8 @@ function parseGetParams() {
       $_GET[getVar[0]] = typeof(getVar[1])=="undefined" ? "" : getVar[1]; 
    } 
    return $_GET; 
-} 
+}
+
 //  $('#ajax-check-sql').click(function(e) {
 //      e.preventDefault();
 //      $.ajax({
