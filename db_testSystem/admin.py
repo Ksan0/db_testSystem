@@ -21,11 +21,6 @@ class AttemptInline(admin.TabularInline):
         return super(AttemptInline, self).get_formset(request, obj, **kwargs)
 
 
-"""def user_statistic(obj):
-    return '{{ cl }}'
-user_statistic.short_description = 'Статистика'
-"""
-
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')
     list_editable = ('is_active',)
