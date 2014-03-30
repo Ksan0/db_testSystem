@@ -3,6 +3,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.core.mail import send_mail
 from forms import *
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
@@ -11,9 +12,9 @@ from DB import *
 
 
 static_context = {
-    'tests_url': 'tests/',
-    'login_url': 'login/',
-    'logout_url': 'logout/'
+    'tests_url': '/tests/',
+    'login_url': '/login/',
+    'logout_url': '/logout/'
 }
 ATTEMPTES_MAX = 3
 QUESTIONS_COUNT = 10
@@ -51,6 +52,11 @@ def index(request, other_context=None):  # list of RK
 
 def test_answer(sql_query, right_sql_query):
     return Review.check_answer(sql_query=sql_query, right_sql_query=right_sql_query)
+
+
+def password_restore(request):
+    send_mail('Subject here', 'Here is the message.', 'db.testSystem@gmail.com', ['kgfq@mail.ru'])
+
 
 
 @login_required(redirect_field_name='')
