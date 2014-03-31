@@ -13,11 +13,25 @@ $(function(){
 		}, 6000);
 		$(".session_timer > a:nth-child(1)").html("Осталось "+parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/))+" min");
 	}
+	
 	$("a.dropdown-toggle").click(function(e) {
-      	$(".dropdown-menu").css("display", "block");
-    e.PreventDefault();
+		if($(".dropdown-menu").css('display') != 'block'){
+      		$(".dropdown-menu").show();
+			var click = true;
+			$(document).bind('click.myEvent', function (e) {
+          		if (!click && $(e.target).closest('.dropdown-menu').length == 0) {
+            	$(".dropdown-menu").hide();
+            	$(document).unbind('click.myEvent');
+          	}
+			click = false;
+        });
+		}
 	});
-    
+	$("a.dropdown-menu").mouseleave(function(e){
+       	$(".dropdown-menu").css("display", "none");
+   	});
+
+
 $("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
 		var get = parseGetParams();
