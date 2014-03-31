@@ -143,7 +143,7 @@ def test_answer(request):
 
     form = AnswerForm(request.POST)
 
-    reviewer = Review(sql_query=form.data['answer'], right_sql_query=question.answer)
+    reviewer = Review(sql_query=form.data['answer'])
 
     #session_question.last_answer = form.data['answer']
     #session_question.is_right = reviewer.is_user_right

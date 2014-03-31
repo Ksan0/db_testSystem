@@ -40,11 +40,15 @@ class Review(object):
         self.right_records = ''
         self.user_records = ''
         self.is_user_right = False
-        self.orm = MySqlDB(HOST_NAME, USER_NAME, USER_PASSWORD, DB_NAME, DB_CHARSET)
 
-        if right_sql_query != '':
-            self.right_records, self.error = self.orm.select(right_sql_query)
-        if sql_query != '':
-            self.user_records, self.error = self.orm.select(sql_query)
-        if right_sql_query != '' and sql_query != '':
-            self.is_user_right = [a.values() for a in self.user_records] == [a.values() for a in self.answer_records]
+        try:
+            self.orm = MySqlDB(HOST_NAME, USER_NAME, USER_PASSWORD, DB_NAME, DB_CHARSET)
+
+            if right_sql_query != '':
+                self.right_records, self.error = self.orm.select(right_sql_query)
+            if sql_query != '':
+                self.user_records, self.error = self.orm.select(sql_query)
+            if right_sql_query != '' and sql_query != '':
+                self.is_user_right = [a.values() for a in self.user_records] == [a.values() for a in self.answer_records]
+        except:
+            pass
