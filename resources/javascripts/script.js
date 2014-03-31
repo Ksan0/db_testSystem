@@ -1,6 +1,12 @@
 $(function(){
 	var form = $('.contact-form');
-		
+	var auto_agree=true;
+	$("#send_sql").click(function() {
+		if(!auto_agree){
+			$(".confirm").show();
+		}
+	}	
+//Timer
 	if ($(".session_timer > a:nth-child(1)").length) {
 		var Interval = setInterval(function(){
 			var timer = parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/));
@@ -13,7 +19,8 @@ $(function(){
 		}, 6000);
 		$(".session_timer > a:nth-child(1)").html("Осталось "+parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/))+" min");
 	}
-	
+
+//выпадающее меню на профайл
 	$("a.dropdown-toggle").click(function(e) {
 		if($(".dropdown-menu").css('display') != 'block'){
       		$(".dropdown-menu").show();
@@ -31,7 +38,7 @@ $(function(){
        	$(".dropdown-menu").css("display", "none");
    	});
 
-
+//Проверка ответа на сервере и разбор в таблицу
 	$("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
 		var get = parseGetParams();
@@ -66,6 +73,7 @@ $(function(){
         );
 	});
 
+//Восстановление пароля
     $(".restore_link").click(function() {
 		$(".login_form").css("display","none");
 		$(".restore_form").css("display","block");
