@@ -14,17 +14,3 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "db_testSystem.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
-
-"""
-
-import os, sys
-
-reload(sys)  # Reload does the trick!
-sys.setdefaultencoding('UTF8')
-
-sys.path.append('/var/www/ksan/data/www/cimg.ru')
-
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
-"""

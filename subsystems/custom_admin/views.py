@@ -9,7 +9,15 @@ from django.contrib.auth.decorators import login_required
 
 
 @login_required(redirect_field_name='')
-def statistic(request):
+def user_stats(request):
+    if not request.user.is_superuser:
+        return HttpResponseRedirect('/')
+
+    return render(request, 't2.html', {'msg': 'ok'})
+
+
+@login_required(redirect_field_name='')
+def test_stats(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect('/')
 
@@ -21,4 +29,9 @@ def index(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect('/')
 
-    return render(request, 't2.html', {'msg': 'ok'})
+    users = User.objects.filter(is_superuser=False)
+    rks = RK.objects.all()
+    return render(request, 'custom_admin_index.html', {
+        'users': users,
+        'tests': rks
+    })
