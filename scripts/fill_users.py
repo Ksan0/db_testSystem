@@ -1,4 +1,5 @@
-import os
+import os, sys
+sys.path.append('/var/www/ksan/data/www/db_testSystem')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "db_testSystem.settings")
 import random
 import string
