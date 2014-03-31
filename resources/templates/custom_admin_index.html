@@ -1,19 +1,40 @@
-<p> Пользователи </p>
-<p>
-{% for usr in users %}
-    <p>
-    <a href='/custom-admin/user/?login={{ usr.username }}'> {{ usr.username }} </a>
-    </p>
-{% endfor %}
-</p>
+{% extends "base.html" %}
 
-------------------------------
+{% block page %}
+{% load static %}
+<div class="section-header">
+	<h1> 
+    	<small class="light">Пользователи</small>
+	</h1>
+</div>
 
-<p> Тесты </p>
-<p>
-{% for test in tests %}
-    <p>
-    <a href='/custom-admin/test/?testid={{ test.id }}'> {{ test.title }} </a>
-    </p>
-{% endfor %}
-</p>
+<section class="section section-alt section-padded">
+    <div class="container-fluid">
+        <div class="section-header">
+        	<h3 style>Выберите, чтобы увидеть статистику</h2>
+		</div>
+        <ul class="inline row-fluid">
+			<table class="users table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Nickname</th>
+						<th>E-mail</th>
+						<th>First Name</th>
+						<th>Second Name</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for usr in users %}
+					<tr><a href="/custom-admin/user/?login={{ usr.username }}">
+                			<td><a href="/custom-admin/user/?login={{ usr.username }}" style="position:absolute; width:92%;">{{ usr.username }} </a></td>
+							<td>{% if not usr.email %}-{% else %}{{ usr.email }}{% endif %}</td>
+							<td>{{ usr.first_name }}</td>
+							<td>{{ usr.last_name }}</td>
+  					</tr>
+            	{% endfor %}
+				</tbody>
+        	</table>
+		</ul>
+    </div>
+</section>
+{% endblock %}

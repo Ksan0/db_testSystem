@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block page %}
+{% load static %}
+
+
 {% for session_output in user_sessions %}
     -----------------------------------------------------------
     <p>
@@ -20,3 +26,53 @@
 
     </p>
 {% endfor %}
+
+<section class="section section-alt section-padded">
+    <div class="container-fluid">
+        <div class="section-header">
+            <h3 style>{{ user.username }}</h2>
+        </div>
+        <ul class="inline row-fluid">    
+		{% for session_output in user_sessions %}
+			<h3>{{ session_output.session.rk.title }}</h3>
+			<h4> Попытка № {{ session_output.session.attempt }}</h4>
+			<table class="users table table-bordered table-hover">
+                <thead>
+                    <tr>
+						<th>#</th>
+                        <th>Запрос</th>
+                        <th>Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+        		{% for session_question in session_output.session_questions %}		
+					<tr style="background-color:#fff">
+						<td>Вопрос</td>
+						<td colspan="2">{{ session_question.question.description }}</td>
+					</tr>
+                    <tr class="info">
+						<td>Преподаватель</td>
+						<td>{{ session_question.question.answer }}</td> 
+            			<td>{{ session_question.get_right_records }} </td>
+					</tr>
+                    <tr class="warning">
+						<td>Студент</td>
+            			<td>{{ session_question.last_answer }} </td>
+						<td>{{ session_question.get_user_records }} </td>	
+					</tr>
+					<tr class={% if session_question.is_right %}"success">
+						<td colspan=3><h4 style="text-align:center">Совпадение</h4></td>
+						{% elif session_question.get_user_records %}"error">
+						<td colspan=3><h4 style="text-align:center">Расхождение</h4></td>
+						{% else %}>
+						<td colspan=3><h4 style="text-align:center">Нет ответа</h4></td>
+						{% endif %}
+                {% endfor %}
+				</tbody>
+            </table>
+		{% endfor %}
+        </ul>
+    </div>
+</section>
+
+{% endblock %}
