@@ -93,8 +93,12 @@ def password_restore(request):
         })
 
 
+@login_required(redirect_field_name='')
 def close_session(request):
-    pass
+    user_session = UserSession.objects.get(user=request.user, running=True)
+    user_session.running = False
+    user_session.save()
+    return HttpResponseRedirect('/')
 
 
 def test_answer(request):
