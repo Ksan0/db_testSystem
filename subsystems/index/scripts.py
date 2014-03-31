@@ -20,10 +20,6 @@ def user_time_update(user):
     return int(have_minutes)
 
 
-def test_answer_inside(sql_query, right_sql_query):
-    return Review.check_answer(sql_query=sql_query, right_sql_query=right_sql_query)
-
-
 def toHex(x):
     return "".join([hex(ord(c))[2:].zfill(2) for c in x])
 

@@ -140,9 +140,13 @@ def test_answer(request):
 
     form = AnswerForm(request.POST)
 
-    session_question.last_answer = form.data['answer']
-    session_question.is_right, back, error = test_answer_inside(form.data['answer'], question.answer)
-    session_question.save()
+    reviewer = Review(sql_query=form.data['answer'], right_sql_query=question.answer)
+
+    #session_question.last_answer = form.data['answer']
+    #session_question.is_right = reviewer.is_user_right
+    back = reviewer.user_records
+    error = reviewer.error
+    #session_question.save()
 
     return render(request, 't.html', {
         'msg': error and 'Syntax error' or back
@@ -203,8 +207,13 @@ def question(request):
 
     form = AnswerForm(request.POST)
     context.update({'form': form})
+
+    reviewer = Review(sql_query=form.data['answer'], right_sql_query=question.answer)
+
     session_question.last_answer = form.data['answer']
-    session_question.is_right, back, error = test_answer_inside(form.data['answer'], question.answer)
+    session_question.is_right = reviewer.is_user_right
+    back = reviewer.user_records
+    error = reviewer.error
     session_question.save()
 
     return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
