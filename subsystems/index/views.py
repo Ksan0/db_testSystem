@@ -193,8 +193,7 @@ def question(request):
         return HttpResponseRedirect('/tests/')
 
     if request.method == 'GET':
-        form = AnswerForm()
-        form.set_value(session_question.last_answer)
+        form = AnswerForm({'answer': session_question.last_answer})
         context.update({
             'form': form,
             'testid': rk_id,

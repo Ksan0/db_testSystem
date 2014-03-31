@@ -1,0 +1,14 @@
+{% for session_output in user_sessions %}
+    <p>
+        {{ session_output.session.rk.title }}
+        Attempt #{{ session_output.session.attempt }}
+
+        {% for session_question in session_output.session_questions %}
+            <p>
+            {{ session_question.question.description }} | {{ session_question.question.answer }} |
+            {{ session_question.last_answer }} | {{ session_question.is_right }}
+            </p>
+        {% endfor %}
+
+    </p>
+{% endfor %}
