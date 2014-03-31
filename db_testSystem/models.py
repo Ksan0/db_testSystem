@@ -2,6 +2,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from system_settings import *
+from subsystems.db_raw_sql_works.DB import Review
 
 
 class RK(models.Model):
@@ -64,3 +65,19 @@ class SessionQuestions(models.Model):
     question = models.ForeignKey(Question)
     last_answer = models.CharField(max_length=2000)
     is_right = models.BooleanField(default=False)
+
+    def get_right_records(self):
+        if self.question.answer == '':
+            return {'sql_query_error': 'empty query'}
+        reviewer = Review(right_sql_query=self.question.answer)
+        if reviewer.error:
+            return {'sql_query_error': reviewer.error}
+        return reviewer.right_records
+
+    def get_user_records(self):
+        if self.last_answer == '':
+            return {'sql_query_error': 'empty query'}
+        reviewer = Review(sql_query=self.last_answer)
+        if reviewer.error:
+            return {'sql_query_error': reviewer.error}
+        return reviewer.user_records

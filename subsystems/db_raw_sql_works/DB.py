@@ -35,9 +35,16 @@ class MySqlDB(object):
 
 
 class Review(object):
-    @staticmethod
-    def check_answer(sql_query, right_sql_query):
-        orm = MySqlDB(HOST_NAME, USER_NAME, USER_PASSWORD, DB_NAME, DB_CHARSET)
-        answer_records, error = orm.select(right_sql_query)
-        user_records, error = orm.select(sql_query)
-        return [a.values() for a in user_records] == [a.values() for a in answer_records], user_records, error
+    def __init__(self, sql_query='', right_sql_query=''):
+        self.error = ''
+        self.right_records = ''
+        self.user_records = ''
+        self.is_user_right = False
+        self.orm = MySqlDB(HOST_NAME, USER_NAME, USER_PASSWORD, DB_NAME, DB_CHARSET)
+
+        if right_sql_query != '':
+            self.right_records, self.error = self.orm.select(right_sql_query)
+        if sql_query != '':
+            self.user_records, self.error = self.orm.select(sql_query)
+        if right_sql_query != '' and sql_query != '':
+            self.is_user_right = [a.values() for a in self.user_records] == [a.values() for a in self.answer_records]

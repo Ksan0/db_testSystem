@@ -1,12 +1,20 @@
 {% for session_output in user_sessions %}
+    -----------------------------------------------------------
     <p>
-        {{ session_output.session.rk.title }}
-        Attempt #{{ session_output.session.attempt }}
+        {{ session_output.session.rk.title }} |
+        Attempt #{{ session_output.session.attempt }} <br/>
+
+        Правильных ответов: {{ session_output.questions_right_count }} / {{ session_output.questions_all_count }}
+
 
         {% for session_question in session_output.session_questions %}
             <p>
-            {{ session_question.question.description }} | {{ session_question.question.answer }} |
-            {{ session_question.last_answer }} | {{ session_question.is_right }}
+            Вопрос: {{ session_question.question.description }} <br/>
+            Правильный запрос: {{ session_question.question.answer }} <br/>
+            Правильный запрос возвращает: {{ session_question.get_right_records }} <br/>
+            Запрос пользователя: {{ session_question.last_answer }} <br/>
+            Запрос пользователя возвращает: {{ session_question.get_user_records }} <br/>
+            Пользователь прав: {{ session_question.is_right }}
             </p>
         {% endfor %}
 

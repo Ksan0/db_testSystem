@@ -15,11 +15,10 @@ def user_stats(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(username=request.GET['login'])
-    user_sessions = UserSession.objects.filter(user=user).order_by('rk', 'attempt')
+    user_sessions = UserSession.objects.filter(user=user).order_by('-rk', '-attempt')
     user_sessions_output = []
     for usr_sess in user_sessions:
         user_sessions_output.append(UserSessionOutputModel(usr_sess))
-
 
     return render(request, 'custom_admin_userinfo.html', {
         'user_sessions': user_sessions_output
