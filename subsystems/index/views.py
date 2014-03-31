@@ -25,6 +25,9 @@ static_context = {
 
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
+    if request.user.is_superuser:
+        return HttpResponseRedirect('/admin/')
+
     template_name = 'test_list.html'
 
     tests = []
