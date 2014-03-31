@@ -4,5 +4,4 @@ from views import *
 urlpatterns = patterns('',
     url(r'^$', index),
     url(r'^user/$', user_stats),
-    url(r'^test/$', test_stats),
 )
