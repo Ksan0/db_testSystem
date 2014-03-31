@@ -2,15 +2,15 @@ $(function(){
 	var form = $('.contact-form');
 		
 	var Interval = setInterval(function(){
-		var timer = parseInt($(".session_timer")[0].text.match(/\d+/));
+		var timer = parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/));
 		if (timer-1 > 0)	{
-			$(".session_timer").html("Осталось "+(timer-1)+" min");
+			$(".session_timer > a:nth-child(1)").html("Осталось "+(timer-1)+" min");
 		} else {
-			$(".session_timer").html("Время вышло");
+			$(".session_timer > a:nth-child(1)").html("Время вышло");
 			clearInterval(Interval);
 		}
 	}, 60000);
-	$(".session_timer").html("Осталось "+parseInt($(".session_timer")[0].text.match(/\d+/))+" min");
+	$(".session_timer > a:nth-child(1)").html("Осталось "+parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/))+" min");
 
 	$("a.dropdown-toggle").click(function(e) {
       	$(".dropdown-menu").css("display", "block");
