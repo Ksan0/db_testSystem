@@ -32,7 +32,7 @@ $(function(){
    	});
 
 
-$("#ajax-check-sql").click(function() {
+	$("#ajax-check-sql").click(function() {
         var form = $('.contact-form');
 		var get = parseGetParams();
         $.post(
@@ -40,20 +40,27 @@ $("#ajax-check-sql").click(function() {
             form.serialize(),
             function(data) {      //success method
 				data = jQuery.parseJSON($.parseHTML(data)[0].data.replace(/ u\'/g, " \'").replace(/: (?=[0-9])/g,": '").replace(/L,/g,"',").replace(/'/g,"\"").replace(/None/g,"\"None\""));
-				var result = "<table class=\"table\">\n<thead>\n<tr>\n";
-				var keys = [];
+				var result;
 				for(var k in data[0]){
-					result+="<th>"+k+"</th>\n";
+					if (k == 'sql_query_error') { result="error"; break;}
 				}
-				result+="</tr></thead>\n<tbody>\n";
-				for(var k in data){
-					result+="<tr>";
-					for(var j in data[k]){
-						result+="<th>"+data[k][j]+"</th>";
+				if( result == "error"){
+					result = "sql_query_error:" + data[0]['sql_query_error'];
+				} else {
+					result = "<table class=\"table\">\n<thead>\n<tr>\n";
+					for(var k in data[0]){
+						result+="<th>"+k+"</th>\n";
 					}
-					result+="</tr>\n";
-				}	
-				result +="</tbody>\n</table>";
+					result+="</tr></thead>\n<tbody>\n";
+					for(var k in data){
+						result+="<tr>";
+						for(var j in data[k]){
+							result+="<th>"+data[k][j]+"</th>";
+						}
+						result+="</tr>\n";
+					}	
+					result +="</tbody>\n</table>";
+				}
 				$(".messages").append(result);
             }
         );

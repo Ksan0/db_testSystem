@@ -40,7 +40,7 @@
 </head>
 
 {% if error_msg %}
-<div class="alert alert-error animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>
+<div class="alert alert-error animated fadeinup"><a href="#" class="close" data-dismiss="alert">&times;</a>
 	{% if error_msg == "login failed" 		%}Извините вы ошиблись с логином или паролем
 	{% elif error_msg == "confirm failed" 	%}Не удалось восстановить пароль
 	{% elif error_msg == "no user" 			%}Такого пользователя не существует

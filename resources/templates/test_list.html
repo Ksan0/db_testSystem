@@ -34,7 +34,8 @@
 					<h3>Вы уверены, что хотите начать прохождение теста?</h3>
 				</div>
 				<div class="modal-body">
-					{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка!{% else %}
+					{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка!
+					{% elif test.attemptes_amount == 0 %}У вас закончились попытки :({% else %}
 					<p>У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 and test.attemptes_amount < 4%}попытки!{% else %}попыток!{% endif %}
 					{% endif %}
 					<div class="confirm_button_block" style="margin-top:-5px;float:right">
@@ -49,20 +50,4 @@
         </ul>
     </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {% endblock %}
