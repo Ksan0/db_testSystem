@@ -9,7 +9,7 @@ class OutputRKModel(RK):
         self.description = sup.description
 
         try:
-            self.attemptes_amount = ATTEMPTES_MAX - Attempt.objects.get(user=user, rk=sup).used
+            self.attemptes_amount = Attempt.objects.get(user=user, rk=sup).have
         except:
             self.attemptes_amount = ATTEMPTES_MAX
 

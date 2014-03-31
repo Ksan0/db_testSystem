@@ -1,21 +1,19 @@
-<html>
-<head>
-
-</head>
-<body>
-    <p> Пользователи </p>
+<p> Пользователи </p>
+<p>
+{% for usr in users %}
     <p>
-    {% for usr in users %}
-        <a href='/custom-admin/user/?login={{ usr.username }}'> {{ usr.username }} </a>
-    {% endfor %}
+    <a href='/custom-admin/user/?login={{ usr.username }}'> {{ usr.username }} </a>
     </p>
-    ------------------------------
+{% endfor %}
+</p>
 
-    <p> Тесты </p>
+------------------------------
+
+<p> Тесты </p>
+<p>
+{% for test in tests %}
     <p>
-    {% for test in tests %}
-        <a href='/custom-admin/test/?testid={{ test.id }}'> {{ test.title }} </a>
-    {% endfor %}
+    <a href='/custom-admin/test/?testid={{ test.id }}'> {{ test.title }} </a>
     </p>
-</body>
-</html>
+{% endfor %}
+</p>
