@@ -2,44 +2,33 @@
 
 {% block page %}
 {% load static %}
-
-
-{% for session_output in user_sessions %}
-    -----------------------------------------------------------
-    <p>
-        {{ session_output.session.rk.title }} |
-        Attempt #{{ session_output.session.attempt }} <br/>
-
-        Правильных ответов: {{ session_output.questions_right_count }} / {{ session_output.questions_all_count }}
-
-
-        {% for session_question in session_output.session_questions %}
-            <p>
-            Вопрос: {{ session_question.question.description }} <br/>
-            Правильный запрос: {{ session_question.question.answer }} <br/>
-            Правильный запрос возвращает: {{ session_question.get_right_records }} <br/>
-            Запрос пользователя: {{ session_question.last_answer }} <br/>
-            Запрос пользователя возвращает: {{ session_question.get_user_records }} <br/>
-            Пользователь прав: {{ session_question.is_right }}
-            </p>
-        {% endfor %}
-
-    </p>
-{% endfor %}
-
 <section class="section section-alt section-padded">
     <div class="container-fluid">
         <div class="section-header">
             <h3 style>{{ user.username }}</h2>
         </div>
         <ul class="inline row-fluid">    
+<!--TODO: nav menu
+		<h3>Список вопросов</h3>
+		<ul class="nav nav-list">
+        {% for session_output in user_sessions %}
+			{% if session_output.session.attempt == 1 %}<li class="nav-header">{{ session_output.session.rk.title }}</li>{% endif %}
+			<li ><a href="#{{ session_output.session.rk.title }} {{ session_output.session.attempt }}">{{ session_output.session.attempt }}</a></li>
+			<ul class="nav nav-list">
+				{% for session_question in session_output.session_questions %}
+            		<li>{{ session_question.question.description }}</li>
+        		{% endfor %}
+			</ul>
+		{% endfor %}
+		</ul>
+--!>
 		{% for session_output in user_sessions %}
-			<h3>{{ session_output.session.rk.title }}</h3>
-			<h4> Попытка № {{ session_output.session.attempt }}</h4>
+			<h3 id= "{{ session_output.session.rk.title }}">{{ session_output.session.rk.title }}</h3>
+			<h4 id= "{{ session_output.session.rk.title }} {{ session_output.session.attempt }}"> Попытка № {{ session_output.session.attempt }}</h4>
 			<table class="users table table-bordered table-hover">
                 <thead>
                     <tr>
-						<th>#</th>
+						<th style="width:150px">#</th>
                         <th>Запрос</th>
                         <th>Результат</th>
                     </tr>
