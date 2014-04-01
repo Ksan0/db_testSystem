@@ -62,7 +62,8 @@ def password_restore_confirm(request):
         user.set_password(new_pass)
         user.save()
 
-        send_mail('Password restore successful', 'Ваш новый пароль: {0}'.format(new_pass), 'db.testSystem@gmail.com', [user.email])
+        msg = 'Ваш логин: {0}\nВаш новый пароль: {1}'.format(username, new_pass)
+        send_mail('Password restore successful', msg, 'db.testSystem@gmail.com', [user.email])
         return login_view(request, {
             'success_msg': CONFIRM_SUCCESS
         })
@@ -78,9 +79,11 @@ def password_restore(request):
         username = restore_form.data['login']
         user = User.objects.get(username=username)
         password = toHex(user.password)
-        msg =   ('Что бы восстановить пароль, перейдите по ссылке\n'
-                'http://localhost:8000/password_restore_confirm?'
-                'login={0}&confirm={1}').format(username, password)
+        msg = (
+            'Что бы восстановить пароль, перейдите по ссылке\n'
+            'http://localhost:8000/password_restore_confirm?'
+            'login={0}&confirm={1}').format(username, password
+        )
 
         send_mail('Password restore', msg, 'db.testSystem@gmail.com', [user.email])
 
