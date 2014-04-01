@@ -3,3 +3,4 @@
 db_testSystem/settings.py
 *~
 logs/*
+db_testSystem/settings_db.py

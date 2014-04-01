@@ -263,13 +263,7 @@ def start_new_session(request, user, rk, attempt):
         questions.append(question)
         SessionQuestions.objects.create(session=user_session, question=question)
 
-    context = {
-        'question_list': questions,
-        'testid': rk.id,
-        'have_time': user_time_update(user)
-    }
-    context.update(static_context)
-    return render(request, 'question_list.html', context)
+    return HttpResponseRedirect('/tests/?testid={0}'.format(rk.id))
 
 
 @login_required(redirect_field_name='')

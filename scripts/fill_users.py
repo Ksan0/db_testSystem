@@ -2,6 +2,7 @@ import os, sys
 import random
 import string
 
+# run from "scripts" folder
 # mail@mail.ru  last_name  first_name
 
 def filling_users(users_file, new_file):
