@@ -21,7 +21,8 @@ def user_stats(request):
         user_sessions_output.append(UserSessionOutputModel(usr_sess))
 
     return render(request, 'custom_admin_userinfo.html', {
-        'user_sessions': user_sessions_output
+        'user_sessions': user_sessions_output,
+        'is_admin': True
     })
 
 """
@@ -43,5 +44,7 @@ def index(request):
     # rks = RK.objects.all()
     return render(request, 'custom_admin_index.html', {
         'users': users,
+        'is_admin': True,
+        'is_index': True
         #'tests': rks
     })
