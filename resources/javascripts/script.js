@@ -5,9 +5,9 @@ $(function(){
 		if(!auto_agree){
 			$(".confirm").show();
 		}
-	}	
+	});	
 //Timer
-	if ($(".session_timer > a:nth-child(1)").length) {
+	if ($(".session_timer > a:nth-child(1)").lengthc) {
 		var Interval = setInterval(function(){
 			var timer = parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/));
 			if (timer-1 > 0)	{
@@ -34,9 +34,6 @@ $(function(){
         });
 		}
 	});
-	$("a.dropdown-menu").mouseleave(function(e){
-       	$(".dropdown-menu").css("display", "none");
-   	});
 
 //Проверка ответа на сервере и разбор в таблицу
 	$("#ajax-check-sql").click(function() {
@@ -47,13 +44,14 @@ $(function(){
             form.serialize(),
             function(data) {      //success method
 				data = jQuery.parseJSON($.parseHTML(data)[0].data.replace(/ u\'/g, " \'").replace(/: (?=[0-9])/g,": '").replace(/L,/g,"',").replace(/'/g,"\"").replace(/None/g,"\"None\""));
-				var result;
+				var result="empty set";
 				for(var k in data[0]){
+					result = "";
 					if (k == 'sql_query_error') { result="error"; break;}
 				}
 				if( result == "error"){
 					result = "sql_query_error:" + data[0]['sql_query_error'];
-				} else {
+				} else if(result=="") {
 					result = "<table class=\"table\">\n<thead>\n<tr>\n";
 					for(var k in data[0]){
 						result+="<th>"+k+"</th>\n";
