@@ -95,7 +95,14 @@
                         <ul class="nav pull-right">
 			
                             {% if user.is_authenticated %}
-                            <li class=""><a href="{{ tests_url }}">Тесты</a></li>
+                                {% if is_admin %}
+                                    {% if not is_index %}
+                                        <li class=""><a href="/custom-admin/"> Статистика </a></li>
+                                    {% endif %}
+                                    <li class=""><a href="/admin/"> Админка </a></li>
+                                {% else %}
+                                    <li class=""><a href="{{ tests_url }}">Тесты</a></li>
+                                {% endif %}
                             {% if have_time and have_time > 0 %}
 							<li class="close_session"><a href="#close_session" data-target="#close_session" data-toggle="modal">Завершить тест</a></li>
 							<div class="modal hide fade" id="close_session">

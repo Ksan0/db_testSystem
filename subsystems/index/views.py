@@ -160,7 +160,8 @@ def test_answer(request):
 def question(request):
     template_name = 'answer_form.html'
 
-    if user_time_update(request.user) <= 0:
+    have_time = user_time_update(request.user)
+    if have_time <= 0:
         return index(request, {
             'warn_msg': NO_TIME
         })
@@ -204,7 +205,8 @@ def question(request):
         context.update({
             'form': form,
             'testid': rk_id,
-            'question': question
+            'question': question,
+            'have_time': have_time
         })
         return render(request, template_name, context)
 
