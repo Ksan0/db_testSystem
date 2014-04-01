@@ -22,7 +22,9 @@ def user_stats(request):
 
     return render(request, 'custom_admin_userinfo.html', {
         'user_sessions': user_sessions_output,
-        'is_admin': True
+        'student': user,
+        'is_admin': True,
+        'hide_tests_url': True
     })
 
 """
@@ -45,6 +47,7 @@ def index(request):
     return render(request, 'custom_admin_index.html', {
         'users': users,
         'is_admin': True,
-        'is_index': True
+        'hide_tests_url': True,
+        'is_custom_admin_index': True
         #'tests': rks
     })

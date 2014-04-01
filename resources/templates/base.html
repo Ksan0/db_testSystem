@@ -96,11 +96,12 @@
 			
                             {% if user.is_authenticated %}
                                 {% if is_admin %}
-                                    {% if not is_index %}
+                                    {% if not is_custom_admin_index %}
                                         <li class=""><a href="/custom-admin/"> Статистика </a></li>
                                     {% endif %}
                                     <li class=""><a href="/admin/"> Админка </a></li>
-                                {% else %}
+                                {% endif %}
+                                {% if not hide_tests_url and not is_user_index %}
                                     <li class=""><a href="{{ tests_url }}">Тесты</a></li>
                                 {% endif %}
                             {% if have_time and have_time > 0 %}

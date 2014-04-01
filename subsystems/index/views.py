@@ -25,8 +25,7 @@ static_context = {
 
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
-    if request.user.is_superuser:
-        return HttpResponseRedirect('/admin/')
+    is_admin = request.user.is_superuser
 
     template_name = 'test_list.html'
 
@@ -36,6 +35,8 @@ def index(request, other_context=None):  # list of RK
 
     context = {
         'user': request.user,
+        'is_admin': is_admin,
+        'is_user_index': True,
         'tests': tests,
         'have_time': user_time_update(request.user)
     }
