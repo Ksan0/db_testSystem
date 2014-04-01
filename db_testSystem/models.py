@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.contrib.auth.models import User
 from django.db import models
-from system_settings import *
+from settings_system import *
 from subsystems.db_raw_sql_works.DB import Review
 
 

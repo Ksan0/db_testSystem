@@ -62,7 +62,7 @@ def password_restore_confirm(request):
         user.set_password(new_pass)
         user.save()
 
-        send_mail('Restore successful', 'Ваш новый пароль: {0}'.format(new_pass), 'db.testSystem@gmail.com', [user.email])
+        send_mail('Password restore successful', 'Ваш новый пароль: {0}'.format(new_pass), 'db.testSystem@gmail.com', [user.email])
         return login_view(request, {
             'success_msg': CONFIRM_SUCCESS
         })

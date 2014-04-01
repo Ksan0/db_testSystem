@@ -59,17 +59,7 @@ WSGI_APPLICATION = 'db_testSystem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-		'NAME': 'db_testSystem',
-                                                            
-		'USER': 'root',
-		'PASSWORD': '',
-		'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-		'PORT': '', # Set to empty string for default.
-   }
-}
+from settings_db import DATABASES
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
