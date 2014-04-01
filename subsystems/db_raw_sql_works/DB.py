@@ -4,11 +4,8 @@ from _mysql_exceptions import DataError, DatabaseError, InternalError, Integrity
 from db_testSystem.models import *
 
 
-HOST_NAME = ''
-DB_NAME = 'db_test'
-USER_NAME = 'root'
-USER_PASSWORD = ''
-DB_CHARSET = 'utf8'
+from db_testSystem.settings_db import TEST_DB
+
 
 
 class MySqlDB(object):
@@ -41,7 +38,11 @@ class Review(object):
         self.user_records = ''
         self.is_user_right = False
 
-        self.orm = MySqlDB(HOST_NAME, USER_NAME, USER_PASSWORD, DB_NAME, DB_CHARSET)
+        self.orm = MySqlDB(TEST_DB['HOST_NAME'],
+                           TEST_DB['USER_NAME'],
+                           TEST_DB['USER_PASSWORD'],
+                           TEST_DB['DB_NAME'],
+                           TEST_DB['DB_CHARSET'])
 
         if right_sql_query != '':
             self.right_records, self.error = self.orm.select(right_sql_query)
