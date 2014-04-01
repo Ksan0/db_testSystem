@@ -15,7 +15,7 @@
             {% for test in tests %}
             <li class="span4">
                 <div class="well blockquote-well">
-                	<a href={% if have_time > 0 %}"{{ tests_url }}?testid={{ test.id }}"{% else %}"#confirm" data-target="#confirm" data-toggle="modal" {% endif %}>
+                	<a href={% if have_time > 0 %}"{{ tests_url }}?testid={{ test.id }}"{% else %}"#confirm" data-target="#confirm_{{test.id}}" data-toggle="modal" {% endif %}>
 					<p> {{ test.title }} </p>
                     <blockquote>
                     	<p>
@@ -28,7 +28,8 @@
 					</a>
                 </div>
             </li>
-			<div class="modal hide fade" id="confirm">
+
+			<div class="modal hide fade" id="confirm_{{test.id}}">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h3>Вы уверены, что хотите начать прохождение теста?</h3>
