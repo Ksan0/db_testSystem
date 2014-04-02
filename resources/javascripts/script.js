@@ -7,7 +7,7 @@ $(function(){
 		}
 	});	
 //Timer
-	if ($(".session_timer > a:nth-child(1)").lengthc) {
+	if ($(".session_timer > a:nth-child(1)").length) {
 		var Interval = setInterval(function(){
 			var timer = parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/));
 			if (timer-1 > 0)	{
@@ -16,7 +16,7 @@ $(function(){
 				$(".session_timer > a:nth-child(1)").html("Время вышло");
 				clearInterval(Interval);
 			}
-		}, 6000);
+		}, 60000);
 		$(".session_timer > a:nth-child(1)").html("Осталось "+parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/))+" min");
 	}
 
@@ -84,7 +84,7 @@ function dataToTable(data, elem, clear) {      //success method
 		var result;	
     	if(data.sql_query_error){
 			if(clear) $(elem).empty;
-    		result = "sql_query_error: \"" + data.sql_query_error+"\"";
+            if(data.sql_query_error != "empty_query") result = "sql_query_error: \"" + data.sql_query_error+"\"";
 		} else if(data[0]) {
        		result = "<table class=\"table\" back>\n<thead>\n<tr>\n";
         	for(var k in data[0]){
