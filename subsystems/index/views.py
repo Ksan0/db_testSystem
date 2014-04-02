@@ -112,6 +112,7 @@ def close_session(request):
         pass
     return HttpResponseRedirect('/')
 
+
 @login_required
 def test_answer(request):
     try:
