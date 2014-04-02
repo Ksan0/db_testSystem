@@ -41,36 +41,11 @@ $(function(){
 		var get = parseGetParams();
         $.post(
             "/test_answer/?testid="+get.testid+"&queid="+get.queid, //url
-            form.serialize(),
-            function(data) {      //success method
-				data = jQuery.parseJSON($.parseHTML(data)[0].data.replace(/ u\'/g, " \'").replace(/: (?=[0-9])/g,": '").replace(/L,/g,"',").replace(/'/g,"\"").replace(/None/g,"\"None\""));
-				var result="empty set";
-				for(var k in data[0]){
-					result = "";
-					if (k == 'sql_query_error') { result="error"; break;}
-				}
-				if( result == "error"){
-					result = "sql_query_error:" + data[0]['sql_query_error'];
-				} else if(result=="") {
-					result = "<table class=\"table\">\n<thead>\n<tr>\n";
-					for(var k in data[0]){
-						result+="<th>"+k+"</th>\n";
-					}
-					result+="</tr></thead>\n<tbody>\n";
-					for(var k in data){
-						result+="<tr>";
-						for(var j in data[k]){
-							result+="<th>"+data[k][j]+"</th>";
-						}
-						result+="</tr>\n";
-					}	
-					result +="</tbody>\n</table>";
-				}
-				$(".messages").append(result);
-            }
+            form.serialize(), function(data) {
+				dataToTable(data,".messages",1);
+			}
         );
 	});
-
 //Восстановление пароля
     $(".restore_link").click(function() {
 		$(".login_form").css("display","none");
@@ -82,6 +57,12 @@ $(function(){
     	$(".restore_form").css("display","none");
     });
 
+//Статистика у админа
+	$(".users").ready(function(){
+		$(".answer").each(function() {
+			dataToTable(this.textContent,this,1);
+		});
+	});
 });
 
 function parseGetParams() { 
@@ -94,23 +75,37 @@ function parseGetParams() {
    return $_GET; 
 }
 
-//  $('#ajax-check-sql').click(function(e) {
-//      e.preventDefault();
-//      $.ajax({
-//          type: "POST",
-//          url: "/test/ajax/attempt-sql/",
-//          dataType: "json",
-//          data: {
-//              'csrfmiddlewaretoken':$( "#csrfmiddlewaretoken" ).val(),
-//              'sql': $(this).serialize()
-//          }
-//          ,
-//          success: function(data) {
-//              $('p').html('ok');
-//              alert(1);
-//          },
-//          error: function(data) {
-//
-//          }
-//      });
-//  })
+function dataToTable(data, elem, clear) {      //success method
+    if (!elem) return;
+	try {
+		data=data.replace(/: "/g,": '").replace(/"}/g,"'}").replace(/r '/,"r \\\'").replace(/' at/,"\\\' at"); // TO DELETE
+		data = jQuery.parseJSON(data.replace(/ u\'/g, " \'").replace(/: (?=[0-9])/g,": '").replace(/L,/g,"',").replace(/'/g,"\"").replace(/None/g,"\"None\""));
+		var result;	
+    	if(data.sql_query_error){
+			if(clear) $(elem).empty;
+    		result = "sql_query_error: \"" + data.sql_query_error+"\"";
+		} else if(data[0]) {
+       		result = "<table class=\"table\" back>\n<thead>\n<tr>\n";
+        	for(var k in data[0]){
+        		result+="<th>"+k+"</th>\n";
+   			}
+        	result+="</tr></thead>\n<tbody style=\"background-color:transparent\">\n";
+	   	 	for(var k in data){
+    			result+="<tr>";
+        		for(var j in data[k]){
+        			result+="<th>"+data[k][j]+"</th>";
+       	 		}
+        		result+="</tr>\n";
+    		}
+   			result +="</tbody>\n</table>";
+   		}
+		if(clear) $(elem).empty();
+    	if(!result) $(elem).append("<h4>Empty set</h4>");
+		$(elem).append(result);
+    } catch(err) {
+		console.log(err,data);
+		if(clear) $(elem).empty();
+		$(elem).append("<h4>"+data+"<h4>");
+
+	}
+}
