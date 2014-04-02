@@ -48,12 +48,14 @@
 	{% elif error_msg == "no attemptes" 	%}Не хватает попыток
 	{% elif error_msg == "session closed"	%}Вы уже закончили сессию
 	{% elif error_msg == "disabled user"    %}Не хватает попыток
+	{% elif 
+	error_msg == "another test running"    	%}Вы уже выполняете тест, завершите, чтобы начать следующий
 	{% else %}
 		{{ error_msg }}
 	{% endif %}
 </div>
 {% endif %}
-	
+
 {% if success_msg %}
 <div class="alert alert-success animated fadeinup delayed"><a href="#" class="close" data-dismiss="alert">&times;</a>
 	{% if success_msg == "confirm success" 	%}Восстановление прошло успешно, пароль отправлен на почту

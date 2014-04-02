@@ -4986,3 +4986,8 @@ a.label:hover, a.badge:hover {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+
+.messages {
+  margin: -40px 5% 20px 5%;
+  text-align: center;
+}

@@ -23,10 +23,11 @@
 		{% endfor %}
 		</ul>
 --!>
+		{% if not user_sessions %}<h3>Студенту не хватило мотивации ни на один рк:(</h3>{% endif %}
 		{% for session_output in user_sessions %}
 			<h3 id= "{{ session_output.session.rk.title }}">{{ session_output.session.rk.title }}</h3>
 			<h4 id= "{{ session_output.session.rk.title }} {{ session_output.session.attempt }}"> Попытка № {{ session_output.session.attempt }}</h4>
-			<table class="users table table-bordered table-hover">
+			<table class="users table table-bordered">
                 <thead>
                     <tr>
 						<th style="width:150px">#</th>
@@ -43,12 +44,12 @@
                     <tr class="info">
 						<td>Преподаватель</td>
 						<td>{{ session_question.question.answer }}</td> 
-            			<td>{{ session_question.get_right_records }} </td>
+            			<td class="answer">{{ session_question.get_right_records }} </td>
 					</tr>
                     <tr class="warning">
 						<td>Студент</td>
             			<td>{{ session_question.last_answer }} </td>
-						<td>{{ session_question.get_user_records }} </td>	
+						<td class="answer">{{ session_question.get_user_records }} </td>	
 					</tr>
 					<tr class={% if session_question.is_right %}"success">
 						<td colspan=3><h4 style="text-align:center">Совпадение</h4></td>
