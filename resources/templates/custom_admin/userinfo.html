@@ -22,11 +22,12 @@
 			</ul>
 		{% endfor %}
 		</ul>
---!>
+-->
 		{% if not user_sessions %}<h3>Студенту не хватило мотивации ни на один рк:(</h3>{% endif %}
 		{% for session_output in user_sessions %}
 			<h3 id= "{{ session_output.session.rk.title }}">{{ session_output.session.rk.title }}</h3>
 			<h4 id= "{{ session_output.session.rk.title }} {{ session_output.session.attempt }}"> Попытка № {{ session_output.session.attempt }}</h4>
+			<h5> Правильно......{{ session_output.questions_right_count }}/{{ session_output.questions_all_count }}</h5>
 			<table class="users table table-bordered">
                 <thead>
                     <tr>

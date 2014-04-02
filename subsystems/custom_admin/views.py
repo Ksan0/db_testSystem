@@ -22,14 +22,15 @@ def user_stats(request):
     for usr_sess in user_sessions:
         user_sessions_output.append(UserSessionOutputModel(usr_sess))
 
-    return render(request, 'custom_admin_userinfo.html', {
+    return render(request, 'custom_admin/userinfo.html', {
         'user_sessions': user_sessions_output,
         'student': user,
         'is_admin': True,
         'hide_tests_url': True
     })
 
-"""
+
+"""  IT WILL BE ADDED IN NEXT VERSION
 @login_required(redirect_field_name='')
 def test_stats(request):
     if not request.user.is_superuser:
@@ -46,7 +47,7 @@ def index(request):
 
     users = User.objects.filter(is_superuser=False)
     # rks = RK.objects.all()
-    return render(request, 'custom_admin_index.html', {
+    return render(request, 'custom_admin/index.html', {
         'users': users,
         'is_admin': True,
         'hide_tests_url': True,
