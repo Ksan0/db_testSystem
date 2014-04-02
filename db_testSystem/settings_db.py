@@ -15,7 +15,7 @@ DATABASES = {
 TEST_DB = {
     'HOST_NAME': '',
     'DB_NAME': 'db_test',
-    'USER_NAME': 'testUser',
-    'USER_PASSWORD': 'qwe',
+    'USER_NAME': 'root',
+    'USER_PASSWORD': '',
     'DB_CHARSET': 'utf8'
 }
