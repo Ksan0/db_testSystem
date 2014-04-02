@@ -42,6 +42,7 @@ $(function(){
         $.post(
             "/test_answer/?testid="+get.testid+"&queid="+get.queid, //url
             form.serialize(), function(data) {
+                console.log(data);
 				dataToTable(data,".messages",1);
 			}
         );
