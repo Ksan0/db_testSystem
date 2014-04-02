@@ -24,6 +24,7 @@ static_context = {
 }
 
 
+# user_time_update called
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
     is_admin = request.user.is_superuser
@@ -103,12 +104,15 @@ def password_restore(request):
 
 @login_required(redirect_field_name='')
 def close_session(request):
-    user_session = UserSession.objects.get(user=request.user, running=True)
-    user_session.running = False
-    user_session.save()
+    try:
+        user_session = UserSession.objects.get(user=request.user, running=True)
+        user_session.running = False
+        user_session.save()
+    except:
+        pass
     return HttpResponseRedirect('/')
 
-
+@login_required
 def test_answer(request):
     try:
         testid = request.GET['testid']
@@ -119,25 +123,21 @@ def test_answer(request):
     except:
         HttpResponseRedirect('/tests/?testid={0}'.format(testid))
 
-    good_ids = False
+    if user_time_update(request.user) <= 0:
+        return render(request, 't.html', {
+            'msg': NO_TIME
+        })
+
     try:
         question = Question.objects.get(id=queid)
         rk = RK.objects.get(id=testid)
         attempt = Attempt.objects.get(user=request.user, rk=rk)
         user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
         session_question = SessionQuestions.objects.get(session=user_session, question=question)
-        good_ids = True
         # если это все отработало, значит такая сессия действительно существует
     except:
-        pass
-
-    if not good_ids:
         HttpResponseRedirect('/')
 
-    if user_time_update(request.user) <= 0:
-        return render(request, 't.html', {
-            'msg': NO_TIME
-        })
     if not user_session.running:
         return render(request, 't.html', {
             'msg': SESSION_CLOSED
@@ -195,9 +195,6 @@ def question(request):
         good_ids = True
         # если это все отработало, значит такая сессия действительно существует
     except:
-        pass
-
-    if not good_ids:
         return HttpResponseRedirect('/tests/')
 
     if not user_session.running:
@@ -280,7 +277,7 @@ def test(request):
     try:
         attempt = Attempt.objects.get(user=request.user, rk=rk)
     except:
-        attempt = Attempt.objects.create(user=request.user, rk=rk, used=0)
+        attempt = Attempt.objects.create(user=request.user, rk=rk)
         return start_new_session(request, request.user, rk, attempt)
 
     try:
