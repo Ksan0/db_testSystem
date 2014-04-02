@@ -19,7 +19,7 @@ def filling_users(users_file, new_file):
 
 
 if __name__ == '__main__':
-    BASE_DIR = os.path.dirname(__file__) + '/..'
+    BASE_DIR = os.getcwd() + '/' + os.path.dirname(__file__) + '/..'
     sys.path.append(BASE_DIR)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "db_testSystem.settings")
     filling_users('in_users_db', 'out_users_db')
