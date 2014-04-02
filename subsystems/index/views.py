@@ -13,6 +13,7 @@ from random import choice
 import string
 from datetime import timedelta
 from user_messages import *
+import json
 
 
 static_context = {
@@ -148,15 +149,15 @@ def test_answer(request):
     form = AnswerForm(request.POST)
 
     reviewer = Review(sql_query=form.data['answer'])
-
-    #session_question.last_answer = form.data['answer']
-    #session_question.is_right = reviewer.is_user_right
     back = reviewer.user_records
-    error = reviewer.error
-    #session_question.save()
+
+    if reviewer.error:
+        msg = {'sql_query_error': reviewer.error}
+    else:
+        msg = reviewer.user_records
 
     return render(request, 't.html', {
-        'msg': error and 'Syntax error' or back
+        'msg': msg
     })
 
 
@@ -196,13 +197,13 @@ def question(request):
     except:
         pass
 
+    if not good_ids:
+        return HttpResponseRedirect('/tests/')
+
     if not user_session.running:
         return index(request, {
             'warn_msg': SESSION_CLOSED
         })
-
-    if not good_ids:
-        return HttpResponseRedirect('/tests/')
 
     if request.method == 'GET':
         form = AnswerForm({'answer': session_question.last_answer})

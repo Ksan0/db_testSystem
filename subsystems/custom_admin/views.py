@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
 from output_models import *
+from subsystems.index.scripts import user_time_update
 
 
 @login_required(redirect_field_name='')
@@ -15,6 +16,7 @@ def user_stats(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(username=request.GET['login'])
+    user_time_update(user)
     user_sessions = UserSession.objects.filter(user=user).order_by('-rk', '-attempt')
     user_sessions_output = []
     for usr_sess in user_sessions:
