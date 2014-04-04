@@ -15,7 +15,11 @@ def user_stats(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect('/')
 
-    user = User.objects.get(username=request.GET['login'])
+    try:
+        user = User.objects.get(username=request.GET['login'])
+    except:
+        return HttpResponseRedirect('/custom-admin/')
+
     user_time_update(user)
     user_sessions = UserSession.objects.filter(user=user).order_by('-rk', '-attempt')
     user_sessions_output = []
@@ -28,6 +32,13 @@ def user_stats(request):
         'is_admin': True,
         'hide_tests_url': True
     })
+
+
+#@login_required(redirect_field_name='')
+#def user_stats(request):
+#    if not request.user.is_superuser:
+#        return HttpResponseRedirect('/')
+
 
 
 """  IT WILL BE ADDED IN NEXT VERSION

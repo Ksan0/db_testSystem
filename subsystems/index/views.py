@@ -84,10 +84,9 @@ def password_restore(request):
         user = User.objects.get(username=username)
         password = toHex(user.password)
         msg = (
-            'Что бы восстановить пароль, перейдите по ссылке\n'
-            'http://localhost:8000/password_restore_confirm?'
-            'login={0}&confirm={1}').format(username, password
-        )
+                'Что бы восстановить пароль, перейдите по ссылке\n'\
+                'http://{0}/password_restore_confirm?login={1}&confirm={2}'
+        ).format(INET_ADDRESS, username, password)
 
         send_mail('Password restore', msg, 'db.testSystem@gmail.com', [user.email])
 

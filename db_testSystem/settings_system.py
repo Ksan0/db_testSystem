@@ -1,3 +1,5 @@
 ATTEMPTES_MAX = 3
 QUESTIONS_COUNT = 10
 TIME_FOR_ATTEMPT = 61
+
+INET_ADDRESS = 'localhost:8000'  # 'sql.openrise.org'
