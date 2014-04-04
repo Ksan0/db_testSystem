@@ -11,4 +11,4 @@ class PassRestoreForm(forms.Form):
 
 
 class AnswerForm(forms.Form):
-    answer = CharField(widget=Textarea())
+    answer = CharField(widget=Textarea({'style': 'width: 90%;'}))
