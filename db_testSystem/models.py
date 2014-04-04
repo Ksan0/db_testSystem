@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from settings_system import *
 from subsystems.db_raw_sql_works.DB import Review
+import json
+from subsystems.index.scripts import CustomJSONEncoder
 
 
 class RK(models.Model):
@@ -68,16 +70,22 @@ class SessionQuestions(models.Model):
 
     def get_right_records(self):
         if self.question.answer == '':
-            return {'sql_query_error': 'empty query'}
-        reviewer = Review(right_sql_query=self.question.answer)
-        if reviewer.error:
-            return {'sql_query_error': reviewer.error}
-        return reviewer.right_records
+            msg = {'sql_query_error': 'empty query'}
+        else:
+            reviewer = Review(right_sql_query=self.question.answer)
+            if reviewer.error:
+                msg = {'sql_query_error': reviewer.error}
+            else:
+                msg = reviewer.right_records
+        return json.dumps(msg, cls=CustomJSONEncoder)
 
     def get_user_records(self):
         if self.last_answer == '':
-            return {'sql_query_error': 'empty query'}
-        reviewer = Review(sql_query=self.last_answer)
-        if reviewer.error:
-            return {'sql_query_error': reviewer.error}
-        return reviewer.user_records
+            msg = {'sql_query_error': 'empty query'}
+        else:
+            reviewer = Review(sql_query=self.last_answer)
+            if reviewer.error:
+                msg = {'sql_query_error': reviewer.error}
+            else:
+                msg = reviewer.user_records
+        return json.dumps(msg, cls=CustomJSONEncoder)
