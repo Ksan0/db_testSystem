@@ -13,7 +13,9 @@ from random import choice
 import string
 from datetime import timedelta
 from user_messages import *
+#from bson import json_util
 import json
+import datetime
 
 
 static_context = {
@@ -157,8 +159,8 @@ def test_answer(request):
     else:
         msg = reviewer.user_records
 
-    encoder = json.JSONEncoder()
-    msg = encoder.dumps(msg)
+
+    msg = json.dumps(msg, cls=CustomJSONEncoder)
 
     return render(request, 't.html', {
         'msg': msg
