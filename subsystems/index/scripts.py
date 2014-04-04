@@ -5,6 +5,8 @@ from django.utils import timezone
 from subsystems.db_raw_sql_works.DB import Review
 from db_testSystem.models import *
 from db_testSystem.settings_system import *
+import json
+import datetime
 
 
 def user_time_update(user):
@@ -22,4 +24,14 @@ def user_time_update(user):
 
 def toHex(x):
     return "".join([hex(ord(c))[2:].zfill(2) for c in x])
+
+
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.date):
+            encoded_object = str(obj)
+        else:
+            encoded_object =json.JSONEncoder.default(self, obj)
+        return encoded_object
+
 
