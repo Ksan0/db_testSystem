@@ -79,8 +79,7 @@ function parseGetParams() {
 function dataToTable(data, elem, clear) {      //success method
     if (!elem) return;
 	try {
-		data=data.replace(/: "/g,": '").replace(/"}/g,"'}").replace(/r '/,"r \\\'").replace(/' at/,"\\\' at"); // TO DELETE
-		data = jQuery.parseJSON(data.replace(/ u\'/g, " \'").replace(/: (?=[0-9])/g,": '").replace(/L,/g,"',").replace(/'/g,"\"").replace(/None/g,"\"None\""));
+		data = jQuery.parseJSON(data);
 		var result;	
     	if(data.sql_query_error){
 			if(clear) $(elem).empty;
