@@ -157,6 +157,9 @@ def test_answer(request):
     else:
         msg = reviewer.user_records
 
+    encoder = json.JSONEncoder()
+    msg = encoder.encode(msg)
+
     return render(request, 't.html', {
         'msg': msg
     })
