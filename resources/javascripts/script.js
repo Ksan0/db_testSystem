@@ -51,10 +51,13 @@ $(function(){
 
 // by Ksan. Не работает, нужно допилить
     $(".ajax-check-sql-admin").click(function() {
-        console.log($("#id_answer")[0].value);
+        // id : $("#id_answer")[0].baseURLOD.
 		$.post(
             "/ajax", //url
-            {message: ("#id_answer")[0].value}
+            {
+			message: $("#id_answer")[0].value,
+			id : $("#id_answer")[0].baseURL
+			}
         );
 	});
 
