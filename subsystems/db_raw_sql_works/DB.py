@@ -32,12 +32,14 @@ class MySqlDB(object):
 
 
 class Review(object):
-    def __init__(self):
-        self.orm = MySqlDB(TEST_DB['HOST_NAME'],
-                           TEST_DB['USER_NAME'],
-                           TEST_DB['USER_PASSWORD'],
-                           TEST_DB['DB_NAME'],
-                           TEST_DB['DB_CHARSET'])
+    def __init__(self, db_settings=None):
+        if db_settings is None:
+            db_settings = TEST_DB
+        self.orm = MySqlDB(db_settings['HOST_NAME'],
+                           db_settings['USER_NAME'],
+                           db_settings['USER_PASSWORD'],
+                           db_settings['DB_NAME'],
+                           db_settings['DB_CHARSET'])
 
 
     def select(self, sql_query):
