@@ -48,16 +48,13 @@ $(function(){
 			}
         );
 	});
+
 // by Ksan. Не работает, нужно допилить
-    $("#ajax-check-sql-admin").click(function() {
-        var form = $('.contact-form');
-		var get = parseGetParams();
-        $.post(
+    $(".ajax-check-sql-admin").click(function() {
+        console.log($("#id_answer")[0].value);
+		$.post(
             "/ajax", //url
-            form.serialize(), function(data) {
-                console.log(data);
-				dataToTable(data,".messages",1);
-			}
+            {message: ("#id_answer")[0].value}
         );
 	});
 
