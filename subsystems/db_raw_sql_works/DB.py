@@ -1,7 +1,7 @@
 #coding: utf-8
 import MySQLdb
 from _mysql_exceptions import DataError, DatabaseError, InternalError, IntegrityError, InterfaceError, MySQLError, OperationalError, ProgrammingError
-from db_testSystem.models import *
+#from db_testSystem.models import *
 
 
 from db_testSystem.settings_db import TEST_DB
