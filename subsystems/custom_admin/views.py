@@ -65,7 +65,7 @@ def make_user_answer_right(request):
     try:
         user = User.objects.get(id=request.GET['uid'])
         rk = RK.objects.get(id=request.GET['rkid'])
-        attempt = request.GET['attid']
+        attempt = request.GET['att']
         question = Question.objects.get(id=request.GET['queid'])
     except:
         return render(request, 't.html', {
