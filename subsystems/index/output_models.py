@@ -21,4 +21,4 @@ class OutputQuestionModel(Question):
         self.status = status
 
     def __unicode__(self):
-        return u"id={0}, descr={1}, status={2}".format(self.id, self.description, self.status)
+        return "id={0}, descr={1}, status={2}".format(self.id, self.description, self.status)

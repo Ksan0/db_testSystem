@@ -4,7 +4,7 @@ import string
 
 
 def migrate_db():
-    from db_testSystem.models import Question, RK, Attempt
+    from db_testSystem.models import Question, RK, Attempt, UserSession, SessionQuestions
     from django.contrib.auth.models import User
     from subsystems.db_raw_sql_works.DB import Review
 
@@ -59,11 +59,27 @@ def migrate_db():
             outfile.write('{0}\n'.format(username))
     """
 
-    with open(u'att_sub', 'r') as infile:
+    # sub attemptes
+    """
+    with open('att_sub', 'r') as infile:
         for line in infile:
             user_list = [word for word in line.split()]
             user = User.objects.get(username=user_list[0])
-            Attempt.objects.create(user=user, rk=RK.objects.get(id=1), used=1, have=2)
+    """
+
+    # add score
+    with open('sc_add', 'r') as infile:
+        for line in infile:
+            user_list = [word for word in line.split()]
+            user = User.objects.get(username=user_list[0])
+            count = int(user_list[1])
+            if count > 0:
+                rk = RK.objects.get(id=1)
+                Attempt.objects.create(user=user, rk=rk, used=1, have=2)
+                session = UserSession.objects.create(user=user, rk=rk, attempt=1, running=False)
+                question = Question.objects.get(id=19)
+                for i in range(count):
+                    SessionQuestions.objects.create(session=session, question=question, is_right=True)
 
     return 0
 
