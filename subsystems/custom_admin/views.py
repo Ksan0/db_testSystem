@@ -119,7 +119,7 @@ def statistic_user(request, id):
         return HttpResponseRedirect('/admin/')
 
     user_time_update(user)
-    user_sessions = UserSession.objects.filter(user=user).order_by('-rk', '-attempt')
+    user_sessions = UserSession.objects.filter(user=user)  # .order_by('-rk', '-attempt')
     user_sessions_output = []
     for usr_sess in user_sessions:
         user_sessions_output.append(UserSessionOutputModel(usr_sess))
