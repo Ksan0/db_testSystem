@@ -55,8 +55,8 @@ $(function(){
 		$.post(
             "/ajax", //url
             {
-			message: $("#id_answer")[0].value,
-			id : $("#id_answer")[0].baseURL
+				message: $("#id_answer")[0].value,
+				url : $("#id_answer").context.URL
 			}
         );
 	});
