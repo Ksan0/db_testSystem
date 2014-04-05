@@ -12,6 +12,7 @@ from subsystems.index.scripts import user_time_update
 import re
 
 
+@login_required(redirect_field_name='')
 def test_question(request):
     if not request.user.is_superuser:
         return render(request, 't.html', {
@@ -86,7 +87,13 @@ def make_user_answer_right(request):
     })
 
 
+@login_required(redirect_field_name='')
 def user_action(request):
+    if not request.user.is_superuser:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Access denied'}, cls=CustomJSONEncoder)
+        })
+
     try:
         type = request.GET['type']
     except:
