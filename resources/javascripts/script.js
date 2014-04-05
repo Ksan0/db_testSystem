@@ -48,7 +48,7 @@ $(function(){
 			}
         );
 	});
-
+// by Ksan. Не работает, нужно допилить
     $("#ajax-check-sql-admin").click(function() {
         var form = $('.contact-form');
 		var get = parseGetParams();
