@@ -13,7 +13,7 @@ from subsystems.index.scripts import user_time_update
 @login_required(redirect_field_name='')
 def user_stats(request):
     if not request.user.is_superuser:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/custim-admin/')
 
     try:
         user = User.objects.get(username=request.GET['login'])
@@ -34,21 +34,57 @@ def user_stats(request):
     })
 
 
-#@login_required(redirect_field_name='')
-#def user_stats(request):
-#    if not request.user.is_superuser:
-#        return HttpResponseRedirect('/')
+
+def statistic_user(request, id):
+    try:
+        user = User.objects.get(id=id)
+    except:
+        return HttpResponseRedirect('/admin/')
+
+    user_time_update(user)
+    user_sessions = UserSession.objects.filter(user=user).order_by('-rk', '-attempt')
+    user_sessions_output = []
+    for usr_sess in user_sessions:
+        user_sessions_output.append(UserSessionOutputModel(usr_sess))
+
+    return render(request, 'custom_admin/userinfo.html', {
+        'user_sessions': user_sessions_output,
+        'student': user,
+        'is_admin': True,
+        'hide_tests_url': True
+    })
 
 
+def statistic_question(request, id):
+    try:
+        question = Question.objects.get(id=id)
+    except:
+        return HttpResponseRedirect('/admin/')
 
-"""  IT WILL BE ADDED IN NEXT VERSION
+    answers = SessionQuestions.objects.filter(question=question)
+    return render(request, 'custom_admin/statistic_question.html', {
+        'question': question,
+        'answers': answers
+    })
+
+
 @login_required(redirect_field_name='')
-def test_stats(request):
+def statistic(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect('/')
 
-    return render(request, 't2.html', {'msg': 'ok'})
-"""
+    try:
+        type = request.GET['type']
+        id = request.GET['id']
+    except:
+        return HttpResponseRedirect('/admin/')
+
+    if type == 'user':
+        return statistic_user(request, id)
+    if type == 'question':
+        return statistic_question(request, id)
+
+    return HttpResponseRedirect('/admin/')
 
 
 @login_required(redirect_field_name='')

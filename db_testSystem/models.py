@@ -38,6 +38,16 @@ class Question(models.Model):
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
 
+    def get_records(self):
+        reviewer = Review()
+        back = reviewer.select(self.answer)
+        if back['error']:
+            msg = {'sql_query_error': back['error']}
+        else:
+            msg = back['records']
+        return json.dumps(msg, cls=CustomJSONEncoder)
+
+
 
 class Attempt(models.Model):
     user = models.ForeignKey(User, verbose_name='Пользователь')
@@ -69,23 +79,13 @@ class SessionQuestions(models.Model):
     is_right = models.BooleanField(default=False)
 
     def get_right_records(self):
-        if self.question.answer == '':
-            msg = {'sql_query_error': 'empty query'}
-        else:
-            reviewer = Review(right_sql_query=self.question.answer)
-            if reviewer.error:
-                msg = {'sql_query_error': reviewer.error}
-            else:
-                msg = reviewer.right_records
-        return json.dumps(msg, cls=CustomJSONEncoder)
+        return self.question.get_records()
 
     def get_user_records(self):
-        if self.last_answer == '':
-            msg = {'sql_query_error': 'empty query'}
+        reviewer = Review()
+        back = reviewer.select(self.last_answer)
+        if back['error']:
+            msg = {'sql_query_error': back['error']}
         else:
-            reviewer = Review(sql_query=self.last_answer)
-            if reviewer.error:
-                msg = {'sql_query_error': reviewer.error}
-            else:
-                msg = reviewer.user_records
+            msg = back['records']
         return json.dumps(msg, cls=CustomJSONEncoder)

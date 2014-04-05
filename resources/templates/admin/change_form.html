@@ -37,6 +37,16 @@
   </ul>
 {% endif %}{% endif %}
 {% endblock %}
+
+{% if opts.model_name == 'user' or opts.model_name == 'question' %}
+<p>
+    <a style="font-size: 12pt;" href="/custom-admin/statistic/?type={{ opts.model_name }}&id={{ object_id }}"> Статистика </a>
+</p>
+{% endif %}
+{% if opts.model_name == 'question' %}
+    <button style="font-size: 12pt;" id="ajax-check-sql-admin" href="/custom-admin/ajax"> Проверить </button>
+{% endif %}
+
 <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
 <div>
 {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
