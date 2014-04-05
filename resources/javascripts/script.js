@@ -49,6 +49,18 @@ $(function(){
         );
 	});
 
+    $("#ajax-check-sql-admin").click(function() {
+        var form = $('.contact-form');
+		var get = parseGetParams();
+        $.post(
+            "/ajax", //url
+            form.serialize(), function(data) {
+                console.log(data);
+				dataToTable(data,".messages",1);
+			}
+        );
+	});
+
 //Восстановление пароля
     $(".restore_link").click(function() {
 		$(".login_form").css("display","none");

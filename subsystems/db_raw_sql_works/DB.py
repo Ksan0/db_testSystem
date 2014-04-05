@@ -32,21 +32,29 @@ class MySqlDB(object):
 
 
 class Review(object):
-    def __init__(self, sql_query='', right_sql_query=''):
-        self.error = ''
-        self.right_records = ''
-        self.user_records = ''
-        self.is_user_right = False
-
+    def __init__(self):
         self.orm = MySqlDB(TEST_DB['HOST_NAME'],
                            TEST_DB['USER_NAME'],
                            TEST_DB['USER_PASSWORD'],
                            TEST_DB['DB_NAME'],
                            TEST_DB['DB_CHARSET'])
 
-        if right_sql_query != '':
-            self.right_records, self.error = self.orm.select(right_sql_query)
-        if sql_query != '':
-            self.user_records, self.error = self.orm.select(sql_query)
-        if right_sql_query != '' and sql_query != '':
-            self.is_user_right = [a.values() for a in self.user_records] == [a.values() for a in self.right_records]
+
+    def select(self, sql_query):
+        records, error = self.orm.select(sql_query)
+        return {
+            'records': records,
+            'error': error
+        }
+
+    def check_results(self, sql_query_right, sql_query_user):
+        r_records, r_error = self.orm.select(sql_query_right)
+        u_records, u_error = self.orm.select(sql_query_user)
+        is_equal = [a.values() for a in r_records] == [a.values() for a in u_records]
+        return {
+            'r_records': r_records,
+            'r_error': r_error,
+            'u_records': u_records,
+            'u_error': u_error,
+            'is_equal': is_equal
+        }

@@ -148,13 +148,13 @@ def test_answer(request):
 
     form = AnswerForm(request.POST)
 
-    reviewer = Review(sql_query=form.data['answer'])
-    back = reviewer.user_records
+    reviewer = Review()
+    back = reviewer.select(form.data['answer'])
 
-    if reviewer.error:
-        msg = {'sql_query_error': reviewer.error}
+    if back['error']:
+        msg = {'sql_query_error': back['error']}
     else:
-        msg = reviewer.user_records
+        msg = back['records']
 
 
     msg = json.dumps(msg, cls=CustomJSONEncoder)
@@ -218,12 +218,11 @@ def question(request):
     form = AnswerForm(request.POST)
     context.update({'form': form})
 
-    reviewer = Review(sql_query=form.data['answer'], right_sql_query=question.answer)
+    reviewer = Review()
+    back = reviewer.check_results(sql_query_right=question.answer, sql_query_user=form.data['answer'])
 
     session_question.last_answer = form.data['answer']
-    session_question.is_right = reviewer.is_user_right
-    back = reviewer.user_records
-    error = reviewer.error
+    session_question.is_right = back['is_equal']
     session_question.save()
 
     return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
