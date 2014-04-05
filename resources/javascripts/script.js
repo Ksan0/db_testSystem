@@ -63,11 +63,13 @@ $(function(){
 //Проверка у админа 
     $(".ajax-check-sql-admin").click(function() {
         // id : $("#id_answer")[0].baseURLOD.
+		console.log();
 		$.post(
             "/custom-admin/test_question/", //url
             {
 				message: $("#id_answer")[0].value,
-				url : $("#id_answer").context.URL
+				url : $("#id_answer").context.URL,
+				ccsrfmiddlewaretoken: $("#question_form")[0][0].value
 			}
         );
 	});
