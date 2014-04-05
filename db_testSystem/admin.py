@@ -22,7 +22,7 @@ class AttemptInline(admin.TabularInline):
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'first_name', 'last_name', 'is_active')
+    list_display = ('username', 'first_name', 'last_name', 'is_active', 'is_superuser')
     list_editable = ('is_active',)
     fields = ('username', 'email', 'first_name', 'last_name', 'is_active')
     inlines = [AttemptInline]
