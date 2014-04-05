@@ -13,9 +13,7 @@ from random import choice
 import string
 from datetime import timedelta
 from user_messages import *
-#from bson import json_util
-import json
-import datetime
+from classes import CustomJSONEncoder
 
 
 static_context = {

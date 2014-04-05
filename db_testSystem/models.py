@@ -4,7 +4,7 @@ from django.db import models
 from settings_system import *
 from subsystems.db_raw_sql_works.DB import Review
 import json
-from subsystems.index.scripts import CustomJSONEncoder
+from subsystems.index.classes import CustomJSONEncoder
 
 
 class RK(models.Model):
