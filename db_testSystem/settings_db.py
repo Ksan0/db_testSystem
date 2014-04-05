@@ -5,7 +5,7 @@ DATABASES = {
 		'NAME': 'db_testSystem',
 
 		'USER': 'root',
-		'PASSWORD': '1',
+		'PASSWORD': '',
 		'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
 		'PORT': '', # Set to empty string for default.
    }
@@ -16,6 +16,6 @@ TEST_DB = {
     'HOST_NAME': '',
     'DB_NAME': 'db_test',
     'USER_NAME': 'root',
-    'USER_PASSWORD': '1',
+    'USER_PASSWORD': 'qwe',
     'DB_CHARSET': 'utf8'
 }
