@@ -6,6 +6,7 @@ $(function(){
 			$(".confirm").show();
 		}
 	});	
+
 //Timer
 	if ($(".session_timer > a:nth-child(1)").length) {
 		var Interval = setInterval(function(){
@@ -47,6 +48,7 @@ $(function(){
 			}
         );
 	});
+
 //Восстановление пароля
     $(".restore_link").click(function() {
 		$(".login_form").css("display","none");
@@ -59,10 +61,20 @@ $(function(){
     });
 
 //Статистика у админа
-	$(".users").ready(function(){
+	$(".users").ready(function() {
 		$(".answer").each(function() {
 			dataToTable(this.textContent,this,1);
 		});
+	});
+	
+//Навигация у админа в статистиске юзера
+	$(".rk-headers > li:nth-child(1)").addClass("active");
+
+	$(".rk-headers > li").click(function() {
+		$(".rk-headers > li").each(function() {
+			$(this).removeClass("active")
+		});
+ 		$(this).addClass("active");
 	});
 });
 

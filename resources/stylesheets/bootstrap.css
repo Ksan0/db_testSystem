@@ -4991,3 +4991,36 @@ a.label:hover, a.badge:hover {
   margin: -40px 5% 20px 5%;
   text-align: center;
 }
+
+.rk-headers {
+  position: fixed; 
+  left: 0px;
+  top: 200px;
+}
+
+.rk-headers > li {
+  position: relative;
+  margin-top: 20px;
+  left: -50px;
+  width: 132px;
+  height: 40px;
+  text-align:center;
+  background-image: url(/resources/images/navigation.png);
+}
+.rk-headers > li.active {
+  left: -30px;
+}
+.rk-headers >li >a { 
+  position: relative;
+  top: 6px;
+  display: block;
+  margin-left: -15px;
+  color: rgb(30,30,30);
+  font-size:14px;
+  font-family: Arial;
+  font-weight: bold;
+  text-shadow: 0px 1px 0px rgba(180,180,180,1);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+}
