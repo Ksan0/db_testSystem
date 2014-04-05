@@ -71,9 +71,10 @@ $(function(){
 			}	
         );
 	});
+//Для пересчета показателя вопроса
 	$(".ajax-recalc-que-admin").click(function() {
 		$.post(
-			"/question_action/?type=recalc",
+			"custom-admin/question_action/?type=recalc",
 			{
 				url: $(this).baseURL,
 				csrfmiddlewaretoken: $("#question_form")[0][0].value
