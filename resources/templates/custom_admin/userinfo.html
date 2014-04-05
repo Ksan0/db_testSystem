@@ -56,26 +56,39 @@
 								</h4></td>
 							{% else %}>
 							<td colspan=3><h4 style="text-align:center">Нет ответа</h4></td>
-							{% endif %}
-                	{% endfor %}
+							{% endif %}		
+							<div class="modal hide fade" id="make_right">
+	            				<div class="modal-header">
+			    	            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	    				            <h3>Изменить статус?</h3>
+			    	    	    </div>
+        					    <div class="modal-body">
+				        			<p>Вы уверены, что ваш ответ верен?</p>
+                					<div class="confirm_link" style="margin-top:-5px;float:right">
+				                    	<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+                				    	<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
+				                	</div>
+            					</div>
+        					</div>	
+					{% endfor %}
 					</tbody>
 	            </table>
 			{% with user_session|last as lastus %}
 				{% if lastus == session_output  %}</div>{% endif %}
 			{% endwith %}
-			<div class="modal hide fade" id="make_right">
-            	<div class="modal-header">
-                	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	                <h3>Изменить статус?</h3>
-    	        </div>
-        	    <div class="modal-body">
-        			<p>Вы уверены, что ваш ответ верен?</p>
-                	<div class="confirm_link" style="margin-top:-5px;float:right">
-                    	<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
-                    	<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
-                	</div>
-            	</div>
-        	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 			<!--Modals block--!>
 			<div class="modal hide fade" id="add_attempt">
     			<div class="modal-header">
@@ -89,7 +102,7 @@
         			</div>
     			</div>
     		</div>
-<!--End Modals Block --!>
+			<!--End Modals Block --!>
 		{% endfor %}
 	<ul class="rk-headers">
 	{% for session_output in user_sessions %}
