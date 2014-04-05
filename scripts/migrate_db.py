@@ -65,7 +65,6 @@ def migrate_db():
         for line in infile:
             user_list = [word for word in line.split()]
             user = User.objects.get(username=user_list[0])
-            Attempt.objects.create(user=user, rk=RK.objects.get(id=1), used=1, have=2)
     """
 
     # add score
@@ -76,6 +75,7 @@ def migrate_db():
             count = int(user_list[1])
             if count > 0:
                 rk = RK.objects.get(id=1)
+                Attempt.objects.create(user=user, rk=rk, used=1, have=2)
                 session = UserSession.objects.create(user=user, rk=rk, attempt=1, running=False)
                 question = Question.objects.get(id=19)
                 for i in range(count):
