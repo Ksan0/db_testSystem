@@ -64,25 +64,38 @@
 			{% with user_session|last as lastus %}
 				{% if lastus == session_output  %}</div>{% endif %}
 			{% endwith %}
+			<div class="modal hide fade" id="make_right">
+            	<div class="modal-header">
+                	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h3>Изменить статус?</h3>
+    	        </div>
+        	    <div class="modal-body">
+        			<p>Вы уверены, что ваш ответ верен?</p>
+                	<div class="confirm_link" style="margin-top:-5px;float:right">
+                    	<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+                    	<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
+                	</div>
+            	</div>
+        	</div>	
 		{% endfor %}
     </div>
 <ul class="rk-headers">
 {% for session_output in user_sessions %}
     {% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}
 <!--Modals block--!>
-<div class="modal hide fade" id="make_right">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Изменить статус?</h3>
-    </div>
-    <div class="modal-body">
-		<p>Вы уверены, что ваш ответ верен?</p>
-        <div class="confirm_link" style="margin-top:-5px;float:right">
-            <a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
-            <a href="/custom-admin/user_action/?type=answer_is_right&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
-        </div>
-    </div>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="modal hide fade" id="add_attempt">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
