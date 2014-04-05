@@ -27,6 +27,7 @@ def migrate_db():
     """
 
     # users migrate
+    with open(new_file, 'w') as outfile:
     count = int( reviewer.select('SELECT COUNT(*) FROM auth_user')['records'][0]['COUNT(*)'] )
     for i in range(count):
         query = ('SELECT * FROM knowledge_test_question LIMIT {0},1').format(i)
