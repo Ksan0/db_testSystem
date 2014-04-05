@@ -61,8 +61,6 @@ $(function(){
 
 //Проверка у админа 
     $(".ajax-check-sql-admin").click(function() {
-        // id : $("#id_answer")[0].baseURLOD.
-		console.log();
 		$.post(
             "/custom-admin/test_question/", //url
             {
@@ -73,7 +71,18 @@ $(function(){
 			}	
         );
 	});
-
+	$(".ajax-recalc-que-admin").click(function() {
+		$.post(
+			"/question_action/?type=recalc",
+			{
+				url: $(this).baseURL,
+				csrfmiddlewaretoken: $("#question_form")[0][0].value
+			}, function(data) {
+				if (data) $(".ajax-recalc-que-admin-success").append("Success");
+				else $(".ajax-recalc-que-admin-success").append(data);
+			}
+		);
+	});
 //Статистика у админа
 	$(".users").ready(function() {
 		$(".answer").each(function() {
@@ -84,7 +93,8 @@ $(function(){
 //Навигация у админа в статистиске юзера
 	$(".rk-headers > li:first").addClass("active");
 	$(".rk-view:first").addClass("active");
-    $(".rk-view").click(function() {
+    
+	$(".rk-view").click(function() {
 		console.log(this);
 });
 	$(".rk-headers > li").click(function() {

@@ -69,10 +69,9 @@
     </div>
     <div class="modal-body">
 		<p>Вы уверены, что ваш ответ верен?</p>
-		<p>За последствия не отвечаем!</p>	
         <div class="confirm_link" style="margin-top:-5px;float:right">
-            <a href="" class="btn" data-dismiss="modal" aria-hidden="true">НЕТ! Я ВСЕГДА ПРАВ!</a>
-            <a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Повелеваю! Сделай этo!</a>
+            <a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+            <a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Работаем.</a>
         </div>
     </div>
 </div>
@@ -82,10 +81,9 @@
         <h3>Добавить попытку?</h3>
     </div>
     <div class="modal-body">
-		<p>Напоминаем, что угроза жизни не считается оправданием для данного действия</p>
         <div class="confirm_link" style="margin-top:-5px;float:right">
             <a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
-            <a href="/custom-admin/user_action/?type=answer_is_right&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА! Я ХОЧУУУ!</a>
+            <a href="/custom-admin/user_action/?type=answer_is_right&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
         </div>
     </div>
 </div>
