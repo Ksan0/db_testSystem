@@ -14,7 +14,13 @@
 
 		{% if not user_sessions %}<h3>Студенту не хватило мотивации ни на один рк:(</h3>{% endif %}
 		{% for session_output in user_sessions %}
-			{% if session_output.session.attempt == 1 %}<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}<a href="#add_attempt" data-target="#add_attempt" data-toggle="modal"><small style="color:blue"> (Нужно больше попыток?)</small></a></h3>{% endif %}
+			{% if session_output.session.attempt == 1 %}
+			{% with user_sessions|first as firstus%}
+				{% if not firstus == session_output %}</div>{% endif %}
+			{% endwith %}
+			<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}
+				<a href="#add_attempt" data-target="#add_attempt" data-toggle="modal"><small style="color:blue"> (Нужно больше попыток?)</small></a></h3>
+			{% endif %}
 				<h4 id= "{{ session_output.session.rk.title }} {{ session_output.session.attempt }}"> Попытка № {{ session_output.session.attempt }}</h4>
 				<h5> Правильно......{{ session_output.questions_right_count }}/{{ session_output.questions_all_count }}</h5>
 				<table class="users table table-bordered">
@@ -55,7 +61,9 @@
                 	{% endfor %}
 					</tbody>
 	            </table>
-			{% if %}</div>{% endif %}
+			{% with user_session|last as lastus %}
+				{% if lastus == session_output  %}</div>{% endif %}
+			{% endwith %}
 		{% endfor %}
     </div>
 <ul class="rk-headers">
