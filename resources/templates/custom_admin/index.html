@@ -26,8 +26,8 @@
 				{% for usr in users %}
 					<tr>
                 			<td><a href="/custom-admin/statistic?type=user&id={{ usr.id }}" style="position:absolute; width:92%;">{{ usr.email }} </a></td>
-							<td>{{ usr.first_name }}</td>
-							<td>{{ usr.last_name }}</td>
+							<td>{% if usr.first_name %}{{ usr.first_name }}{% else %}-{% endif %}</td>
+							<td>{% if usr.last_name %}{{ usr.last_name }}{% else %}-{% endif %}</td>
   					</tr>
             	{% endfor %}
 				</tbody>
