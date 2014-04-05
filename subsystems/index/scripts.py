@@ -6,11 +6,10 @@ from db_testSystem.settings_system import *
 
 
 def user_time_update(user):
-    if True:
-    #try:
+    try:
         session = UserSession.objects.get(user=user, running=True)
-    #except:
-    #    return -1
+    except:
+        return -1
     have_time = session.registered_at + timedelta(minutes=TIME_FOR_ATTEMPT) - timezone.now()
     have_minutes = have_time.total_seconds() / 60
     if have_minutes <= 0:
