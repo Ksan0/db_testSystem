@@ -22,7 +22,6 @@ def migrate_db():
         que = reviewer.select(query)['records']
         print que
 
-
     return 0
 
 
