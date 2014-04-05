@@ -44,7 +44,9 @@
 </p>
 {% endif %}
 {% if opts.model_name == 'question' %}
+    <p>
     <button class="ajax-check-sql-admin" style="font-size: 12pt;"> Проверить </button>
+    </p>
 {% endif %}
 
 <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
@@ -73,6 +75,10 @@
 {% endblock %}
 
 {% block after_related_objects %}{% endblock %}
+
+<div class="sql-check-table-admin">
+
+</div>
 
 {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
 

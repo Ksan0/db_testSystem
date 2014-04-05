@@ -12,23 +12,12 @@ from subsystems.index.scripts import user_time_update
 import re
 
 
-@csrf_exempt
 def test_question(request):
     try:
         query = request.POST['message']
-        url = request.POST['url']
     except:
         return render(request, 't.html', {
             'msg': json.dumps({'error': 'POST error'}, cls=CustomJSONEncoder)
-        })
-
-    try:
-        splitter = re.compile(r'/')
-        url_splitted = splitter.split(url)
-        id = url_splitted[-2]
-    except:
-        return render(request, 't.html', {
-            'msg': json.dumps({'error': 'Server internal error'}, cls=CustomJSONEncoder)
         })
 
     reviewer = Review()
@@ -43,33 +32,6 @@ def test_question(request):
     return render(request, 't.html', {
         'msg': msg
     })
-
-#def update_statistic_user(request):
-
-
-@login_required(redirect_field_name='')
-def user_stats(request):
-    if not request.user.is_superuser:
-        return HttpResponseRedirect('/custim-admin/')
-
-    try:
-        user = User.objects.get(username=request.GET['login'])
-    except:
-        return HttpResponseRedirect('/custom-admin/')
-
-    user_time_update(user)
-    user_sessions = UserSession.objects.filter(user=user).order_by('-rk', '-attempt')
-    user_sessions_output = []
-    for usr_sess in user_sessions:
-        user_sessions_output.append(UserSessionOutputModel(usr_sess))
-
-    return render(request, 'custom_admin/userinfo.html', {
-        'user_sessions': user_sessions_output,
-        'student': user,
-        'is_admin': True,
-        'hide_tests_url': True
-    })
-
 
 
 def statistic_user(request, id):
