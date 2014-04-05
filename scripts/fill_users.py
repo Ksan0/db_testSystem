@@ -5,6 +5,8 @@ import string
 # run from "scripts" folder
 # mail@mail.ru  last_name  first_name
 
+# last_name  first_name  mail(=login)  pass
+
 def filling_users(users_file, new_file):
     from django.contrib.auth.models import User
     with open(new_file, 'w') as outfile, open(users_file, 'r') as infile:
@@ -12,8 +14,8 @@ def filling_users(users_file, new_file):
             user_list = [word for word in line.split()]
             if user_list[0] == '#':
                 continue
-            user_list.append(''.join([random.choice(string.ascii_uppercase) for _ in xrange(12)]))
-            User.objects.create_user(username=user_list[0], email=user_list[0], password=user_list[-1], first_name=user_list[2], last_name=user_list[1])
+            # user_list.append(''.join([random.choice(string.ascii_uppercase) for _ in xrange(12)]))
+            User.objects.create_user(username=user_list[2], email=user_list[2], password=user_list[3], first_name=user_list[1], last_name=user_list[0])
             outfile.write('{} {} {} {}\n'.format(*user_list))
     return 0
 
