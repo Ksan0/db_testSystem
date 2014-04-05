@@ -6,4 +6,5 @@ urlpatterns = patterns('',
     url(r'^statistic/$', statistic),
     url(r'^test_question/$', test_question),  # ajax
     url(r'^user_action/$', user_action),  # ajax
+    url(r'^question_action/$', question_action),  # ajax
 )

@@ -57,7 +57,7 @@ def user_add_attempt(request):
         attempt = Attempt.objects.create(user=user, rk=rk, have=ATTEMPTES_MAX + 1)
 
     return render(request, 't.html', {
-        'msg': 'OK'
+        'msg': ''
     })
 
 
@@ -83,7 +83,7 @@ def make_user_answer_right(request):
         })
 
     return render(request, 't.html', {
-        'msg': 'OK'
+        'msg': ''
     })
 
 
@@ -112,6 +112,49 @@ def user_action(request):
     })
 
 
+def recalc_question(request):
+    try:
+        splitter = re.compile(r'/')
+        split_url = request.POST['url']
+        question = Question.objects.get(id=int(split_url[-2]))
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Args error'}, cls=CustomJSONEncoder)
+        })
+
+    try:
+        for obj in SessionQuestions.objects.filter(question=question, is_right=False):
+            obj.check()
+    except:
+        pass
+
+    return render(request, 't.html', {
+        'msg': ''
+    })
+
+
+@login_required(redirect_field_name='')
+def question_action(request):
+    if not request.user.is_superuser:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Access denied'}, cls=CustomJSONEncoder)
+        })
+
+    try:
+        type = request.GET['type']
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Wrong action type'}, cls=CustomJSONEncoder)
+        })
+
+    if type == 'recalc':
+        recalc_question(request)
+
+    return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Wrong action type'}, cls=CustomJSONEncoder)
+        })
+
+
 def statistic_user(request, id):
     try:
         user = User.objects.get(id=id)
@@ -119,7 +162,7 @@ def statistic_user(request, id):
         return HttpResponseRedirect('/admin/')
 
     user_time_update(user)
-    user_sessions = UserSession.objects.filter(user=user)  # .order_by('-rk', '-attempt')
+    user_sessions = UserSession.objects.filter(user=user).order_by('rk', 'attempt')
     user_sessions_output = []
     for usr_sess in user_sessions:
         user_sessions_output.append(UserSessionOutputModel(usr_sess))
@@ -143,7 +186,6 @@ def statistic_question(request, id):
         'question': question,
         'answers': answers
     })
-
 
 @login_required(redirect_field_name='')
 def statistic(request):

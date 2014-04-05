@@ -89,3 +89,9 @@ class SessionQuestions(models.Model):
         else:
             msg = back['records']
         return json.dumps(msg, cls=CustomJSONEncoder)
+
+    def check(self):
+        reviewer = Review()
+        back = reviewer.check_results(sql_query_right=self.question.answer, sql_query_user=self.last_answer)
+        self.is_right = back['is_equal']
+        self.save()
