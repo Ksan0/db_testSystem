@@ -64,7 +64,7 @@ $(function(){
     $(".ajax-check-sql-admin").click(function() {
         // id : $("#id_answer")[0].baseURLOD.
 		$.post(
-            "/custom-admin/test_question", //url
+            "/custom-admin/test_question/", //url
             {
 				message: $("#id_answer")[0].value,
 				url : $("#id_answer").context.URL
