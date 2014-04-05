@@ -65,6 +65,10 @@
 		{% endfor %}
         </ul>
     </div>
+{% for session_output in user_sessions %}
+   	<ul class="rk-headers">
+    {% if session_output.session.attempt == 1 %}<li><a href="#{{ session_output.session.rk.title }}">{{ session_output.session.rk.title }}</a></li>{%endif%}
+	<!--<div style="position:fixed; left:-15px; top:200px; z-index:5000; width:135px; height:40px; background-image: url(/resources/images/navigation.png)"></div>--!>
+{% endfor %}
 </section>
-
 {% endblock %}
