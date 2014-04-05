@@ -6,10 +6,12 @@
 <script type="text/javascript" src="/resources/javascripts/jscharts.js"></script>
 <section class="section section-alt section-padded">
     <div class="container-fluid">
+
         <div class="section-header">
             <h3>{{ student.username }}</h3>
 			<h3>{{ student.first_name }} {{ student.last_name }}</h3>
         </div>
+
 		{% if not user_sessions %}<h3>Студенту не хватило мотивации ни на один рк:(</h3>{% endif %}
 		{% for session_output in user_sessions %}
 			{% if session_output.session.attempt == 1 %}<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}<a href="#add_attempt" data-target="#add_attempt" data-toggle="modal"><small style="color:blue"> (Нужно больше попыток?)</small></a></h3>{% endif %}
@@ -59,9 +61,7 @@
 <ul class="rk-headers">
 {% for session_output in user_sessions %}
     {% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}
-{% endfor %}
-</ul>
-</section>
+<!--Modals block--!>
 <div class="modal hide fade" id="make_right">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -89,5 +89,8 @@
         </div>
     </div>
 </div>
-
+<!--End Modals Block --!>
+{% endfor %}
+</ul>
+</section>
 {% endblock %}
