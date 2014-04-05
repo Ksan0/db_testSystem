@@ -13,6 +13,11 @@ import re
 
 
 def test_question(request):
+    if not request.user.is_superuser:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Access denied'}, cls=CustomJSONEncoder)
+        })
+
     try:
         query = request.POST['message']
     except:
