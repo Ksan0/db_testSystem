@@ -7,6 +7,17 @@ $(function(){
 		}
 	});	
 
+//Восстановление пароля
+    $(".restore_link").click(function() {
+		$(".login_form").css("display","none");
+		$(".restore_form").css("display","block");
+	});
+	
+	$(".login_link").click(function() {
+    	$(".login_form").css("display","block");
+    	$(".restore_form").css("display","none");
+    });
+
 //Timer
 	if ($(".session_timer > a:nth-child(1)").length) {
 		var Interval = setInterval(function(){
@@ -49,28 +60,17 @@ $(function(){
         );
 	});
 
-// by Ksan. Не работает, нужно допилить
+//Проверка у админа 
     $(".ajax-check-sql-admin").click(function() {
         // id : $("#id_answer")[0].baseURLOD.
 		$.post(
-            "/ajax", //url
+            "/custom-admin/test_question", //url
             {
 				message: $("#id_answer")[0].value,
 				url : $("#id_answer").context.URL
 			}
         );
 	});
-
-//Восстановление пароля
-    $(".restore_link").click(function() {
-		$(".login_form").css("display","none");
-		$(".restore_form").css("display","block");
-	});
-	
-	$(".login_link").click(function() {
-    	$(".login_form").css("display","block");
-    	$(".restore_form").css("display","none");
-    });
 
 //Статистика у админа
 	$(".users").ready(function() {
@@ -81,8 +81,9 @@ $(function(){
 	
 //Навигация у админа в статистиске юзера
 	$(".rk-headers > li:nth-child(1)").addClass("active");
-
+	$(".rk-block:nth-child(1)").addClass("active");
 	$(".rk-headers > li").click(function() {
+		console.log($("#"+$(this)[0].children[0].href.replace(/%20/g," ").split("#")[1]));
 		$(".rk-headers > li").each(function() {
 			$(this).removeClass("active")
 		});
