@@ -4,7 +4,8 @@ import string
 
 
 def migrate_db():
-    from db_testSystem.models import *
+    from db_testSystem.models import Question
+    from django.contrib.auth.models import User
     from subsystems.db_raw_sql_works.DB import Review
 
     db_settings = {
@@ -27,16 +28,17 @@ def migrate_db():
     """
 
     # users migrate
+    """
     with open('out_users_db', 'w') as outfile:
         count = int( reviewer.select('SELECT COUNT(*) FROM auth_user')['records'][0]['COUNT(*)'] )
         for i in range(count):
-            query = ('SELECT * FROM knowledge_test_question LIMIT {0},1').format(i)
+            query = ('SELECT * FROM auth_user LIMIT {0},1').format(i)
             que = reviewer.select(query)['records'][0]
             newpass = ''.join([random.choice(string.ascii_uppercase) for _ in xrange(12)])
 
-            User.objects.create_user(username=que['username'], email=que['email'], password=newpass, is_superuser=que['is_superuser'], is_active=True)
+            User.objects.create_user(username=que['username'], email=que['email'], password=newpass)
             outfile.write('{0} {1}\n'.format(que['username'], newpass))
-
+    """
     return 0
 
 
