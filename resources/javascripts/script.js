@@ -54,7 +54,6 @@ $(function(){
         $.post(
             "/test_answer/?testid="+get.testid+"&queid="+get.queid, //url
             form.serialize(), function(data) {
-                console.log(data);
 				dataToTable(data,".messages",1);
 			}
         );
@@ -69,7 +68,9 @@ $(function(){
             {
 				message: $("#id_answer")[0].value,
 				csrfmiddlewaretoken: $("#question_form")[0][0].value
-			}
+			}, function(data) {
+				dataToTable(data,".sql-check-table-admin",1);
+			}	
         );
 	});
 
