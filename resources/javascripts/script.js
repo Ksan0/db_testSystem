@@ -96,9 +96,6 @@ $(function(){
 	$(".rk-headers > li:first").addClass("active");
 	$(".rk-view:first").addClass("active");
     
-	$(".rk-view").click(function() {
-		console.log(this);
-});
 	$(".rk-headers > li").click(function() {
 		$(".active").removeClass("active");
  		$(this).addClass("active");
