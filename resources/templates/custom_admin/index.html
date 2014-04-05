@@ -25,8 +25,8 @@
 				</thead>
 				<tbody>
 				{% for usr in users %}
-					<tr><a href="/custom-admin/user/?login={{ usr.username }}">
-                			<td><a href="/custom-admin/user/?login={{ usr.username }}" style="position:absolute; width:92%;">{{ usr.username }} </a></td>
+					<tr>
+                			<td><a href="/custom-admin/statistic?type=user&id={{ usr.id }}" style="position:absolute; width:92%;">{{ usr.username }} </a></td>
 							<td>{% if not usr.email %}-{% else %}{{ usr.email }}{% endif %}</td>
 							<td>{{ usr.first_name }}</td>
 							<td>{{ usr.last_name }}</td>
