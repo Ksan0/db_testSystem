@@ -235,7 +235,7 @@ def question(request):
     back = reviewer.check_results(sql_query_right=question.answer, sql_query_user=form.data['answer'])
 
     session_question.last_answer = form.data['answer']
-    session_question.is_right = back['is_equal']
+    session_question.check()
     session_question.save()
 
     return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
