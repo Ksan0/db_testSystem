@@ -6,7 +6,6 @@
 <script type="text/javascript" src="/resources/javascripts/jscharts.js"></script>
 <section class="section section-alt section-padded">
     <div class="container-fluid">
-
         <div class="section-header">
             <h3>{{ student.username }}</h3>
 			<h3>{{ student.first_name }} {{ student.last_name }}</h3>
@@ -76,40 +75,27 @@
                     	<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
                 	</div>
             	</div>
-        	</div>	
-		{% endfor %}
-    </div>
-<ul class="rk-headers">
-{% for session_output in user_sessions %}
-    {% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}
-<!--Modals block--!>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="modal hide fade" id="add_attempt">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Добавить попытку?</h3>
-    </div>
-    <div class="modal-body">
-        <div class="confirm_link" style="margin-top:-5px;float:right">
-            <a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
-            <a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Работаем.</a>
-        </div>
-    </div>
-</div>
+        	</div>
+			<!--Modals block--!>
+			<div class="modal hide fade" id="add_attempt">
+    			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        			<h3>Добавить попытку?</h3>
+    			</div>
+    			<div class="modal-body">
+        			<div class="confirm_link" style="margin-top:-5px;float:right">
+	            		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
+    	        		<a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Работаем.</a>
+        			</div>
+    			</div>
+    		</div>
 <!--End Modals Block --!>
-{% endfor %}
-</ul>
+		{% endfor %}
+	<ul class="rk-headers">
+	{% for session_output in user_sessions %}
+    	{% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}c
+	{% endfor %}
+	</ul>
+	</div>
 </section>
 {% endblock %}
