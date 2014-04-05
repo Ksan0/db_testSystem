@@ -4,7 +4,7 @@ import string
 
 
 def migrate_db():
-    from db_testSystem.models import Question, RK
+    from db_testSystem.models import Question, RK, Attempt
     from django.contrib.auth.models import User
     from subsystems.db_raw_sql_works.DB import Review
 
@@ -41,6 +41,7 @@ def migrate_db():
     """
 
     # attempt sub
+    """
     usernames = []
     count = int( reviewer.select('SELECT COUNT(*) FROM knowledge_test_gameranswer')['records'][0]['COUNT(*)'] )
     for i in range(count):
@@ -56,6 +57,13 @@ def migrate_db():
     with open('out_att_sub', 'w') as outfile:
         for username in usernames:
             outfile.write('{0}\n'.format(username))
+    """
+
+    with open(u'att_sub', 'r') as infile:
+        for line in infile:
+            user_list = [word for word in line.split()]
+            user = User.objects.get(username=user_list[0])
+            Attempt.objects.create(user=user, rk=RK.objects.get(id=1), used=1, have=2)
 
     return 0
 
