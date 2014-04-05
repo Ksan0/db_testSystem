@@ -7,11 +7,12 @@
 <section class="section section-alt section-padded">
     <div class="container-fluid">
         <div class="section-header">
-            <h2>{{ student.username }}</h2>
+            <h3>{{ student.username }}</h3>
+			<h3>{{ student.first_name }} {{ student.last_name }}</h3>
         </div>
 		{% if not user_sessions %}<h3>Студенту не хватило мотивации ни на один рк:(</h3>{% endif %}
 		{% for session_output in user_sessions %}
-			{% if session_output.session.attempt == 1 %}<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}</h3>{% endif %}
+			{% if session_output.session.attempt == 1 %}<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}<a href="#add_attempt" data-target="#add_attempt" data-toggle="modal"><small style="color:blue"> (Нужно больше попыток?)</small></a></h3>{% endif %}
 				<h4 id= "{{ session_output.session.rk.title }} {{ session_output.session.attempt }}"> Попытка № {{ session_output.session.attempt }}</h4>
 				<h5> Правильно......{{ session_output.questions_right_count }}/{{ session_output.questions_all_count }}</h5>
 				<table class="users table table-bordered">
@@ -41,7 +42,11 @@
 							<tr class={% if session_question.is_right %}"success">
 							<td colspan=3><h4 style="text-align:center">Совпадение</h4></td>
 							{% elif session_question.get_user_records %}"error">
-							<td colspan=3><h4 style="text-align:center">Расхождение</h4></td>
+							<td colspan=3><h4 style="text-align:center">Расхождение
+								{% if not session_question.is_right == 1 %}
+									<a href="#make_right" data-target="#make_right" data-toggle="modal" style="color:green"> (Верный ответ?)</a>
+								{% endif %}
+								</h4></td>
 							{% else %}>
 							<td colspan=3><h4 style="text-align:center">Нет ответа</h4></td>
 							{% endif %}
@@ -57,4 +62,32 @@
 {% endfor %}
 </ul>
 </section>
+<div class="modal hide fade" id="make_right">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Изменить статус?</h3>
+    </div>
+    <div class="modal-body">
+		<p>Вы уверены, что ваш ответ верен?</p>
+		<p>За последствия не отвечаем!</p>	
+        <div class="confirm_link" style="margin-top:-5px;float:right">
+            <a href="" class="btn" data-dismiss="modal" aria-hidden="true">НЕТ! Я ВСЕГДА ПРАВ!</a>
+            <a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Повелеваю! Сделай этo!</a>
+        </div>
+    </div>
+</div>
+<div class="modal hide fade" id="add_attempt">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Добавить попытку?</h3>
+    </div>
+    <div class="modal-body">
+		<p>Напоминаем, что угроза жизни не считается оправданием для данного действия</p>
+        <div class="confirm_link" style="margin-top:-5px;float:right">
+            <a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
+            <a href="/custom-admin/user_action/?type=answer_is_right&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА! Я ХОЧУУУ!</a>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

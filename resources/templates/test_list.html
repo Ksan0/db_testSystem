@@ -35,10 +35,10 @@
 					<h3>{% if test.attemptes_amount == 0 %}Уупс......{% else %}Начать тест?{% endif %}</h3>
 				</div>
 				<div class="modal-body">
-					{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка!
+					<p>{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка!
 					{% elif test.attemptes_amount == 0 %}У вас закончились попытки :({% else %}
-					<p>У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 and test.attemptes_amount < 4%}попытки!{% else %}попыток!{% endif %}
-					{% endif %}
+					У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 and test.attemptes_amount < 4%}попытки!{% else %}попыток!{% endif %}
+					{% endif %}</p>
 					<div class="confirm_button_block" style="margin-top:-5px;float:right">
 						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Закрыть</a>
 						{% if test.attemptes_amount > 0 %}

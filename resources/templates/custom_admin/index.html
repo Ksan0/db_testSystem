@@ -17,7 +17,6 @@
 			<table class="users table table-striped table-bordered table-hover">
 				<thead>
 					<tr>
-						<th>Nickname</th>
 						<th>E-mail</th>
 						<th>First Name</th>
 						<th>Second Name</th>
@@ -26,8 +25,7 @@
 				<tbody>
 				{% for usr in users %}
 					<tr>
-                			<td><a href="/custom-admin/statistic?type=user&id={{ usr.id }}" style="position:absolute; width:92%;">{{ usr.username }} </a></td>
-							<td>{% if not usr.email %}-{% else %}{{ usr.email }}{% endif %}</td>
+                			<td><a href="/custom-admin/statistic?type=user&id={{ usr.id }}" style="position:absolute; width:92%;">{{ usr.email }} </a></td>
 							<td>{{ usr.first_name }}</td>
 							<td>{{ usr.last_name }}</td>
   					</tr>
