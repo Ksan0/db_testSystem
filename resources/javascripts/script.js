@@ -89,8 +89,7 @@ $(function(){
 	$(".rk-headers > li").click(function() {
 		$(".active").removeClass("active");
  		$(this).addClass("active");
-		console.log(this);
-		$("#"+this.children[0].name).addClass("active");
+		$($(this).attr("name")).addClass("active");
 	});
 });
 
