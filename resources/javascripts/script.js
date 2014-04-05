@@ -68,7 +68,6 @@ $(function(){
             "/custom-admin/test_question/", //url
             {
 				message: $("#id_answer")[0].value,
-				url : $("#id_answer").context.URL,
 				csrfmiddlewaretoken: $("#question_form")[0][0].value
 			}
         );
@@ -82,14 +81,16 @@ $(function(){
 	});
 	
 //Навигация у админа в статистиске юзера
-	$(".rk-headers > li:nth-child(1)").addClass("active");
-	$(".rk-view").addClass("active");
+	$(".rk-headers > li:first").addClass("active");
+	$(".rk-view:first").addClass("active");
+    $(".rk-view").click(function() {
+		console.log(this);
+});
 	$(".rk-headers > li").click(function() {
-		console.log($("#"+$(this)[0].children[0].href.replace(/%20/g," ").split("#")[1]));
-		$(".rk-headers > li").each(function() {
-			$(this).removeClass("active")
-		});
+		$(".active").removeClass("active");
  		$(this).addClass("active");
+		console.log(this);
+		$("#"+this.children[0].name).addClass("active");
 	});
 });
 

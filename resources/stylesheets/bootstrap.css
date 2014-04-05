@@ -5006,10 +5006,13 @@ a.label:hover, a.badge:hover {
   height: 40px;
   text-align:center;
   background-image: url(/resources/images/navigation.png);
+  cursor: default;
 }
+
 .rk-headers > li.active {
   left: -30px;
 }
+
 .rk-headers >li >a { 
   position: relative;
   top: 6px;
@@ -5023,4 +5026,12 @@ a.label:hover, a.badge:hover {
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text;
+}
+
+.rk-view {
+  display: none;
+}
+
+.rk-view.active {
+  display: block;
 }
