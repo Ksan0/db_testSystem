@@ -40,9 +40,16 @@ def migrate_db():
             outfile.write('{0} {1}\n'.format(que['username'], newpass))
     """
 
-    # answers migrate
-    rk = RK.objects.first()
+    # attempt sub
+    with open('out_att_sub', 'w') as outfile:
+        count = int( reviewer.select('SELECT COUNT(*) FROM knowledge_test_gameranswer')['records'][0]['COUNT(*)'] )
+        for i in range(count):
+            query = ('SELECT * FROM knowledge_test_gameranswer LIMIT {0},1').format(i)
+            que = reviewer.select(query)['records'][0]
+            print que
 
+            #User.objects.create_user(username=que['username'], email=que['email'], password=newpass)
+            #outfile.write('{0} {1}\n'.format(que['username'], newpass))
 
     return 0
 
