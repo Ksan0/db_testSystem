@@ -12,6 +12,7 @@ from subsystems.index.scripts import user_time_update
 import re
 
 
+@login_required(redirect_field_name='')
 def test_question(request):
     if not request.user.is_superuser:
         return render(request, 't.html', {
@@ -36,6 +37,78 @@ def test_question(request):
 
     return render(request, 't.html', {
         'msg': msg
+    })
+
+
+def user_add_attempt(request):
+    try:
+        user = User.objects.get(id=request.GET['uid'])
+        rk = RK.objects.get(id=request.GET['rkid'])
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Args error'}, cls=CustomJSONEncoder)
+        })
+
+    try:
+        attempt = Attempt.objects.get(user=user, rk=rk)
+        attempt.have += 1
+        attempt.save()
+    except:
+        attempt = Attempt.objects.create(user=user, rk=rk, have=ATTEMPTES_MAX + 1)
+
+    return render(request, 't.html', {
+        'msg': 'OK'
+    })
+
+
+def make_user_answer_right(request):
+    try:
+        user = User.objects.get(id=request.GET['uid'])
+        rk = RK.objects.get(id=request.GET['rkid'])
+        attempt = request.GET['attid']
+        question = Question.objects.get(id=request.GET['queid'])
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Args error'}, cls=CustomJSONEncoder)
+        })
+
+    try:
+        session = UserSession.objects.get(user=user, rk=rk, attempt=attempt)
+        session_question = SessionQuestions.objects.get(session=session, question=question)
+        session_question.is_right = True
+        session_question.save()
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Internal server error'}, cls=CustomJSONEncoder)
+        })
+
+    return render(request, 't.html', {
+        'msg': 'OK'
+    })
+
+
+@login_required(redirect_field_name='')
+def user_action(request):
+    if not request.user.is_superuser:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Access denied'}, cls=CustomJSONEncoder)
+        })
+
+    try:
+        type = request.GET['type']
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Wrong action type'}, cls=CustomJSONEncoder)
+        })
+
+    if type == 'add_attempt':
+        return user_add_attempt(request)
+
+    if type == 'answer_is_right':
+        return make_user_answer_right(request)
+
+    return render(request, 't.html', {
+        'msg': json.dumps({'error': 'Wrong action type'}, cls=CustomJSONEncoder)
     })
 
 

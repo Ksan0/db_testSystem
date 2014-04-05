@@ -5,5 +5,5 @@ urlpatterns = patterns('',
     url(r'^$', index),
     url(r'^statistic/$', statistic),
     url(r'^test_question/$', test_question),  # ajax
-    # url(r'^user_action/$', user_action),  # ajax
+    url(r'^user_action/$', user_action),  # ajax
 )
