@@ -4,7 +4,7 @@ import string
 
 
 def migrate_db():
-    from db_testSystem.models import Question
+    from db_testSystem.models import Question, RK
     from django.contrib.auth.models import User
     from subsystems.db_raw_sql_works.DB import Review
 
@@ -39,6 +39,11 @@ def migrate_db():
             User.objects.create_user(username=que['username'], email=que['email'], password=newpass)
             outfile.write('{0} {1}\n'.format(que['username'], newpass))
     """
+
+    # answers migrate
+    rk = RK.objects.first()
+
+
     return 0
 
 

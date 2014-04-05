@@ -5,4 +5,5 @@ urlpatterns = patterns('',
     url(r'^$', index),
     url(r'^user/$', user_stats),
     url(r'^statistic/$', statistic),
+    url(r'^test_question/$', test_question),
 )

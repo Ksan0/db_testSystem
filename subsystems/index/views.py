@@ -31,9 +31,22 @@ def index(request, other_context=None):  # list of RK
 
     template_name = 'test_list.html'
 
+    running_added = False
     tests = []
     for obj in RK.objects.filter(is_active=True):
         tests.append(OutputRKModel(obj, request.user))
+        try:
+            session = UserSession.objects.get(user=request.user, rk=obj, running=True)
+            running_added = True
+        except:
+            pass
+
+    try:
+        session = UserSession.objects.get(user=request.user, running=True)
+        if not running_added:
+            tests.append(OutputRKModel(session.rk, request.user))
+    except:
+        pass
 
     context = {
         'user': request.user,
@@ -235,6 +248,9 @@ def start_new_session(request, user, rk, attempt):
         confirm = ''
 
     if confirm != 'yes':
+        return HttpResponseRedirect('/')
+
+    if rk.is_active == False:
         return HttpResponseRedirect('/')
 
     if attempt.have <= 0:
