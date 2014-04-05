@@ -4,10 +4,47 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
 from db_testSystem.models import *
 from django.contrib.auth.decorators import login_required
 from output_models import *
 from subsystems.index.scripts import user_time_update
+import re
+
+
+@csrf_exempt
+def test_question(request):
+    try:
+        query = request.POST['message']
+        url = request.POST['url']
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'POST error'}, cls=CustomJSONEncoder)
+        })
+
+    try:
+        splitter = re.compile(r'/')
+        url_splitted = splitter.split(url)
+        id = url_splitted[-2]
+    except:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'Server internal error'}, cls=CustomJSONEncoder)
+        })
+
+    reviewer = Review()
+    back = reviewer.select(query)
+    if back['error']:
+        msg = {'sql_query_error': back['error']}
+    else:
+        msg = back['records']
+
+    msg = json.dumps(msg, cls=CustomJSONEncoder)
+
+    return render(request, 't.html', {
+        'msg': msg
+    })
+
+#def update_statistic_user(request):
 
 
 @login_required(redirect_field_name='')
@@ -61,7 +98,7 @@ def statistic_question(request, id):
     except:
         return HttpResponseRedirect('/admin/')
 
-    answers = SessionQuestions.objects.filter(question=question)
+    answers = SessionQuestions.objects.filter(question=question).order_by('is_right')
     return render(request, 'custom_admin/statistic_question.html', {
         'question': question,
         'answers': answers
