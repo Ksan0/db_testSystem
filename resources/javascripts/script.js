@@ -69,7 +69,7 @@ $(function(){
             {
 				message: $("#id_answer")[0].value,
 				url : $("#id_answer").context.URL,
-				ccsrfmiddlewaretoken: $("#question_form")[0][0].value
+				csrfmiddlewaretoken: $("#question_form")[0][0].value
 			}
         );
 	});
@@ -83,7 +83,7 @@ $(function(){
 	
 //Навигация у админа в статистиске юзера
 	$(".rk-headers > li:nth-child(1)").addClass("active");
-	$(".rk-block:nth-child(1)").addClass("active");
+	$(".rk-view").addClass("active");
 	$(".rk-headers > li").click(function() {
 		console.log($("#"+$(this)[0].children[0].href.replace(/%20/g," ").split("#")[1]));
 		$(".rk-headers > li").each(function() {
