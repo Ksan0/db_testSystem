@@ -90,12 +90,11 @@ $(function(){
 		$.get(
 			$(this).attr("href"),
 			function() {
-				console.log(this);
 				var get = $.parseJSON("{\""+this.url.split("?")[1].replace(/&/g,"\", \"").replace(/=/g,"\": \"")+"\"}");
-				console.log($("#RK"+get.rkid+"Att"+get.att+"Que"+get.queid).removeClass("error").addClass("success").value);
 				$("#RK"+get.rkid+"Att"+get.att+"Que"+get.queid).removeClass("error").addClass("success").empty().append(
 					"<td colspan=\"3\"><h4 style=\"text-align:center\">Совпадение<small style=\"color:red\">(Исправлено)<small></h4></td>"
 				);
+				$("#RK"+get.rkid+"Att"+get.att+">h5").append(" +1");
 			}
 		);
 		event.preventDefault();

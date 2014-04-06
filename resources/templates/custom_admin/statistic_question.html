@@ -1,12 +1,42 @@
-title: {{ question.title }} <br/>
-description: {{ question.description }} <br/>
+{% extends "base.html" %}
+
+{% block page %}
+{% load static %}
 answer: {{ question.answer }} <br/>
 records: {{ question.get_records }} <br/>
 
-{% for answer in answers %}
-    ---------------------------------------------------------- <br/>
-    user: {{ answer.session.user }} <br/>
-    query: {{ answer.last_answer }} <br/>
-    records: {{ answer.get_user_records }} <br/>
     is_right: {{ answer.is_right }} <br/>
-{% endfor %}
+<script type="text/javascript" src="/resources/javascripts/jscharts.js"></script>
+<section class="section section-alt section-padded">
+    <div class="container-fluid">
+        <div class="section-header">
+            <h3>{{ question.title }}</h3>
+			<h4>{{ question.desqription }}</h4>
+        </div>
+		<h3>Правильный ответ:</h3>
+		<h4>{{ question.answer }}</h4>	
+		<button class="ajax-check-sql-admin" style="font-size: 12pt;">Проверить</button>
+		<h3>Результат</h3>
+		<div class="result"></div>
+		{% if not answers %}<h3>Тут жизни нет:(</h3>{% endif %}
+		<table class="question-table table table-bordered">
+        	<thead>
+	        	<tr>
+					<th style="width:150px">Пользователь</th>
+        	        <th>Запрос</th>
+            	    <th>Результат</th>
+	            </tr>
+    	    </thead>
+        	<tbody>
+			{% for answer in answers %}
+				<tr style="background-color:#fff">
+					<td>{{ answer.session.user }}</td>
+					<td>{{ answer.last_answer }}</td>
+					<td>{{ answer.get_user_records }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</section>
+{% endblock %}
