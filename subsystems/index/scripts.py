@@ -3,6 +3,14 @@ from datetime import timedelta
 from django.utils import timezone
 from db_testSystem.models import *
 from db_testSystem.settings_system import *
+from user_messages import UserMessage
+
+
+def get_user_message(request):
+    try:
+        return UserMessage(request.GET['user_msg'])
+    except:
+        return None
 
 
 def user_time_update(user):
