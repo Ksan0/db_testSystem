@@ -85,6 +85,20 @@ $(function(){
 			}
 		);
 	});
+// Зачесть вопрос как правильный
+    $(".ajax-make-que-right-admin").click(function() {
+		$.post(
+			"/custom-admin/OOO",
+			{
+				url: $(this).baseURL,
+				// csrfmiddlewaretoken: $("#question_form")[0][0].value
+			}, function(data) {
+				$(".ajax-recalc-que-admin-success").empty();
+				if (data) $(".ajax-recalc-que-admin-success").append("Показатели пересчитаны");
+				else $(".ajax-recalc-que-admin-success").append(data);
+			}
+		);
+	});
 //Статистика у админа
 	$(".users").ready(function() {
 		$(".answer").each(function() {
