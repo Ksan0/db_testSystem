@@ -86,18 +86,19 @@ $(function(){
 		);
 	});
 // Зачесть вопрос как правильный
-    $(".ajax-make-que-right-admin").click(function() {
-		$.post(
-			"/custom-admin/OOO",
-			{
-				url: $(this).baseURL,
-				// csrfmiddlewaretoken: $("#question_form")[0][0].value
-			}, function(data) {
-				$(".ajax-recalc-que-admin-success").empty();
-				if (data) $(".ajax-recalc-que-admin-success").append("Показатели пересчитаны");
-				else $(".ajax-recalc-que-admin-success").append(data);
+    $(".ajax-make-que-right-admin").click(function(event) {
+		$.get(
+			$(this).attr("href"),
+			function() {
+				console.log(this);
+				var get = $.parseJSON("{\""+this.url.split("?")[1].replace(/&/g,"\", \"").replace(/=/g,"\": \"")+"\"}");
+				console.log($("#RK"+get.rkid+"Att"+get.att+"Que"+get.queid).removeClass("error").addClass("success").value);
+				$("#RK"+get.rkid+"Att"+get.att+"Que"+get.queid).removeClass("error").addClass("success").empty().append(
+					"<td colspan=\"3\"><h4 style=\"text-align:center\">Совпадение<small style=\"color:red\">(Исправлено)<small></h4></td>"
+				);
 			}
 		);
+		event.preventDefault();
 	});
 //Статистика у админа
 	$(".users").ready(function() {
@@ -119,6 +120,7 @@ $(function(){
 
 function parseGetParams() { 
    var $_GET = {}; 
+
    var __GET = window.location.search.substring(1).split("&"); 
    for(var i=0; i<__GET.length; i++) { 
       var getVar = __GET[i].split("="); 
