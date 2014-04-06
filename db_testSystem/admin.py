@@ -24,7 +24,7 @@ class AttemptInline(admin.TabularInline):
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')
     list_editable = ('is_active',)
-    fields = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser')
+    fields = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser')
     inlines = [AttemptInline]
 
     # def change_view(self, request, object_id, form_url='', extra_context=None):

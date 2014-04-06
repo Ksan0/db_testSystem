@@ -111,8 +111,10 @@ def index(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect('/')
 
-    users = User.objects.filter(is_superuser=False)
-    # rks = RK.objects.all()
+    users = []
+    for user in User.objects.all():
+        users.append(UserOutputModel(user))
+
     return render(request, 'custom_admin/index.html', {
         'users': users,
         'is_admin': True,
