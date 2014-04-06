@@ -27,10 +27,6 @@ static_context = {
 # user_time_update called
 @login_required(redirect_field_name='')
 def index(request, other_context=None):  # list of RK
-    is_admin = request.user.is_superuser
-
-    template_name = 'test_list.html'
-
     running_added = False
     tests = []
     for obj in RK.objects.filter(is_active=True):
@@ -50,15 +46,16 @@ def index(request, other_context=None):  # list of RK
 
     context = {
         'user': request.user,
-        'is_admin': is_admin,
+        'is_admin': request.user.is_superuser,
         'is_user_index': True,
         'tests': tests,
-        'have_time': user_time_update(request.user)
+        'have_time': user_time_update(request.user),
+        'user_msg': get_user_message(request),
     }
     context.update(static_context)
     if other_context is not None:
         context.update(other_context)
-    return render(request, template_name, context)
+    return render(request, 'test_list.html', context)
 
 
 def password_restore_confirm(request):
@@ -69,9 +66,7 @@ def password_restore_confirm(request):
         user = User.objects.get(username=username)
         passw_hex = toHex(user.password)
         if confirm != passw_hex:
-            return login_view(request, {
-                'error_msg': CONFIRM_FAILED
-            })
+            return HttpResponseRedirect('/login/?{0}'.format('user_msg=confirm_failed'))
 
         new_pass = ''.join([choice(string.ascii_uppercase) for _ in xrange(12)])
         user.set_password(new_pass)
@@ -79,13 +74,9 @@ def password_restore_confirm(request):
 
         msg = 'Ваш логин: {0}\nВаш новый пароль: {1}'.format(username, new_pass)
         send_mail('Password restore successful', msg, 'db.testSystem@gmail.com', [user.email])
-        return login_view(request, {
-            'success_msg': CONFIRM_SUCCESS
-        })
+        return HttpResponseRedirect('/login/?{0}'.format('user_msg=confirm_success'))
     except:
-        return login_view(request, {
-            'error_msg': CONFIRM_FAILED
-        })
+        return HttpResponseRedirect('/login/?{0}'.format('user_msg=confirm_failed'))
 
 
 def password_restore(request):
@@ -101,17 +92,9 @@ def password_restore(request):
 
         send_mail('Password restore', msg, 'db.testSystem@gmail.com', [user.email])
 
-        request.method = 'GET'
-
-        return login_view(request, {
-            'success_msg': LOOK_AT_MAIL
-        })
+        return HttpResponseRedirect('/login/?{0}'.format('user_msg=look_at_mail'))
     except:
-        request.method = 'GET'
-
-        return login_view(request, {
-            'error_msg': NO_USER
-        })
+        return HttpResponseRedirect('/login/?{0}'.format('user_msg=no_user'))
 
 
 @login_required(redirect_field_name='')
@@ -130,15 +113,20 @@ def test_answer(request):
     try:
         testid = request.GET['testid']
     except:
-        HttpResponseRedirect('/')
+        return render(request, 't.html', {
+            'msg': 'Внутренняя ошибка'
+        })
+
     try:
         queid = request.GET['queid']
     except:
-        HttpResponseRedirect('/tests/?testid={0}'.format(testid))
+        return render(request, 't.html', {
+            'msg': 'Внутренняя ошибка'
+        })
 
     if user_time_update(request.user) <= 0:
         return render(request, 't.html', {
-            'msg': NO_TIME
+            'msg': 'Время вышло'
         })
 
     try:
@@ -153,24 +141,25 @@ def test_answer(request):
 
     if not user_session.running:
         return render(request, 't.html', {
-            'msg': SESSION_CLOSED
+            'msg': 'Сессия закрыта'
         })
 
-    if request.method != 'POST':
-        HttpResponseRedirect('/question/?testid={0}&queid={1}')
+    try:
+        form = AnswerForm(request.POST)
 
-    form = AnswerForm(request.POST)
+        reviewer = Review()
+        back = reviewer.select(form.data['answer'])
 
-    reviewer = Review()
-    back = reviewer.select(form.data['answer'])
+        if back['error']:
+            msg = {'sql_query_error': back['error']}
+        else:
+            msg = back['records']
 
-    if back['error']:
-        msg = {'sql_query_error': back['error']}
-    else:
-        msg = back['records']
-
-
-    msg = json.dumps(msg, cls=CustomJSONEncoder)
+        msg = json.dumps(msg, cls=CustomJSONEncoder)
+    except:
+        return render(request, 't.html', {
+            'msg': 'Внутренняя ошибка'
+        })
 
     return render(request, 't.html', {
         'msg': msg
@@ -179,13 +168,9 @@ def test_answer(request):
 
 @login_required(redirect_field_name='')
 def question(request):
-    template_name = 'answer_form.html'
-
     have_time = user_time_update(request.user)
     if have_time <= 0:
-        return index(request, {
-            'warn_msg': NO_TIME
-        })
+        return HttpResponseRedirect('/?{0}'.format('user_msg=no_time'))
 
     try:
         rk_id = request.GET['testid']
@@ -214,9 +199,7 @@ def question(request):
         return HttpResponseRedirect('/tests/')
 
     if not user_session.running:
-        return index(request, {
-            'warn_msg': SESSION_CLOSED
-        })
+        return HttpResponseRedirect('/?{0}'.format('user_msg=session_closed'))
 
     if request.method == 'GET':
         form = AnswerForm({'answer': session_question.last_answer})
@@ -224,21 +207,25 @@ def question(request):
             'form': form,
             'testid': rk_id,
             'question': question,
-            'have_time': have_time
+            'have_time': have_time,
+            'user_msg': get_user_message(request)
         })
-        return render(request, template_name, context)
+        return render(request, 'answer_form.html', context)
 
-    form = AnswerForm(request.POST)
-    context.update({'form': form})
+    try:
+        form = AnswerForm(request.POST)
+        context.update({'form': form})
 
-    reviewer = Review()
-    back = reviewer.check_results(sql_query_right=question.answer, sql_query_user=form.data['answer'])
+        reviewer = Review()
+        back = reviewer.check_results(sql_query_right=question.answer, sql_query_user=form.data['answer'])
 
-    session_question.last_answer = form.data['answer']
-    session_question.check()
-    session_question.save()
+        session_question.last_answer = form.data['answer']
+        session_question.check()
+        session_question.save()
 
-    return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
+        return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
+    except:
+        return HttpResponseRedirect('/')
 
 
 def start_new_session(request, user, rk, attempt):
@@ -250,13 +237,11 @@ def start_new_session(request, user, rk, attempt):
     if confirm != 'yes':
         return HttpResponseRedirect('/')
 
-    if rk.is_active == False:
+    if not rk.is_active:
         return HttpResponseRedirect('/')
 
     if attempt.have <= 0:
-        return index(request, {
-            'error_msg': NO_ATTEMPTES
-        })
+        return HttpResponseRedirect('/?{0}'.format('user_msg=no_attemptes'))
 
     indexes = []
     for obj in Question.objects.filter(rk=rk, is_active=True):
@@ -268,16 +253,19 @@ def start_new_session(request, user, rk, attempt):
         good_indexes.append(ch)
         indexes.remove(ch)
 
-    attempt.used += 1
-    attempt.have -= 1
-    attempt.save()
-    user_session = UserSession.objects.create(user=user, rk=rk, attempt=attempt.used)
+    try:
+        attempt.used += 1
+        attempt.have -= 1
+        attempt.save()
+        user_session = UserSession.objects.create(user=user, rk=rk, attempt=attempt.used)
 
-    questions = []
-    for id in good_indexes:
-        question = Question.objects.get(id=id)
-        questions.append(question)
-        SessionQuestions.objects.create(session=user_session, question=question)
+        questions = []
+        for id in good_indexes:
+            question = Question.objects.get(id=id)
+            questions.append(question)
+            SessionQuestions.objects.create(session=user_session, question=question)
+    except:
+        return HttpResponseRedirect('/')
 
     return HttpResponseRedirect('/tests/?testid={0}'.format(rk.id))
 
@@ -302,9 +290,7 @@ def test(request):
         user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
     except:
         if have_time > 0:
-            return index(request, {
-                'error_msg': ANOTHER_TEST_RUNNING
-            })
+            return HttpResponseRedirect('/login/?{0}'.format('user_msg=another_test_running'))
         return start_new_session(request, request.user, rk, attempt)
 
     if not user_session.running:
@@ -321,22 +307,20 @@ def test(request):
     context = {
         'question_list': questions,
         'testid': rk_id,
-        'have_time': have_time
+        'have_time': have_time,
+        'user_msg': get_user_message(request),
     }
     context.update(static_context)
     return render(request, 'question_list.html', context)
 
 
-def login_view(request, extra_context=None):
-    template_name = 'auth.html'
-
+def login_view(request):
     context = {
         'form_auth': LoginForm(),
         'form_pass_restore': PassRestoreForm(),
-        'is_login_page': 'True'
+        'is_login_page': 'True',
+        'user_msg': get_user_message(request),
     }
-    if extra_context is not None:
-        context.update(extra_context)
     context.update(static_context)
 
     if request.method == 'GET':
@@ -344,19 +328,19 @@ def login_view(request, extra_context=None):
             if request.user.is_superuser:
                 return HttpResponseRedirect('/admin/')
             return HttpResponseRedirect('/')
-        return render(request, template_name, context)
+        return render(request, 'auth.html', context)
 
     form_auth = LoginForm(request.POST)
     context.update({'form_auth': form_auth})
     user = authenticate(username=form_auth.data["login"], password=form_auth.data["password"])
 
     if user is None:
-        context.update({'error_msg': LOGIN_FAILED})
-        return render(request, template_name, context)
+        context.update({'user_msg': UserMessage('login_failed')})
+        return render(request, 'auth.html', context)
 
     if not user.is_active:
-        context.update({'error_msg': DISABLED_USER})
-        return render(request, template_name, context)
+        context.update({'user_msg': UserMessage('disabled_user')})
+        return render(request, 'auth.html', context)
 
     login(request, user)
     if user.is_superuser:
