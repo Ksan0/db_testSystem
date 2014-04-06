@@ -25,7 +25,7 @@
                        <tbody>
                        {% for question in question_list %}
                            <tr class="{% if question.status == 'sended' %}success{% else %}warning{% endif %}">
-                           	<td><a href="/question?testid={{ testid }}&queid={{ question.id }}"> {{ question.description|truncatechars:60 }}</a></td>
+                           	<td><a href="/question/?testid={{ testid }}&queid={{ question.id }}"> {{ question.description|truncatechars:60 }}</a></td>
                            	<td>{% if question.status == 'sended' %} Отправлен {% endif %}</td>
                        	</tr>
                       	{% endfor %}

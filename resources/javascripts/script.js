@@ -60,7 +60,7 @@ $(function(){
 	});
 
 //Проверка у админа 
-    $(".ajax-check-sql-admin").click(function() {
+    $(".ajax-check-sql-admin").click(function(e) {
 		$.post(
             "/custom-admin/test_question/", //url
             {
@@ -70,6 +70,7 @@ $(function(){
 				dataToTable(data,".sql-check-table-admin",1);
 			}	
         );
+		e.preventDefault();
 	});
 //Для пересчета показателя вопроса
 	$(".ajax-recalc-que-admin").click(function() {
@@ -92,7 +93,7 @@ $(function(){
 			function() {
 				var get = $.parseJSON("{\""+this.url.split("?")[1].replace(/&/g,"\", \"").replace(/=/g,"\": \"")+"\"}");
 				$("#RK"+get.rkid+"Att"+get.att+"Que"+get.queid).removeClass("error").addClass("success").empty().append(
-					"<td colspan=\"3\"><h4 style=\"text-align:center\">Совпадение<small style=\"color:red\">(Исправлено)<small></h4></td>"
+					"<td colspan=\"3\"><h4 style=\"text-align:center\">Совпадение<small style=\"color:red\">(Исправлено)</small></h4></td>"
 				);
 				$("#RK"+get.rkid+"Att"+get.att+">h5").append(" +1");
 			}
@@ -100,7 +101,7 @@ $(function(){
 		event.preventDefault();
 	});
 //Статистика у админа
-	$(".users").ready(function() {
+	$(document).ready(function() {
 		$(".answer").each(function() {
 			dataToTable(this.textContent,this,1);
 		});
@@ -115,6 +116,36 @@ $(function(){
  		$(this).addClass("active");
 		$($(this).attr("name")).addClass("active");
 	});
+	
+	$(".attempt-view").each(function() {
+		$(this).css("display","none");
+	});	
+	
+	$(".open-attempt").click(function(){
+		//var rkid= this.id.split("RK")[1].split("Att")[0];
+		if($("#"+this.id.split("_")[1]).css("display") != "none")	
+			$("#"+this.id.split("_")[1]).css("display","none");
+		else{
+			$("#"+this.id.split("_")[1]).css("display","block");
+			$("#"+this.id.split("_")[1] + "> table > tbody >tr.info").each(function(){
+				$(this).css("display","none");
+			});
+			$("#"+this.id.split("_")[1] + "> table > tbody >tr.warning").each(function(){
+                $(this).css("display","none");
+            });
+		}
+	});
+	$("tr.hided").click(function(e){
+		console.log(this);
+		if($("."+this.className.split(" ")[1]+".info").css("display") == "none")
+			$("."+this.className.split(" ")[1]).css("display","row");
+		else{
+			$("."+this.className.split(" ")[1]+".info").css("display","none");
+            $("."+this.className.split(" ")[1]+".warning").css("display","none");
+		}
+		e.preventDefault();
+	});
+	
 });
 
 function parseGetParams() { 

@@ -40,37 +40,38 @@
 		            </div>
 				</div>
 			{% endif %}
+				<div style="margin:5px 0px 0px 0px"><button class="btn-info btn open-attempt" type="button" id="button_RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}">Попытка № {{ session_output.session.attempt }}</button></div>
 				<div class="attempt-view" id="RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}">
 					<h4> Попытка № {{ session_output.session.attempt }}</h4>
 					<h5> Правильно......{{ session_output.questions_right_count }}/{{ session_output.questions_all_count }}</h5>
-					<table class="attempt-table table table-bordered">
+					<table class="attempt-table table table-bordered ">
         	        	<thead>
             	        	<tr>
-								<th style="width:150px">#</th>
-	                	        <th>Запрос</th>
-    	                	    <th>Результат</th>
+								<th style="width:150px;border-bottom:2px solid black;">#</th>
+	                	        <th style="border-bottom:2px solid black;">Запрос</th>
+    	                	    <th style="border-bottom:2px solid black;">Результат</th>
 	        	            </tr>
     	        	    </thead>
         	        	<tbody>
         				{% for session_question in session_output.session_questions %}
-							<tr style="background-color:#fff">
+							<tr class="hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" style="background-color:#fff; border-top:2px solid black;cursor:pointer;">
 								<td>Вопрос</td>
-								<td colspan="2">{{ session_question.question.description_html|safe }}</td>
+								<td colspan="2" style="">{{ session_question.question.description_html|safe }}</td>
 							</tr>
-    		                <tr class="info">
+    		                <tr class="info hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 								<td>Преподаватель</td>
 								<td>{{ session_question.question.answer_html|safe }}</td>
             					<td class="answer">{{ session_question.get_right_records }} </td>
 							</tr>
-		                    <tr class="warning">
+		                    <tr class="warning hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 								<td>Студент</td>
         		    			<td>{{ session_question.last_answer_html|safe }} </td>
 								<td class="answer">{{ session_question.get_user_records }} </td>	
 							</tr>
 								<tr id="RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" class={% if session_question.is_right %}"success">
-								<td colspan=3><h4 style="text-align:center">Совпадение</h4></td>
+								<td colspan=3 style="border-bottom:2px double black;"><h4 style="text-align:center">Совпадение</h4></td>
 								{% elif session_question.get_user_records %}"error">
-								<td colspan=3><h4 style="text-align:center">Расхождение
+								<td colspan=3 style="border-bottom:2px solid black;"><h4 style="text-align:center">Расхождение
 									{% if not session_question.is_right == 1 %}
 										<a href="#make_rightRK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" data-target="#make_rightRK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" data-toggle="modal" style="color:green"> (Верный ответ?)</a>
 									{% endif %}
@@ -95,6 +96,7 @@
 						{% endfor %}
 						</tbody>
 	            	</table>
+				<div style="margin:5px 0px 0px 0px; float:right"><button class="btn-warning btn open-attempt" type="button" id="button_RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}">Скрыть № {{ session_output.session.attempt }}</button></div>
 				</div>
 			{% with user_session|last as lastus %}
 				{% if lastus == session_output  %}</div>{% endif %}
