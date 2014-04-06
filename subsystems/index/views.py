@@ -100,9 +100,9 @@ def password_restore(request):
 @login_required(redirect_field_name='')
 def close_session(request):
     try:
-        user_session = UserSession.objects.get(user=request.user, running=True)
-        user_session.running = False
-        user_session.save()
+        for user_session in UserSession.objects.filter(user=request.user, running=True):
+            user_session.running = False
+            user_session.save()
     except:
         pass
     return HttpResponseRedirect('/')
@@ -235,10 +235,17 @@ def start_new_session(request, user, rk, attempt):
         confirm = ''
 
     if confirm != 'yes':
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/?')
 
     if not rk.is_active:
         return HttpResponseRedirect('/')
+
+    try:
+        rk = UserSession.objects.get(user=user, running=True)
+        # Если такую нашли, новую начать невозможно
+        return HttpResponseRedirect('/?{0}'.format('user_msg=another_test_running'))
+    except:
+        pass
 
     if attempt.have <= 0:
         return HttpResponseRedirect('/?{0}'.format('user_msg=no_attemptes'))
@@ -289,8 +296,6 @@ def test(request):
     try:
         user_session = UserSession.objects.get(user=request.user, rk=rk, attempt=attempt.used)
     except:
-        if have_time > 0:
-            return HttpResponseRedirect('/login/?{0}'.format('user_msg=another_test_running'))
         return start_new_session(request, request.user, rk, attempt)
 
     if not user_session.running:
