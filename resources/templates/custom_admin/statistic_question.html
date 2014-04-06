@@ -8,10 +8,10 @@ records: {{ question.get_records }} <br/>
     <div class="container-fluid">
         <div class="section-header">
             <h3>{{ question.title }}</h3>
-			<h4>{{ question.desqription }}</h4>
+			<h4>{{ question.desqription_html|safe }}</h4>
         </div>
 		<h3>Правильный ответ:</h3>
-		<textarea rows="3">{{ question.answer }}</textarea><br>	
+		<textarea rows="3">{{ question.answer_html|safe }}</textarea><br>
 		<button class="ajax-check-sql-admin btn btn-info">Проверить</button>
 		<h3>Результат</h3>
 		<div class="result"></div>
@@ -28,7 +28,7 @@ records: {{ question.get_records }} <br/>
 			{% for answer in answers %}
 				<tr class="{% if answer.is_right %}success{% else %}error{% endif %}">
 					<td>{{ answer.session.user }}</td>
-					<td>{{ answer.last_answer }}</td>
+					<td>{{ answer.last_answer_html|safe }}</td>
 					<td>{{ answer.get_user_records }}</td>
 				</tr>
 			{% endfor %}

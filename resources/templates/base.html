@@ -75,12 +75,14 @@
                                 {% endif %}
                                 {% if not hide_tests_url and not is_user_index %}
                                     <li class=""><a href="{{ tests_url }}">Тесты</a></li>
-                                {% endif %}i  
-                          	<li class="session_timer"><a> Осталось: {{ have_time }} min</a></li>
-
+                                {% endif %}
+                                {% if have_time > 0 %}
+                          	        <li class="session_timer"><a> Осталось: {{ have_time }} min</a></li>
+                                {% endif %}
                             {% endif %}
 
 
+                            {% if user.is_authenticated %}
                                 <li class="dropdown">
                                 <a class="dropdown-toggle" href="#"
                                    data-toggle="dropdown open">{{ user.username }}</a>

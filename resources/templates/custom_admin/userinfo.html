@@ -55,16 +55,16 @@
         				{% for session_question in session_output.session_questions %}
 							<tr style="background-color:#fff">
 								<td>Вопрос</td>
-								<td colspan="2">{{ session_question.question.description }}</td>
+								<td colspan="2">{{ session_question.question.description_html|safe }}</td>
 							</tr>
     		                <tr class="info">
 								<td>Преподаватель</td>
-								<td>{{ session_question.question.answer }}</td> 
+								<td>{{ session_question.question.answer_html|safe }}</td>
             					<td class="answer">{{ session_question.get_right_records }} </td>
 							</tr>
 		                    <tr class="warning">
 								<td>Студент</td>
-        		    			<td>{{ session_question.last_answer }} </td>
+        		    			<td>{{ session_question.last_answer_html|safe }} </td>
 								<td class="answer">{{ session_question.get_user_records }} </td>	
 							</tr>
 								<tr id="RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" class={% if session_question.is_right %}"success">

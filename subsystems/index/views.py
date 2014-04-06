@@ -235,7 +235,7 @@ def start_new_session(request, user, rk, attempt):
         confirm = ''
 
     if confirm != 'yes':
-        return HttpResponseRedirect('/?')
+        return HttpResponseRedirect('/?{0}'.format('user_msg=start_session_failed'))
 
     if not rk.is_active:
         return HttpResponseRedirect('/')

@@ -21,6 +21,9 @@ class RK(models.Model):
         verbose_name = 'Тест'
         verbose_name_plural = 'Тесты'
 
+    def description_html(self):
+        return self.description.replace('\n', '<br/>')
+
 
 class Question(models.Model):
     title = models.CharField(max_length=250, verbose_name='Название')
@@ -47,6 +50,11 @@ class Question(models.Model):
             msg = back['records']
         return json.dumps(msg, cls=CustomJSONEncoder)
 
+    def description_html(self):
+        return self.description.replace('\n', '<br/>')
+
+    def answer_html(self):
+        return self.answer.replace('\n', '<br/>')
 
 
 class Attempt(models.Model):
@@ -95,3 +103,6 @@ class SessionQuestions(models.Model):
         back = reviewer.check_results(sql_query_right=self.question.answer, sql_query_user=self.last_answer)
         self.is_right = back['is_equal']
         self.save()
+
+    def last_answer_html(self):
+        return self.last_answer.replace('\n', '<br/>')

@@ -17,7 +17,8 @@ class UserMessage():
             'session_closed': 'Вы уже закончили сессию',
             'login_failed': 'Извините вы ошиблись с логином или паролем',
             'disabled_user': 'Юзер неактивен',
-            'another_test_running': 'Вы уже выполняете тест, завершите, чтобы начать следующий'
+            'another_test_running': 'Вы уже выполняете тест, завершите, чтобы начать следующий',
+            'start_session_failed': 'Невозможно начать сессию'
         }
 
         if msg in self.dict_success:
