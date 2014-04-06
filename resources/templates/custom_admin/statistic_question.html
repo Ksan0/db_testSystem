@@ -2,10 +2,7 @@
 
 {% block page %}
 {% load static %}
-answer: {{ question.answer }} <br/>
 records: {{ question.get_records }} <br/>
-
-    is_right: {{ answer.is_right }} <br/>
 <script type="text/javascript" src="/resources/javascripts/jscharts.js"></script>
 <section class="section section-alt section-padded">
     <div class="container-fluid">
@@ -14,8 +11,8 @@ records: {{ question.get_records }} <br/>
 			<h4>{{ question.desqription }}</h4>
         </div>
 		<h3>Правильный ответ:</h3>
-		<h4>{{ question.answer }}</h4>	
-		<button class="ajax-check-sql-admin" style="font-size: 12pt;">Проверить</button>
+		<textarea rows="3">{{ question.answer }}</textarea><br>	
+		<button class="ajax-check-sql-admin btn btn-info">Проверить</button>
 		<h3>Результат</h3>
 		<div class="result"></div>
 		{% if not answers %}<h3>Тут жизни нет:(</h3>{% endif %}
@@ -29,7 +26,7 @@ records: {{ question.get_records }} <br/>
     	    </thead>
         	<tbody>
 			{% for answer in answers %}
-				<tr style="background-color:#fff">
+				<tr class="{% if answer.is_right %}success{% else %}error{% endif %}">
 					<td>{{ answer.session.user }}</td>
 					<td>{{ answer.last_answer }}</td>
 					<td>{{ answer.get_user_records }}</td>

@@ -49,6 +49,21 @@
 			</div>                                                                                                                                                 	
             {% endfor %}
         </ul>
+		{% if have_time and have_time > 0 %}
+		<button class="btn btn-danger" type="button" style="float:right" href="#close_session" data-target="#close_session" data-toggle="modal">Завершить текущий тест</button>
+			<div class="modal hide fade" id="close_session">
+               	<div class="modal-header">
+                	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h3>Завершить тест?</h3>
+				</div>
+        	    <div class="modal-body">
+            		<div class="confirm_button_block" style="margin-top:-5px;float:right">
+                		<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+                    	<a href="/close_session" class="btn btn-primary" style="margin-left:10px">Завершить</a>
+	                </div>
+    	        </div>
+        	</div>
+		{% endif %}
     </div>
 </section>
 {% endblock %}
