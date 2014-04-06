@@ -25,9 +25,13 @@
 				<tbody>
 				{% for usr in users %}
 					<tr>
-                			<td><a href="/custom-admin/statistic?type=user&id={{ usr.id }}" style="position:absolute; width:92%;">{{ usr.email }} </a></td>
-							<td>{% if usr.first_name %}{{ usr.first_name }}{% else %}-{% endif %}</td>
-							<td>{% if usr.last_name %}{{ usr.last_name }}{% else %}-{% endif %}</td>
+							<td><a href="/custom-admin/statistic?type=user&id={{ usr.user.id }}" style="position:absolute; width:92%;">{% if usr.user.first_name %}{{ usr.user.first_name }}{% else %}-{% endif %}</a></td>
+							<td>{% if usr.user.last_name %}{{ usr.user.last_name }}{% else %}-{% endif %}</td>
+                            <td>
+                                {% for rk in usr.rk %}
+                                    {{ rk.0.title }} #{{ rk.1 }} {{ rk.3 }}/{{ rk.2 }}<br/>
+                                {% endfor %}
+                            </td>
   					</tr>
             	{% endfor %}
 				</tbody>
