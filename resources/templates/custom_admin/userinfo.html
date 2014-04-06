@@ -18,7 +18,7 @@
 				{% if not firstus == session_output %}</div>{% endif %}
 			{% endwith %}
 			<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}
-				<a href="#add_attempt" data-target="#add_attempt" data-toggle="modal"><small style="color:blue"> (Нужно больше попыток?)</small></a></h3>
+				<a href="#add_attempt" data-target="#add_attempt{{ session_output.session.rk.id }}" data-toggle="modal"><small style="color:blue"> (Нужно больше попыток?)</small></a></h3>
 			{% endif %}
 				<h4 id= "{{ session_output.session.rk.title }} {{ session_output.session.attempt }}"> Попытка № {{ session_output.session.attempt }}</h4>
 				<h5> Правильно......{{ session_output.questions_right_count }}/{{ session_output.questions_all_count }}</h5>
@@ -31,7 +31,7 @@
         	            </tr>
             	    </thead>
                 	<tbody>
-        			{% for session_question in session_output.session_questions %}		
+        			{% for session_question in session_output.session_questions %}
 						<tr style="background-color:#fff">
 							<td>Вопрос</td>
 							<td colspan="2">{{ session_question.question.description }}</td>
@@ -51,51 +51,55 @@
 							{% elif session_question.get_user_records %}"error">
 							<td colspan=3><h4 style="text-align:center">Расхождение
 								{% if not session_question.is_right == 1 %}
-									<a href="#make_right" data-target="#make_right" data-toggle="modal" style="color:green"> (Верный ответ?)</a>
+									<a href="#make_right{{session_output.session.rk.id}}{{session_output.session.attempt}}{{session_question.question.id}}" data-target="#make_right{{session_output.session.rk.id}}{{session_output.session.attempt}}{{session_question.question.id}}" data-toggle="modal" style="color:green"> (Верный ответ?)</a>
 								{% endif %}
 								</h4></td>
 							{% else %}>
 							<td colspan=3><h4 style="text-align:center">Нет ответа</h4></td>
-							{% endif %}		
-							<div class="modal hide fade" id="make_right">
-	            				<div class="modal-header">
-			    	            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	    				            <h3>Изменить статус?</h3>
-			    	    	    </div>
-        					    <div class="modal-body">
-				        			<p>Вы уверены, что ваш ответ верен?</p>
-                					<div class="confirm_link" style="margin-top:-5px;float:right">
-				                    	<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
-                				    	<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
-				                	</div>
-            					</div>
-        					</div>	
+							{% endif %}	
 					{% endfor %}
 					</tbody>
 	            </table>
 			{% with user_session|last as lastus %}
 				{% if lastus == session_output  %}</div>{% endif %}
 			{% endwith %}
-			<!--Modals block--!>
-			<div class="modal hide fade" id="add_attempt">
-    			<div class="modal-header">
-        			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        			<h3>Добавить попытку?</h3>
-    			</div>
-    			<div class="modal-body">
-        			<div class="confirm_link" style="margin-top:-5px;float:right">
-	            		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
-    	        		<a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Работаем.</a>
-        			</div>
-    			</div>
-    		</div>
-			<!--End Modals Block --!>
 		{% endfor %}
-	<ul class="rk-headers">
-	{% for session_output in user_sessions %}
-    	{% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}c
-	{% endfor %}
-	</ul>
 	</div>
 </section>
+<ul class="rk-headers">
+{% for session_output in user_sessions %}                                                                                                             
+<!--Navigation static--!>
+   	{% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}
+<!-- END Navigation static--!>
+<!--Modals block--!>
+    {% for session_question in session_output.session_questions %}
+		<div class="modal hide fade" id="make_right{{session_output.session.rk.id}}{{session_output.session.attempt}}{{session_question.question.id}}">
+		<div class="modal-header">
+    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    	    <h3>Изменить статус?</h3>
+	    </div>
+    	<div class="modal-body">
+			<p>Вы уверены, что ваш ответ верен?</p>
+			<div class="confirm_link" style="margin-top:-5px;float:right">
+    	    	<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+	    		<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
+    		</div>
+		</div>
+	</div>
+	{%endfor%}
+<div class="modal hide fade" id="add_attempt{{ session_output.session.rk.id }}">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Добавить попытку?</h3>
+	</div>
+	<div class="modal-body">
+		<div class="confirm_link" style="margin-top:-5px;float:right">
+    		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
+    		<a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Работаем.</a>
+		</div>
+	</div>
+</div>
+<!--End Modals Block --!>
+{% endfor %}
+</ul>
 {% endblock %}
