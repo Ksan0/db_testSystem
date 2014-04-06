@@ -5,48 +5,20 @@
 
 <script type="text/javascript" src="/resources/javascripts/jscharts.js"></script>
 <section class="section section-alt section-padded">
-<ul class="rk-headers">
-{% for session_output in user_sessions %}                                                                                                             
-<!--Navigation static--!>
-   	{% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}
-<!-- END Navigation static--!>
-<!--Modals block--!>
-    {% for session_question in session_output.session_questions %}
-		<div class="modal hide fade" id="make_right{{session_output.session.rk.id}}{{session_output.session.attempt}}{{session_question.question.id}}">
-		<div class="modal-header">
-    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    	    <h3>Изменить статус?</h3>
-	    </div>
-    	<div class="modal-body">
-			<p>Вы уверены, что ваш ответ верен?</p>
-			<div class="confirm_link" style="margin-top:-5px;float:right">
-    	    	<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
-	    		<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
-    		</div>
-		</div>
-	</div>
-	{%endfor%}
-<div class="modal hide fade" id="add_attempt{{ session_output.session.rk.id }}">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3>Добавить попытку?</h3>
-	</div>
-	<div class="modal-body">
-		<div class="confirm_link" style="margin-top:-5px;float:right">
-    		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
-    		<a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Работаем.</a>
-		</div>
-	</div>
-</div>
-{% endfor %}
-</ul>
-<!--End Modals Block --!>
     <div class="container-fluid">
         <div class="section-header">
             <h3>{{ student.username }}</h3>
 			<h3>{{ student.first_name }} {{ student.last_name }}</h3>
         </div>
 
+<ul class="rk-headers">
+{% for session_output in user_sessions %}                                                                                                             
+<!--Navigation static-->
+   	{% if session_output.session.attempt == 1 %}<li name="#RK{{session_output.session.rk.id}}"><a>{{ session_output.session.rk.title }}</a></li>{%endif%}
+<!-- END Navigation static-->
+{% endfor %}
+</ul>
+<!--End Modals Block -->
 		{% if not user_sessions %}<h3>Студенту не хватило мотивации ни на один рк:(</h3>{% endif %}
 		{% for session_output in user_sessions %}
 			{% if session_output.session.attempt == 1 %}
@@ -92,13 +64,39 @@
 								</h4></td>
 							{% else %}>
 							<td colspan=3><h4 style="text-align:center">Нет ответа</h4></td>
-							{% endif %}	
+							{% endif %}
+						<!--Modals block-->
+								<div class="modal hide fade" id="make_right{{session_output.session.rk.id}}{{session_output.session.attempt}}{{session_question.question.id}}">
+									<div class="modal-header">
+						    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							    	    <h3>Изменить статус?</h3>
+								    </div>
+							    	<div class="modal-body">
+										<p>Вы уверены, что ваш ответ верен?</p>
+										<div class="confirm_link" style="margin-top:-5px;float:right">
+							    	    	<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+								    		<a href="/custom-admin/user_action/?type=answer_is_right&att={{session_output.session.attempt}}&queid={{session_question.question.id}}&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">ДА!</a>
+							    		</div>
+									</div>
+								</div>
 					{% endfor %}
 					</tbody>
 	            </table>
 			{% with user_session|last as lastus %}
 				{% if lastus == session_output  %}</div>{% endif %}
-			{% endwith %}
+			{% endwith %}	
+<div class="modal hide fade" id="add_attempt{{ session_output.session.rk.id }}">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Добавить попытку?</h3>
+	</div>
+	<div class="modal-body">
+		<div class="confirm_link" style="margin-top:-5px;float:right">
+    		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">:(</a>
+    		<a href="/custom-admin/user_action/?type=add_attempt&rkid={{ session_output.session.rk.id }}&uid={{ student.id }}" class="btn btn-primary" style="margin-left:10px">Работаем.</a>
+		</div>
+	</div>
+</div>
 		{% endfor %}
 	</div>
 </section>
