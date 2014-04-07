@@ -40,10 +40,8 @@
 		            </div>
 				</div>
 			{% endif %}
-				<div style="margin:5px 0px 0px 0px"><button class="btn-info btn open-attempt" type="button" id="button_RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}">Попытка № {{ session_output.session.attempt }}</button></div>
+				<div style="margin:5px 0px 0px 0px"><button class="btn-info btn open-attempt" type="button" id="button_RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}">Попытка № {{ session_output.session.attempt }}</button><h4> Правильно......{{ session_output.questions_right_count }}/{{ session_output.questions_all_count }}</h4></div>
 				<div class="attempt-view" id="RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}">
-					<h4> Попытка № {{ session_output.session.attempt }}</h4>
-					<h5> Правильно......{{ session_output.questions_right_count }}/{{ session_output.questions_all_count }}</h5>
 					<table class="attempt-table table table-bordered ">
         	        	<thead>
             	        	<tr>
