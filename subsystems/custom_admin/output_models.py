@@ -14,12 +14,16 @@ class UserOutputModel(User):
         self.user = user
 
         self.rk = []
-        for attempt in Attempt.objects.filter(user=user):
-            best_row = (0, 0, 0, 0)
-            for i in xrange(1, attempt.used+1):
-                session = UserSession.objects.get(user=user, rk=attempt.rk, attempt=i)
-                session_ques = SessionQuestions.objects.filter(session=session)
-                if session_ques.filter(is_right=True).count() >= best_row[-1]:
-                    best_row = (attempt.rk, i, session_ques.count(), session_ques.filter(is_right=True).count())
-                # rk, attempt_number, que_count_all, que_count_right
+        for rk in RK.objects.all():
+            # rk, attempt_number, que_count_all, que_count_right
+            best_row = (rk, 0, 0, 0)
+            try:
+                attempt = Attempt.objects.get(user=user, rk=rk)
+                for i in xrange(1, attempt.used+1):
+                    session = UserSession.objects.get(user=user, rk=attempt.rk, attempt=i)
+                    session_ques = SessionQuestions.objects.filter(session=session)
+                    if session_ques.filter(is_right=True).count() >= best_row[-1]:
+                        best_row = (attempt.rk, i, session_ques.count(), session_ques.filter(is_right=True).count())
+            except:
+                pass
             self.rk.append(best_row)
