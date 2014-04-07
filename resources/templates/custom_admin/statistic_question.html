@@ -32,9 +32,9 @@
 					<td style="background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.session.user }}</td>
 					<td style="background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.last_answer_html|safe }}</td>
 					<td style="background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}" class="answer">{{ answer.get_user_records }}</td>
-					{% if not answer.is_right %}<td class="btn btn-success" data-target="" data-toggle="modal" style="margin-left:5px; border: 0px none">Засчитать</td>{% endif %}
+					{% if not answer.is_right %}<td class="btn btn-success" data-target="#R{{ answer.session.rk.id }}A{{ answer.session.attempt }}Q{{ question.id }}U{{ answer.session.user.id }}" data-toggle="modal" style="margin-left:5px; border: 0px none">Засчитать</td>{% endif %}
 				</tr>
-				<div class="modal hide fade" id="">
+				<div class="modal hide fade" id="R{{ answer.session.rk.id }}A{{ answer.session.attempt }}Q{{ question.id }}U{{ answer.session.user.id }}">
 					<div class="modal-header">
                 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 	    <h3>Изменить статус?</h3>
@@ -43,7 +43,7 @@
                 		<p>Вы уверены, что ваш ответ верен?</p>
                 		<div class="confirm_link" style="margin-top:-5px;float:right">
                     		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
-                			<a href="" class="btn btn-primary ajax-make-que-right-admin" data-dismiss="modal" aria-hidden="true" style="margin-left:10px">ДА!</a>
+                			<a href="/custom-admin/user_action/?type=answer_is_right&att={{ answer.session.attempt }}&queid={{ question.id }}&rkid={{ answer.session.rk.id }}&uid={{ answer.session.user.id }}" class="btn btn-primary ajax-make-que-right-admin" data-dismiss="modal" aria-hidden="true" style="margin-left:10px">ДА!</a>
                 		</div>
                 	</div>
                 </div>
