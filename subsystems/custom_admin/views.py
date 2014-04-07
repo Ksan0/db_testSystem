@@ -112,7 +112,7 @@ def index(request):
         return HttpResponseRedirect('/')
 
     users = []
-    for user in User.objects.all():
+    for user in User.objects.filter(is_staff=False, is_superuser=False):
         users.append(UserOutputModel(user))
 
     return render(request, 'custom_admin/index.html', {
