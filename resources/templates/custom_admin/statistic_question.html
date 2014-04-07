@@ -18,7 +18,7 @@
 		<div class="sql-check-table-admin"></div>
 		{% if not answers %}<h3>Тут жизни нет:(</h3>{% endif %}
 		<h3>Результат</h3>
-		<table class="question-table table table-bordered">
+		<table class="question-table table table-bordered" style="border: 0px">
         	<thead>
 	        	<tr>
 					<th style="width:150px">Пользователь</th>
@@ -28,11 +28,25 @@
     	    </thead>
         	<tbody>
 			{% for answer in answers %}
-				<tr class="{% if answer.is_right %}success{% else %}error{% endif %}">
-					<td>{{ answer.session.user }}</td>
-					<td>{{ answer.last_answer_html|safe }}</td>
-					<td class="answer">{{ answer.get_user_records }}</td>
+				<tr >
+					<td style="background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.session.user }}</td>
+					<td style="background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.last_answer_html|safe }}</td>
+					<td style="background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}" class="answer">{{ answer.get_user_records }}</td>
+					{% if not answer.is_right %}<td class="btn btn-success" data-target="" data-toggle="modal" style="margin-left:5px; border: 0px none">Засчитать</td>{% endif %}
 				</tr>
+				<div class="modal hide fade" id="">
+					<div class="modal-header">
+                		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                	    <h3>Изменить статус?</h3>
+                    </div>
+                	<div class="modal-body">
+                		<p>Вы уверены, что ваш ответ верен?</p>
+                		<div class="confirm_link" style="margin-top:-5px;float:right">
+                    		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+                			<a href="" class="btn btn-primary ajax-make-que-right-admin" data-dismiss="modal" aria-hidden="true" style="margin-left:10px">ДА!</a>
+                		</div>
+                	</div>
+                </div>
 			{% endfor %}
 			</tbody>
 		</table>
