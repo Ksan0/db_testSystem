@@ -87,6 +87,7 @@ $(function(){
 		);
 	});
 // Зачесть вопрос как правильный
+	//Страница статистики юзера
     $(".ajax-make-que-right-admin").click(function(event) {
 		$.get(
 			$(this).attr("href"),
@@ -99,6 +100,22 @@ $(function(){
 			}
 		);
 		event.preventDefault();
+	});
+	//Страница статистики вопроса
+	$(".make-right-question_stat-quest").click(function(e) {
+		$.get(
+			$(this).attr("href"),
+			function() {
+				var get = $.parseJSON("{\""+this.url.split("?")[1].replace(/&/g,"\", \"").replace(/=/g,"\": \"")+"\"}");
+				var rowIndex= $("[data-target=#R"+get.rkid+"A"+get.att+"Q"+get.queid+"U"+get.uid+"]")[0].parentElement.rowIndex;
+				$($("[data-target=#R"+get.rkid+"A"+get.att+"Q"+get.queid+"U"+get.uid+"]")[0].parentElement.parentElement.children[rowIndex]).css("background","#DFF0D8");
+				var tds = $($("[data-target=#R"+get.rkid+"A"+get.att+"Q"+get.queid+"U"+get.uid+"]")[0].parentElement.children);
+				$(tds[0]).css("background","#DFF0D8");
+				$(tds[1]).css("background","#DFF0D8");
+				$(tds[2]).css("background","#DFF0D8");
+				$(tds[3]).css("display","none");
+			}
+		)
 	});
 //Статистика у админа
 	$(document).ready(function() {
@@ -120,7 +137,7 @@ $(function(){
 	$(".attempt-view").each(function() {
 		$(this).css("display","none");
 	});	
-	
+//Показываем/скрываем попытку юзера на странице статистики юзера
 	$(".open-attempt").click(function(){
 		//var rkid= this.id.split("RK")[1].split("Att")[0];
 		if($("#"+this.id.split("_")[1]).css("display") != "none")	
@@ -135,6 +152,7 @@ $(function(){
             });
 		}
 	});
+//Скрываем/показываем строки в таблице на странице статистики юзера
 	$("tr.hided").click(function(e){
 		console.log(this);
 		if($("."+this.className.split(" ")[1]+".info").css("display") == "none")
@@ -145,7 +163,25 @@ $(function(){
 		}
 		e.preventDefault();
 	});
-	
+//Скрываем/показываем строку на странице статистики вопроса
+	//костыль, что при клики на "Засчитать" не выпадало
+	var is_click_question_table_td3=false;
+	$("table.question-table > tbody > tr").click( function() {
+		if (is_click_question_table_td3 == true) {
+			is_click_question_table_td3=false;
+			return;
+		}
+		if(this.rowIndex % 2 == 1) 
+    		if($(this.parentElement.children[this.rowIndex]).css("display") == "none")
+    			$(this.parentElement.children[this.rowIndex]).css("display","row");
+    		else
+    			$(this.parentElement.children[this.rowIndex]).css("display","none");
+    	else
+    		$(this).css("display","none");
+    });	
+	$("table.question-table > tbody > tr > td:nth-child(4)").click( function(e) {	
+		is_click_question_table_td3=true;
+	});
 });
 
 function parseGetParams() { 
