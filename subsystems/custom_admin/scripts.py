@@ -133,9 +133,10 @@ def statistic_tech(request):
     result_data = []
     for user in users:
         email = user.user.email
-        if email not in mysmalldb.keys():
-            continue
-        tech_id = mysmalldb[email]
+        if email in mysmalldb.keys():
+            tech_id = mysmalldb[email]
+        else:
+            tech_id = None
         result = 0
         for row in user.rk:
             if row[0].id == rk.id:
