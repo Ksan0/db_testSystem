@@ -37,11 +37,11 @@
 {% endif %}{% endif %}
 {% endblock %}
 
-{% if opts.model_name == 'user' or opts.model_name == 'question' %}
+{# {% if opts.model_name == 'user' or opts.model_name == 'question' %} #}
 <p>
     <a style="font-size: 12pt;" href="/custom-admin/statistic/?type={{ opts.model_name }}&id={{ object_id }}"> Статистика </a>
 </p>
-{% endif %}
+{# {% endif %} #}
 {% if opts.model_name == 'question' %}
     <p> <button class="ajax-check-sql-admin" style="font-size: 12pt;"> Проверить </button>
     <button class="ajax-recalc-que-admin" style="font-size: 12pt;"> Пересчитать показатели </button> </p>

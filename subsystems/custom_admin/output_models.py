@@ -9,7 +9,8 @@ class UserSessionOutputModel():
         self.questions_right_count = self.session_questions.filter(is_right=True).count()
         self.questions_all_count = self.session_questions.count()
 
-class UserOutputModel(User):
+
+class UserOutputModel():
     def __init__(self, user):
         self.user = user
 

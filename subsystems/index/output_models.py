@@ -2,7 +2,7 @@ from db_testSystem.models import *
 from db_testSystem.settings_system import *
 
 
-class OutputRKModel(RK):
+class OutputRKModel():
     def __init__(self, sup, user):  # sup = rk
         self.id = sup.id
         self.title = sup.title
@@ -29,7 +29,7 @@ class OutputRKModel(RK):
 
 
 
-class OutputQuestionModel(Question):
+class OutputQuestionModel():
     def __init__(self, sup, status):
         self.id = sup.id
         self.description = sup.description

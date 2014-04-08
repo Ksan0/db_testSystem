@@ -94,14 +94,15 @@ def statistic(request):
 
     try:
         type = request.GET['type']
-        id = request.GET['id']
     except:
         return HttpResponseRedirect('/admin/')
 
     if type == 'user':
-        return statistic_user(request, id)
+        return statistic_user(request)
     if type == 'question':
-        return statistic_question(request, id)
+        return statistic_question(request)
+    if type == 'rk':
+        return statistic_tech(request)
 
     return HttpResponseRedirect('/admin/')
 
