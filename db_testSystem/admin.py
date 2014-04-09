@@ -33,7 +33,7 @@ admin.site.register(User, UserAdmin)
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'rk', 'is_active')
+    list_display = ('description', 'rk', 'is_active')
     list_editable = ('rk', 'is_active')
     list_filter = ('rk',)
 admin.site.register(Question, QuestionAdmin)

@@ -1,6 +1,7 @@
 #coding: utf-8
 import MySQLdb
 from _mysql_exceptions import DataError, DatabaseError, InternalError, IntegrityError, InterfaceError, MySQLError, OperationalError, ProgrammingError
+import re
 #from db_testSystem.models import *
 
 
@@ -15,11 +16,16 @@ class MySqlDB(object):
 
     @staticmethod
     def dictfetchall(cursor):
-        desc = cursor.description
-        return [
-            dict(zip([col[0] for col in desc], row))
-            for row in cursor.fetchall()
-        ]
+        result_set = []
+        for row in cursor.fetchall():
+            pre_result = dict()
+            counter = 0
+            for data in row:
+                counter += 1
+                pre_result.update({str(counter): data})
+            result_set.append(pre_result)
+        return result_set
+
 
     def select(self, sql_query):
         try:
