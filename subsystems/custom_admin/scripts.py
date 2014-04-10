@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from output_models import *
 from subsystems.index.scripts import user_time_update
-
+import re
 
 def user_add_attempt(request):
     try:
@@ -54,11 +54,11 @@ def make_user_answer_right(request):
 def recalc_question(request):
     try:
         splitter = re.compile(r'/')
-        split_url = request.POST['url']
+        split_url = splitter.split(request.META['HTTP_REFERER'])
         question = Question.objects.get(id=int(split_url[-2]))
     except:
         return render(request, 't.html', {
-            'msg': 'Args error'
+            'msg': 'Args error '
         })
 
     try:
