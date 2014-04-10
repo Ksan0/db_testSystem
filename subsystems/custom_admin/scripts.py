@@ -182,5 +182,7 @@ def statistic_question(request):
     answers = SessionQuestions.objects.filter(question=question).order_by('is_right')
     return render(request, 'custom_admin/statistic_question.html', {
         'question': question,
-        'answers': answers
+        'answers': answers,
+        'is_admin': True,
+        'hide_tests_url': True
     })

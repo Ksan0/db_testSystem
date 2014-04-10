@@ -94,13 +94,13 @@
 {#                                        <a href="{% url 'gamer-detail' user.id %}">Профиль</a>#}
                                     </li>
                                     <li>
-                                        <a href="{{ logout_url }}">Выйти</a>
+                                        <a href="/logout/">Выйти</a>
                                     </li>
                                 </ul>
                             </li>
                             {% else %}
 								{% if not is_login_page %}
-                            <li class=""><a href="{{ login_url }}">Войти</a></li>
+                            <li class=""><a href="/login/">Войти</a></li>
 								{% endif %}
                             {% endif %}
                             <!-- -->
