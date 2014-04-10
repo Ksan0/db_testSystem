@@ -72,6 +72,7 @@ def question_action(request):
             'msg': json.dumps({'error': 'Access denied'}, cls=CustomJSONEncoder)
         })
 
+
     try:
         type = request.GET['type']
     except:
@@ -80,7 +81,7 @@ def question_action(request):
         })
 
     if type == 'recalc':
-        recalc_question(request)
+        return recalc_question(request)
 
     return render(request, 't.html', {
             'msg': json.dumps({'error': 'Wrong action type'}, cls=CustomJSONEncoder)
