@@ -57,13 +57,25 @@ class Question(models.Model):
         verbose_name_plural = 'Вопросы'
 
     def get_records(self):
-        reviewer = Review()
-        back = reviewer.select(self.answer)
-        if back['error']:
-            msg = {'sql_query_error': back['error']}
-        else:
-            msg = back['records']
-        return json.dumps(msg, cls=CustomJSONEncoder)
+        if self.type.isSQLQuery():
+            reviewer = Review()
+            back = reviewer.select(self.answer)
+            if back['error']:
+                msg = {'sql_query_error': back['error']}
+            else:
+                msg = back['records']
+            return json.dumps(msg, cls=CustomJSONEncoder)
+        elif self.type.isTestMultianswer():
+            strs = self.get_multianswer_strings()
+            bools = self.get_multianswer_bools()
+            res = []
+            for i in range(len(strs)):
+                s = strs[i]
+                b = ''
+                if bools[i]:
+                    b = '+'
+                res.append([s, b])
+            return json.dumps(res)
 
     def description_html(self):
         return self.description.replace('\n', '<br/>')
@@ -82,7 +94,7 @@ class Question(models.Model):
             result.append(str)
         return result
 
-    def get_multianswers_bools(self):
+    def get_multianswer_bools(self):
         result = []
         for str in self.answer.split('\n'):
             str_nospace = str.replace(' ', '')
@@ -125,19 +137,52 @@ class SessionQuestions(models.Model):
         return self.question.get_records()
 
     def get_user_records(self):
-        reviewer = Review()
-        back = reviewer.select(self.last_answer)
-        if back['error']:
-            msg = {'sql_query_error': back['error']}
-        else:
-            msg = back['records']
-        return json.dumps(msg, cls=CustomJSONEncoder)
+        if self.question.type.isSQLQuery():
+            reviewer = Review()
+            back = reviewer.select(self.last_answer)
+            if back['error']:
+                msg = {'sql_query_error': back['error']}
+            else:
+                msg = back['records']
+            return json.dumps(msg, cls=CustomJSONEncoder)
+        elif self.question.type.isTestMultianswer():
+            strs = self.question.get_multianswer_strings()
+            bools = self.last_answer
+            res = []
+            for i in range(len(strs)):
+                s = strs[i]
+                b = ''
+                try:
+                    if bools[i] == '1':
+                        b = '+'
+                except:
+                    pass
+                res.append([s, b])
+            return json.dumps(res)
 
     def check(self):
-        reviewer = Review()
-        back = reviewer.check_results(sql_query_right=self.question.answer, sql_query_user=self.last_answer)
-        self.is_right = back['is_equal']
+        if self.question.type.isSQLQuery():
+            reviewer = Review()
+            back = reviewer.check_results(sql_query_right=self.question.answer, sql_query_user=self.last_answer)
+            self.is_right = back['is_equal']
+        elif self.question.type.isTestMultianswer():
+            bools = self.question.get_multianswer_bools()
+            bools_str = ''
+            for b in bools:
+                if b:
+                    bools_str += '1'
+                else:
+                    bools_str += '0'
+            self.is_right = bools_str == self.last_answer
         self.save()
 
     def last_answer_html(self):
-        return self.last_answer.replace('\n', '<br/>')
+        if self.question.type.isSQLQuery():
+            return self.last_answer.replace('\n', '<br/>')
+        elif self.question.type.isTestMultianswer():
+            res = ''
+            for i in range(len(self.last_answer)):
+                if self.last_answer[i] == '1':
+                    res += '{0}. + <br/>'.format(i+1)
+
+            return res

@@ -238,25 +238,19 @@ def question(request):
             session_question.check()
             session_question.save()
         elif question.type.isTestMultianswer():
-            right_answers = question.get_multianswers_bools()
-            answers = []
+            right_answers = question.get_multianswer_bools()
+            answers = ''
             count = 0
             for ans in question.get_multianswer_strings():
                 ans_key = 'answer_{0}'.format(count)
-                if ans_key in request.POST:
-                    answers.append(request.POST[ans_key] == 'on')
+                if ans_key in request.POST and request.POST[ans_key] == 'on':
+                    answers += '1'
                 else:
-                    answers.append(False)
+                    answers += '0'
                 count += 1
-            save_answers = ''
-            for a in answers:
-                save_answers += str(int(a))
-            session_question.last_answer = save_answers
-            session_question.is_right = answers == right_answers
+            session_question.last_answer = answers
+            session_question.check()
             session_question.save()
-            #raise Exception(session_question.last_answer)
-
-            #raise Exception(right_answers)
 
         return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
     #except:

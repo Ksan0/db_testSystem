@@ -10,7 +10,7 @@
             <h3>{{ question.title }}</h3>
 			<h4>{{ question.desqription_html|safe }}</h4>
         </div>
-		<h3>Правильный ответ:</h3>
+		<h3>Ответ преподавателя:</h3>
 		<form id="question_form" method="post" action="" enctype="multipart/form-data">
 			{% csrf_token %}
 			<textarea rows="3" id="id_answer" style="width: 80%; height: 250px;">{{ question.answer|safe }}</textarea><br>
