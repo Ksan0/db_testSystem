@@ -8,6 +8,11 @@ import re
 from subsystems.index.classes import CustomJSONEncoder
 
 
+class UserExtraInfo(models.Model):
+    user = models.ForeignKey(User)
+    tech_id = models.IntegerField()
+
+
 class RK(models.Model):
     title = models.CharField(max_length=250, verbose_name='Название')
     description = models.TextField(verbose_name='Описание', blank=True)
@@ -184,5 +189,4 @@ class SessionQuestions(models.Model):
             for i in range(len(self.last_answer)):
                 if self.last_answer[i] == '1':
                     res += '{0}. + <br/>'.format(i+1)
-
             return res

@@ -4,7 +4,7 @@ import string
 
 
 def migrate_db():
-    from db_testSystem.models import Question, RK, Attempt, UserSession, SessionQuestions
+    from db_testSystem.models import Question, RK, Attempt, UserSession, SessionQuestions, UserExtraInfo
     from django.contrib.auth.models import User
     from subsystems.db_raw_sql_works.DB import Review
 
@@ -68,6 +68,7 @@ def migrate_db():
     """
 
     # add score
+    """
     with open('sc_add', 'r') as infile:
         for line in infile:
             user_list = [word for word in line.split()]
@@ -80,6 +81,61 @@ def migrate_db():
                 question = Question.objects.get(id=19)
                 for i in range(count):
                     SessionQuestions.objects.create(session=session, question=question, is_right=True)
+    """
+
+    # add extra info (tech-id)
+    mysmalldb = {
+        'oleg_b_94@mail.ru': '866',
+        'igor.gigi13@gmail.com': '888',
+        'abbadoh@mail.ru': '926',
+        'f1nal@cgaming.org': '963',
+        'kirsanov.do@yandex.ru': '968',
+        'p02p@yandex.ru': '976',
+        'krygin.ia@gmail.com': '961',
+        'lifar_tut_net@mail.ru': '796',
+        'fleur-du-jour@rambler.ru': '1009',
+        'minaev.mike@gmail.com': '817',
+        'rumotame@gmail.com': '944',
+        'gifla@ya.ru': '1002',
+        'Tanyadmp@mail.ru': '978',
+        'rudiny@rambler.ru': '940',
+        'Rakhubov@yandex.ru': '852',
+        'rubtsov.dmv@gmail.com': '808',
+        'esusekov@gmail.com': '895',
+        'e.sycheva_nn@mail.ru': '979',
+        'ff.warprobot@gmail.com': '348',
+        'seregachern@mail.ru': '962',
+        'svr93@i.ua': '905',
+        'queenliestme@mail.ru': '907',
+        'abashinos@gmail.com': '490',
+        'Artur_pskov@mail.ru': '772',
+        'alexvasiliev92@gmail.com': '984',
+        'kgfq@mail.ru': '494',
+        'delfin1995@yandex.ru': '781',
+        'govorovskij@gmail.com': '524',
+        'kolesofortuni@mail.ru': '308',
+        'salting@bk.ru': '597',
+        'ria6@yandex.ru': '346',
+        'kolesnikovakatya91@gmail.com': '174',
+        'ko_viktoria@inbox.ru': '782',
+        'igor.latkin@outlook.com': '323',
+        'alekseyl@list.ru': '686',
+        'LinDeni@mail.ru': '574',
+        'napster8192@hotmail.com': '290',
+        'h12vbn6@gmail.com': '391',
+        'maxmyalkin@gmail.com': '531',
+        'Alexopryshko@yandex.ru': '321',
+        'radochin_ilya@list.ru': '271',
+        'timonin.maksim@mail.ru': '514',
+        'Anis-007@yandex.ru': '307',
+        'wequbelity@gmail.com': '272'
+    }
+    for user in User.objects.all():
+        try:
+            tech_id = mysmalldb[user.email]
+            UserExtraInfo.objects.create(user=user, tech_id=tech_id)
+        except:
+            pass
 
     return 0
 
