@@ -29,7 +29,7 @@ static_context = {
 def index(request, other_context=None):  # list of RK
     running_added = False
     tests = []
-    for obj in RK.objects.filter(is_active=True):
+    for obj in RK.objects.order_by('-is_active'):
         tests.append(OutputRKModel(obj, request.user))
         try:
             session = UserSession.objects.get(user=request.user, rk=obj, running=True)

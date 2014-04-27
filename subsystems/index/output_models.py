@@ -7,6 +7,7 @@ class OutputRKModel():
         self.id = sup.id
         self.title = sup.title
         self.description = sup.description
+        self.is_active = sup.is_active
 
         best_result = 0
         try:

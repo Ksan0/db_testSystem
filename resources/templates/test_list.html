@@ -14,7 +14,7 @@
         <ul class="inline row-fluid">
             {% for test in tests %}
             <li class="span4">
-                <div class="well blockquote-well">
+                <div class="well blockquote-well" {% if not test.is_active %}style="background-color: #FFE0E0;" {% endif %}>
                 	<a href={% if have_time > 0 %}"{{ tests_url }}?testid={{ test.id }}"{% else %}"#confirm" data-target="#confirm_{{test.id}}" data-toggle="modal" {% endif %}>
 					<p> {{ test.title }} </p>
                     <blockquote>
@@ -38,13 +38,19 @@
 					<h3>{% if test.attemptes_amount == 0 %}Уупс......{% else %}Начать тест?{% endif %}</h3>
 				</div>
 				<div class="modal-body">
-					<p>{% if test.attemptes_amount == 1 %}У вас осталась 1 попытка!
-					{% elif test.attemptes_amount == 0 %}У вас закончились попытки :({% else %}
-					У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 and test.attemptes_amount < 4%}попытки!{% else %}попыток!{% endif %}
-					{% endif %}</p>
+					<p>
+                    {% if test.is_active %}
+                        {% if test.attemptes_amount == 1 %}У вас осталась 1 попытка!
+					    {% elif test.attemptes_amount == 0 %}У вас закончились попытки :(
+                        {% else %} У вас осталось {{ test.attemptes_amount }} {% if test.attemptes_amount > 1 and test.attemptes_amount < 4%}попытки!{% else %}попыток!{% endif %}
+					    {% endif %}
+                    {% else %}
+                        Тест закрыт
+                    {% endif %}
+                    </p>
 					<div class="confirm_button_block" style="margin-top:-5px;float:right">
 						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Закрыть</a>
-						{% if test.attemptes_amount > 0 %}
+						{% if test.attemptes_amount > 0 and test.is_active %}
 						<a href="{{ tests_url }}?testid={{ test.id }}&confirm_start=yes" class="btn btn-primary" style="margin-left:10px">Начать тест</a>
 						{% endif %}
 					</div>
