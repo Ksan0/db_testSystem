@@ -22,7 +22,7 @@
 		{% if not user_sessions %}<h3>Студенту не хватило мотивации ни на один рк:(</h3>{% endif %}
 		{% for session_output in user_sessions %}
 			{% if session_output.session.attempt == 1 %}
-			{% with user_sessions|first as firstus%}
+			{% with user_sessions|first as firstus %}
 				{% if not firstus == session_output %}</div>{% endif %}
 			{% endwith %}
 			<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}
@@ -46,9 +46,11 @@
         	        	<thead>
             	        	<tr>
 								<th style="width:150px;border-bottom:2px solid black;">#</th>
-	                	        {% if session_output.session.question.type.isSQLQuery %}
+                                {% with session_output.session_questions|first as fssque  %}
+	                	        {% if fssque.question.type.isSQLQuery %}
                                     <th style="border-bottom:2px solid black;">Запрос</th>
                                 {% endif %}
+                                {% endwith %}
     	                	    <th style="border-bottom:2px solid black;">Результат</th>
 	        	            </tr>
     	        	    </thead>
@@ -60,14 +62,14 @@
 							</tr>
     		                <tr class="info hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 								<td>Преподаватель</td>
-								{% if session_output.session.question.type.isSQLQuery %}
+								{% if session_question.question.type.isSQLQuery %}
                                     <td>{{ session_question.question.answer_html|safe }}</td>
                                 {% endif %}
             					<td class="answer">{{ session_question.get_right_records }} </td>
 							</tr>
 		                    <tr class="warning hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 								<td>Студент</td>
-                                {% if session_output.session.question.type.isSQLQuery %}
+                                {% if session_question.question.type.isSQLQuery %}
         		    			    <td>{{ session_question.last_answer_html|safe }} </td>
                                 {% endif %}
 								<td class="answer">{{ session_question.get_user_records }} </td>	
