@@ -86,7 +86,7 @@ def statistic_tech(request):
     result_data = []
     for user in users:
         try:
-            tech_id = UserExtraInfo.objects.get(user=user).tech_id
+            tech_id = UserExtraInfo.objects.get(user=user.user).tech_id
         except:
             tech_id = None
 
