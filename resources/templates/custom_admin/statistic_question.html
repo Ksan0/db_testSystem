@@ -13,7 +13,7 @@
 		<h3>Правильный ответ:</h3>
 		<form id="question_form" method="post" action="" enctype="multipart/form-data">
 			{% csrf_token %}
-			<textarea rows="3" id="id_answer" style="width:400px; max-width:600px">{{ question.answer_html|safe }}</textarea><br>
+			<textarea rows="3" id="id_answer" style="width: 80%; height: 250px;">{{ question.answer|safe }}</textarea><br>
 		<button class="ajax-check-sql-admin btn btn-info">Проверить</button>
 		<div class="sql-check-table-admin"></div>
 		{% if not answers %}<h3>Тут жизни нет:(</h3>{% endif %}

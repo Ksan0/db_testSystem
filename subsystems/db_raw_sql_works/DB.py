@@ -14,27 +14,28 @@ class MySqlDB(object):
         db = MySQLdb.connect(host=host_name, user=username, passwd=passwd, db=db_name, charset=charset)
         self.cursor = db.cursor()
 
-    @staticmethod
-    def dictfetchall(cursor):
+    def dictfetchall(self):
+        title_set = []
+        for set in self.cursor.description:
+            title_set.append(set[0])
+
         result_set = []
-        for row in cursor.fetchall():
-            pre_result = dict()
-            counter = 0
+        for row in self.cursor.fetchall():
+            pre_result = []
             for data in row:
-                counter += 1
-                pre_result.update({str(counter): data})
+                pre_result.append(data)
             result_set.append(pre_result)
-        return result_set
+        return title_set, result_set
 
 
     def select(self, sql_query):
         try:
             self.cursor.execute(sql_query)
-            sql_records = MySqlDB.dictfetchall(self.cursor)
-            return sql_records, False
+            titles, sql_records = self.dictfetchall()
+            return titles, sql_records, False
         except (DataError, DatabaseError, InternalError, IntegrityError,
                 InterfaceError, MySQLError, OperationalError, ProgrammingError) as e:
-            return dict(), e.args[1]
+            return [], [], e.args[1]
 
 
 class Review(object):
@@ -49,19 +50,22 @@ class Review(object):
 
 
     def select(self, sql_query):
-        records, error = self.orm.select(sql_query)
+        titles, records, error = self.orm.select(sql_query)
         return {
             'records': records,
+            'titles': titles,
             'error': error
         }
 
     def check_results(self, sql_query_right, sql_query_user):
-        r_records, r_error = self.orm.select(sql_query_right)
-        u_records, u_error = self.orm.select(sql_query_user)
+        r_titles, r_records, r_error = self.orm.select(sql_query_right)
+        u_titles, u_records, u_error = self.orm.select(sql_query_user)
         is_equal = [a.values() for a in r_records] == [a.values() for a in u_records]
         return {
+            'r_titles': r_titles,
             'r_records': r_records,
             'r_error': r_error,
+            'u_titles': u_titles,
             'u_records': u_records,
             'u_error': u_error,
             'is_equal': is_equal

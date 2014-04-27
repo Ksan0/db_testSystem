@@ -202,7 +202,20 @@ def question(request):
         return HttpResponseRedirect('/?{0}'.format('user_msg=session_closed'))
 
     if request.method == 'GET':
-        form = AnswerForm({'answer': session_question.last_answer})
+        if question.type.isSQLQuery():
+            tmpl = 'sql_query_answer_form.html'
+            form = AnswerForm({'answer': session_question.last_answer})
+        elif question.type.isTestMultianswer():
+            tmpl = 'test_multianswer_form.html'
+            answers_html = ''
+            count = 0
+            for ans in question.get_multianswer_strings():
+                answers_html += '<input type="checkbox" id="id_answer_{0}" name="answer_{0}"> '.format(count)
+                answers_html += ans
+                answers_html += '<br/>'
+                count += 1
+            form = answers_html
+
         context.update({
             'form': form,
             'testid': rk_id,
@@ -210,21 +223,43 @@ def question(request):
             'have_time': have_time,
             'user_msg': get_user_message(request)
         })
-        return render(request, 'answer_form.html', context)
+        return render(request, tmpl, context)
 
-    try:
-        form = AnswerForm(request.POST)
-        context.update({'form': form})
+    if True:
+    #try:
+        if question.type.isSQLQuery():
+            form = AnswerForm(request.POST)
+            context.update({'form': form})
 
-        reviewer = Review()
-        back = reviewer.check_results(sql_query_right=question.answer, sql_query_user=form.data['answer'])
+            reviewer = Review()
+            back = reviewer.check_results(sql_query_right=question.answer, sql_query_user=form.data['answer'])
 
-        session_question.last_answer = form.data['answer']
-        session_question.check()
-        session_question.save()
+            session_question.last_answer = form.data['answer']
+            session_question.check()
+            session_question.save()
+        elif question.type.isTestMultianswer():
+            right_answers = question.get_multianswers_bools()
+            answers = []
+            count = 0
+            for ans in question.get_multianswer_strings():
+                ans_key = 'answer_{0}'.format(count)
+                if ans_key in request.POST:
+                    answers.append(request.POST[ans_key] == 'on')
+                else:
+                    answers.append(False)
+                count += 1
+            save_answers = ''
+            for a in answers:
+                save_answers += str(int(a))
+            session_question.last_answer = save_answers
+            session_question.is_right = answers == right_answers
+            session_question.save()
+            #raise Exception(session_question.last_answer)
+
+            #raise Exception(right_answers)
 
         return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
-    except:
+    #except:
         return HttpResponseRedirect('/')
 
 

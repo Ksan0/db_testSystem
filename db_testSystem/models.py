@@ -4,6 +4,7 @@ from django.db import models
 from settings_system import *
 from subsystems.db_raw_sql_works.DB import Review
 import json
+import re
 from subsystems.index.classes import CustomJSONEncoder
 
 
@@ -25,17 +26,31 @@ class RK(models.Model):
         return self.description.replace('\n', '<br/>')
 
 
+class QuestionType(models.Model):
+    title = models.CharField(max_length=250)
+    signature = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.title
+
+    def isSQLQuery(self):
+        return self.signature == 'SQL_query'
+
+    def isTestMultianswer(self):
+        return self.signature == 'Test_multianswer' \
+                                 ''
+
 class Question(models.Model):
-    title = models.CharField(max_length=250, verbose_name='Название')
+    type = models.ForeignKey(QuestionType, null=True, blank=True, verbose_name='Тип')
     description = models.TextField(verbose_name='Вопрос')
-    answer = models.TextField(verbose_name='Правильный SQL запрос')
+    answer = models.TextField(verbose_name='Ответ')
 
     rk = models.ForeignKey(RK, null=True, blank=True, verbose_name='Тест')
     is_active = models.BooleanField(default=True, verbose_name='Активный')
     registered_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return self.title
+        return self.description
 
     class Meta:
         verbose_name = 'Вопрос'
@@ -55,6 +70,26 @@ class Question(models.Model):
 
     def answer_html(self):
         return self.answer.replace('\n', '<br/>')
+
+    def get_multianswer_strings(self):
+        result = []
+        for str in self.answer.split('\n'):
+            str_nospace = str.replace(' ', '')
+            if len(str_nospace) == 0:
+                continue
+            if str_nospace.find('++') == 0:
+                str = str.replace('++', '', 1)
+            result.append(str)
+        return result
+
+    def get_multianswers_bools(self):
+        result = []
+        for str in self.answer.split('\n'):
+            str_nospace = str.replace(' ', '')
+            if len(str_nospace) == 0:
+                continue
+            result.append(str_nospace.find('++') == 0)
+        return result
 
 
 class Attempt(models.Model):
