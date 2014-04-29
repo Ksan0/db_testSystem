@@ -210,7 +210,13 @@ def question(request):
             answers_html = ''
             count = 0
             for ans in question.get_multianswer_strings():
-                answers_html += '<input type="checkbox" id="id_answer_{0}" name="answer_{0}"> '.format(count)
+                checked = ''
+                try:
+                    if session_question.last_answer[count] == '1':
+                        checked = 'checked'
+                except:
+                    pass
+                answers_html += '<input type="checkbox" id="id_answer_{0}" name="answer_{0}" {1}> '.format(count, checked)
                 answers_html += ans
                 answers_html += '<br/>'
                 count += 1

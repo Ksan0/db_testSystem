@@ -92,10 +92,14 @@ class Question(models.Model):
         result = []
         for str in self.answer.split('\n'):
             str_nospace = str.replace(' ', '')
+            if str_nospace.find('++') == 0:
+                str_nospace = str_nospace.replace('++', '', 1)
+                str = str.replace('++', '', 1)
             if len(str_nospace) == 0:
                 continue
-            if str_nospace.find('++') == 0:
-                str = str.replace('++', '', 1)
+            while str[0] == ' ':
+                str = str.replace(' ', '', 1)
+
             result.append(str)
         return result
 
