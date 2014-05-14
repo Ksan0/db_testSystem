@@ -65,9 +65,15 @@ $(function(){
             "/custom-admin/test_question/", //url
             {
 				message: $("#id_answer")[0].value,
+				type_txt: $("#id_type :selected").text(),
 				csrfmiddlewaretoken: $("#question_form")[0][0].value
 			}, function(data) {
+				if ($("#id_type :selected").attr('value') == '3') {
+					$(".sql-check-table-admin").append(JSON.stringify(data, "", 4));
+				}
+				else {
 				dataToTable(data,".sql-check-table-admin",1);
+				}
 			}	
         );
 		e.preventDefault();
