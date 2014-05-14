@@ -11,11 +11,21 @@ DATABASES = {
    }
 }
 
+
 # db for user's tests. It contains tables as Movie, Reviewer etc
-TEST_DB = {
+MYSQL_TEST_DB = {
     'HOST_NAME': '',
     'DB_NAME': 'db_test',
     'USER_NAME': 'testUser',
     'USER_PASSWORD': 'qwe',
     'DB_CHARSET': 'utf8'
+}
+
+
+NOSQL_TEST_DB = {
+    'HOST_NAME': '',
+    'HOST_PORT': 27017,
+    'DB_NAME': 'wow',
+    'USER_NAME': 'readonly',
+    'USER_PASSWORD': 'readMeAll!'
 }
