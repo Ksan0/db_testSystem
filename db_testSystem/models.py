@@ -42,8 +42,11 @@ class QuestionType(models.Model):
         return self.signature == 'SQL_query'
 
     def isTestMultianswer(self):
-        return self.signature == 'Test_multianswer' \
-                                 ''
+        return self.signature == 'Test_multianswer'
+
+    def isNoSQLQuery(self):
+        return self.signature == 'noSQL_query'
+
 
 class Question(models.Model):
     type = models.ForeignKey(QuestionType, null=True, blank=True, verbose_name='Тип')
