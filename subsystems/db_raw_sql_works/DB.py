@@ -60,7 +60,7 @@ class Review(object):
     def check_results(self, sql_query_right, sql_query_user):
         r_titles, r_records, r_error = self.orm.select(sql_query_right)
         u_titles, u_records, u_error = self.orm.select(sql_query_user)
-        is_equal = [a.values() for a in r_records] == [a.values() for a in u_records]
+        is_equal = [a for a in r_records] == [a for a in u_records]
         return {
             'r_titles': r_titles,
             'r_records': r_records,
