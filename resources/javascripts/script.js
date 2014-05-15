@@ -55,9 +55,11 @@ $(function(){
             "/test_answer/?testid="+get.testid+"&queid="+get.queid, //url
             form.serialize(), function(data) {
                 if ($('.question_type').text() == 'SQL_query')
-				    dataToTable(data,".messages",1);
-                else
+					dataToTable(data,".messages",1);
+                else {
+				    $(".messages").empty();
                     $(".messages").append(data);
+				}
 			}
         );
 	});
@@ -72,7 +74,8 @@ $(function(){
 				csrfmiddlewaretoken: $("#question_form")[0][0].value
 			}, function(data) {
 				if ($("#id_type :selected").attr('value') == 3) {
-					$(".sql-check-table-admin").append(JSON.stringify(jQuery.parseJSON(data)).replace("[","[<br>","g").replace("]","<br>]","g").replace(",[",",<br>[","g"));
+					$(".sql-check-table-admin").empty();
+					$(".sql-check-table-admin").append("<pre>" + JSON.stringify(jQuery.parseJSON(data), "", 2) + "</pre>");
 				    //console.log($(".sql-check-table-admin"));
                 } else {
 					dataToTable(data,".sql-check-table-admin",1);
