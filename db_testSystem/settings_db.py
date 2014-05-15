@@ -23,7 +23,7 @@ MYSQL_TEST_DB = {
 
 
 NOSQL_TEST_DB = {
-    'HOST_NAME': '',
+    'HOST_NAME': 'localhost',
     'HOST_PORT': 27017,
     'DB_NAME': 'wow',
     'USER_NAME': 'readonly',

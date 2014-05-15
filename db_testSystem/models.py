@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from settings_system import *
-from subsystems.db_raw_sql_works.DB import Review
+from subsystems.db_raw_sql_works.DB import MySQLReviewer, NoSQLReviewer
 import json
 import re
 from subsystems.index.classes import CustomJSONEncoder
@@ -66,10 +66,20 @@ class Question(models.Model):
 
     def get_records(self):
         if self.type.isSQLQuery():
-            reviewer = Review()
-            back = reviewer.select(self.answer)
+            with MySQLReviewer() as reviewer:
+                back = reviewer.execute(self.answer)
+
             if back['error']:
-                msg = {'sql_query_error': back['error']}
+                msg = {'query_error': back['error']}
+            else:
+                msg = back['records']
+            return json.dumps(msg, cls=CustomJSONEncoder)
+        elif self.type.isNoSQLQuery():
+            with NoSQLReviewer() as reviewer:
+                back = reviewer.execute(self.answer)
+
+            if back['error']:
+                msg = {'query_error': back['error']}
             else:
                 msg = back['records']
             return json.dumps(msg, cls=CustomJSONEncoder)
@@ -150,10 +160,20 @@ class SessionQuestions(models.Model):
 
     def get_user_records(self):
         if self.question.type.isSQLQuery():
-            reviewer = Review()
-            back = reviewer.select(self.last_answer)
+            with MySQLReviewer() as reviewer:
+                back = reviewer.execute(self.last_answer)
+
             if back['error']:
-                msg = {'sql_query_error': back['error']}
+                msg = {'query_error': back['error']}
+            else:
+                msg = back['records']
+            return json.dumps(msg, cls=CustomJSONEncoder)
+        elif self.question.type.isNoSQLQuery():
+            with NoSQLReviewer() as reviewer:
+                back = reviewer.execute(self.last_answer)
+
+            if back['error']:
+                msg = {'query_error': back['error']}
             else:
                 msg = back['records']
             return json.dumps(msg, cls=CustomJSONEncoder)
@@ -174,8 +194,12 @@ class SessionQuestions(models.Model):
 
     def check(self):
         if self.question.type.isSQLQuery():
-            reviewer = Review()
-            back = reviewer.check_results(sql_query_right=self.question.answer, sql_query_user=self.last_answer)
+            with MySQLReviewer() as reviewer:
+                back = reviewer.execute_double(right_query=self.question.answer, user_query=self.last_answer)
+            self.is_right = back['is_equal']
+        elif self.question.type.isNoSQLQuery():
+            with NoSQLReviewer() as reviewer:
+                back = reviewer.execute_double(right_query=self.question.answer, user_query=self.last_answer)
             self.is_right = back['is_equal']
         elif self.question.type.isTestMultianswer():
             bools = self.question.get_multianswer_bools()
@@ -189,7 +213,7 @@ class SessionQuestions(models.Model):
         self.save()
 
     def last_answer_html(self):
-        if self.question.type.isSQLQuery():
+        if self.question.type.isSQLQuery() or self.question.type.isNoSQLQuery():
             return self.last_answer.replace('\n', '<br/>')
         elif self.question.type.isTestMultianswer():
             res = ''

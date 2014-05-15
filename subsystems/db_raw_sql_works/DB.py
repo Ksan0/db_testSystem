@@ -6,16 +6,16 @@ from db_testSystem.settings_db import MYSQL_TEST_DB, NOSQL_TEST_DB
 import pymongo
 
 
-class MySqlDB(object):
-    def __init__(self, host_name, username, passwd, db_name, charset):
-        self.db = MySQLdb.connect(host=host_name, user=username, passwd=passwd, db=db_name, charset=charset)
+class MySqlDB:
+    def __init__(self, host_name, username, password, db_name, charset):
+        self.db = MySQLdb.connect(host=host_name, user=username, passwd=password, db=db_name, charset=charset)
         self.cursor = self.db.cursor()
 
     def close(self):
         self.cursor.close()
         self.db.close()
 
-    def dictfetchall(self):
+    def __dictfetchall(self):
         title_set = []
         for set in self.cursor.description:
             title_set.append(set[0])
@@ -29,21 +29,21 @@ class MySqlDB(object):
         return title_set, result_set
 
 
-    def select(self, query):
+    def execute(self, query):
         try:
             self.cursor.execute(query)
-            titles, sql_records = self.dictfetchall()
+            titles, sql_records = self.__dictfetchall()
             return titles, sql_records, False
         except (DataError, DatabaseError, InternalError, IntegrityError,
                 InterfaceError, MySQLError, OperationalError, ProgrammingError) as e:
             return [], [], e.args[1]
 
 
-class NoSqlDB(object):  # with pymongo
-    def __init__(self, host_name, username, passwd, db_name, charset):
-        self.client = pymongo.MongoClient(NOSQL_TEST_DB['HOST_NAME'], NOSQL_TEST_DB['HOST_PORT'])
-        self.db = self.client[NOSQL_TEST_DB['DB_NAME']]
-        self.db.authenticate(NOSQL_TEST_DB['USER_NAME'], NOSQL_TEST_DB['USER_PASSWORD'])
+class NoSqlDB:  # with pymongo
+    def __init__(self, host_name, host_port, username, password, db_name):
+        self.client = pymongo.MongoClient(host_name, host_port)
+        self.db = self.client[db_name]
+        self.db.authenticate(username, password)
 
     def close(self):
         self.db.logout()
@@ -87,11 +87,13 @@ class NoSqlDB(object):  # with pymongo
                 case "string":
                 case "boolean":
                     return cursor;
+                case "null":
+                    return "Empty set";
                 case "Uclass":
                     return cursor.toArray();
             }
 
-            throw "mongo-eval-JS error";
+            throw "mongo-eval-JS cursor-type error: " + type.toString();
         """
 
         try:
@@ -102,10 +104,10 @@ class NoSqlDB(object):  # with pymongo
 
         if type(res) is not list:
             res = [res]
-        return res, None
+        return res, False
 
 
-class Review(object):
+class MySQLReviewer:
     def __init__(self, db_settings=None):
         if db_settings is None:
             db_settings = MYSQL_TEST_DB
@@ -121,23 +123,61 @@ class Review(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.orm.close()
 
-    def select(self, query):
-        titles, records, error = self.orm.select(query)
+    def execute(self, query):
+        titles, records, error = self.orm.execute(query)
         return {
             'records': records,
             'titles': titles,
             'error': error
         }
 
-    def check_results(self, right_query, user_query):
-        r_titles, r_records, r_error = self.orm.select(right_query)
-        u_titles, u_records, u_error = self.orm.select(user_query)
+    def execute_double(self, right_query, user_query):
+        r_titles, r_records, r_error = self.orm.execute(right_query)
+        u_titles, u_records, u_error = self.orm.execute(user_query)
         is_equal = [a for a in r_records] == [a for a in u_records]
         return {
             'r_titles': r_titles,
             'r_records': r_records,
             'r_error': r_error,
             'u_titles': u_titles,
+            'u_records': u_records,
+            'u_error': u_error,
+            'is_equal': is_equal
+        }
+
+
+class NoSQLReviewer:
+    def __init__(self, db_settings=None):
+        if db_settings is None:
+            db_settings = NOSQL_TEST_DB
+        self.orm = NoSqlDB(db_settings['HOST_NAME'],
+                           db_settings['HOST_PORT'],
+                           db_settings['USER_NAME'],
+                           db_settings['USER_PASSWORD'],
+                           db_settings['DB_NAME'])
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.orm.close()
+
+    def execute(self, query):
+        records, error = self.orm.execute(query)
+        return {
+            'records': records,
+            'error': error
+        }
+
+    def execute_double(self, right_query, user_query):
+        r_records, r_error = self.orm.execute(right_query)
+        u_records, u_error = self.orm.execute(user_query)
+
+        is_equal = [a for a in r_records] == [a for a in u_records]
+
+        return {
+            'r_records': r_records,
+            'r_error': r_error,
             'u_records': u_records,
             'u_error': u_error,
             'is_equal': is_equal

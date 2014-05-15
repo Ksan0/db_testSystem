@@ -147,11 +147,16 @@ def test_answer(request):
     try:
         form = AnswerForm(request.POST)
 
-        reviewer = Review()
-        back = reviewer.select(form.data['answer'])
+        if question.type.isSQLQuery():
+            model = MySQLReviewer
+        elif question.type.isNoSQLQuery():
+            model = NoSQLReviewer
+
+        with model() as reviewer:
+            back = reviewer.execute(form.data['answer'])
 
         if back['error']:
-            msg = {'sql_query_error': back['error']}
+            msg = {'query_error': back['error']}
         else:
             msg = back['records']
 
@@ -202,7 +207,7 @@ def question(request):
         return HttpResponseRedirect('/?{0}'.format('user_msg=session_closed'))
 
     if request.method == 'GET':
-        if question.type.isSQLQuery():
+        if question.type.isSQLQuery() or question.type.isNoSQLQuery():
             tmpl = 'sql_query_answer_form.html'
             form = AnswerForm({'answer': session_question.last_answer})
         elif question.type.isTestMultianswer():
@@ -233,12 +238,16 @@ def question(request):
 
     if True:
     #try:
-        if question.type.isSQLQuery():
+        if question.type.isSQLQuery() or question.type.isNoSQLQuery():
             form = AnswerForm(request.POST)
             context.update({'form': form})
 
-            reviewer = Review()
-            back = reviewer.check_results(sql_query_right=question.answer, sql_query_user=form.data['answer'])
+            if question.type.isSQLQuery():
+                model = MySQLReviewer
+            elif question.type.isNoSQLQuery():
+                model = NoSQLReviewer
+            with model() as reviewer:
+                back = reviewer.execute_double(right_query=question.answer, user_query=form.data['answer'])
 
             session_question.last_answer = form.data['answer']
             session_question.check()

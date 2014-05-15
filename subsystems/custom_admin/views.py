@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from output_models import *
 from subsystems.index.scripts import user_time_update
 from scripts import *
+from subsystems.db_raw_sql_works.DB import MySQLReviewer, NoSQLReviewer
 
 
 @login_required(redirect_field_name='')
@@ -21,15 +22,27 @@ def test_question(request):
 
     try:
         query = request.POST['message']
+        type_txt = request.POST['type_txt']
+        type = QuestionType.objects.get(title=type_txt)
     except:
         return render(request, 't.html', {
             'msg': json.dumps({'error': 'POST error'}, cls=CustomJSONEncoder)
         })
 
-    reviewer = Review()
-    back = reviewer.select(query)
+    if type.isSQLQuery():
+        model = MySQLReviewer
+    elif type.isNoSQLQuery():
+        model = NoSQLReviewer
+    else:
+        return render(request, 't.html', {
+            'msg': json.dumps({'error': 'wrong type'}, cls=CustomJSONEncoder)
+        })
+
+    with model() as reviewer:
+        back = reviewer.execute(query)
+
     if back['error']:
-        msg = {'sql_query_error': back['error']}
+        msg = {'query_error': back['error']}
     else:
         msg = back['records']
 

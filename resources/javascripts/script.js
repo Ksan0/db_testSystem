@@ -54,7 +54,10 @@ $(function(){
         $.post(
             "/test_answer/?testid="+get.testid+"&queid="+get.queid, //url
             form.serialize(), function(data) {
-				dataToTable(data,".messages",1);
+                if ($('.question_type').text() == 'SQL_query')
+				    dataToTable(data,".messages",1);
+                else
+                    $(".messages").append(data);
 			}
         );
 	});
@@ -70,12 +73,13 @@ $(function(){
 			}, function(data) {
 				if ($("#id_type :selected").attr('value') == 3) {
 					$(".sql-check-table-admin").append(JSON.stringify(jQuery.parseJSON(data)).replace("[","[<br>","g").replace("]","<br>]","g").replace(",[",",<br>[","g"));
-				} else {
+				    //console.log($(".sql-check-table-admin"));
+                } else {
 					dataToTable(data,".sql-check-table-admin",1);
 				}
 			}	
         );
-		console.log($("#id_type"))
+		//console.log($("#id_type"))
 		e.preventDefault();
 	});
 //Для пересчета показателя вопроса
@@ -196,7 +200,7 @@ function parseGetParams() {
    var __GET = window.location.search.substring(1).split("&"); 
    for(var i=0; i<__GET.length; i++) { 
       var getVar = __GET[i].split("="); 
-      $_GET[getVar[0]] = typeof(getVar[1])=="undefined" ? "" : getVar[1]; 
+      $_GET[getVar[0]] = typeof(getVar[1])=="undefined" ? "" : getVar[1];
    } 
    return $_GET; 
 }
@@ -206,9 +210,9 @@ function dataToTable(data, elem, clear) {      //success method
 	try {
 		data = jQuery.parseJSON(data);
 		var result;	
-    	if(data.sql_query_error){
+    	if(data.query_error){
 			if(clear) $(elem).empty;
-            if(data.sql_query_error != "empty_query") result = "sql_query_error: \"" + data.sql_query_error+"\"";
+            if(data.query_error != "empty_query") result = "query_error: \"" + data.query_error+"\"";
 		} else if(data[0]) {
        		result = "<table class=\"table\" back>\n<thead>\n<tr>\n";
         	for(var k in data[0]){

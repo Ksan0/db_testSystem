@@ -15,6 +15,7 @@
         <hr />
         <div class="row-fluid">
           <div class="span8">
+              <div class='question_type' style="display: none;">{{ question.type.signature }}</div>
               <form class="contact-form" action=/question/?type=test&testid={{ testid }}&queid={{ question.id }} method="post">
                 <div class="controls controls-row">
                   <div class="control-group span12">
