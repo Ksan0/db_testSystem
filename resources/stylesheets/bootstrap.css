@@ -5035,3 +5035,8 @@ a.label:hover, a.badge:hover {
 .rk-view.active {
   display: block;
 }
+
+.attempt-view {
+  width: 80%;
+  overflow: auto;
+}
