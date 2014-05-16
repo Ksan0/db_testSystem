@@ -58,7 +58,8 @@ $(function(){
 					dataToTable(data,".messages",1);
                 else {
 				    $(".messages").empty();
-                    $(".messages").append(data);
+                    //$(".messages").append(data);
+                    $(".messages").append("<pre>" + JSON.stringify(jQuery.parseJSON(data), "", 2) + "</pre>");
 				}
 			}
         );
