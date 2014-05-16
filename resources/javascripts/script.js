@@ -54,9 +54,10 @@ $(function(){
         $.post(
             "/test_answer/?testid="+get.testid+"&queid="+get.queid, //url
             form.serialize(), function(data) {
-                if ($('.question_type').text() == 'SQL_query')
-					$(".messages").css("text-align":"center");
+                if ($('.question_type').text() == 'SQL_query') {
+					$(".messages").css("text-align","center");
 					dataToTable(data,".messages",1);
+				}
                 else {
 				    $(".messages").empty();
 					$(".messages").css('text-align','left');
@@ -78,11 +79,11 @@ $(function(){
 			}, function(data) {
 				if ($("#id_type :selected").attr('value') == 3) {
 					$(".sql-check-table-admin").empty();
-					$(".sql-check-table-admin").css("text-align":"left");
+					$(".sql-check-table-admin").css("text-align","left");
 					$(".sql-check-table-admin").append("<pre>" + JSON.stringify(jQuery.parseJSON(data), "", 2) + "</pre>");
 				    //console.log($(".sql-check-table-admin"));
                 } else {
-					$(".sql-check-table-admin").css("text-align":"center");
+					$(".sql-check-table-admin").css("text-align","center");
 					dataToTable(data,".sql-check-table-admin",1);
 				}
 			}	
