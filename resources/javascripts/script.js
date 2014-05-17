@@ -84,7 +84,7 @@ $(function(){
 				type_txt: type_txt,
 				csrfmiddlewaretoken: $("#question_form")[0][0].value
 			}, function(data) {
-				if ($("#id_type :selected").attr('value') == 3) {
+				if (type_txt === "noSQL запрос" || type_txt === "noSQL_query") {
 					$(".sql-check-table-admin").empty();
 					$(".sql-check-table-admin").css("text-align","left");
 					$(".sql-check-table-admin").append("<pre>" + JSON.stringify(jQuery.parseJSON(data), "", 2) + "</pre>");
