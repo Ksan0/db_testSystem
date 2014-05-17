@@ -5037,6 +5037,11 @@ a.label:hover, a.badge:hover {
 }
 
 .attempt-view {
-  width: 80%;
+  width: 90%;
+  overflow: auto;
+}
+
+.sql-check-table-admin {
+  width: 90%;
   overflow: auto;
 }
