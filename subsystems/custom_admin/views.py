@@ -23,7 +23,10 @@ def test_question(request):
     try:
         query = request.POST['message']
         type_txt = request.POST['type_txt']
-        type = QuestionType.objects.get(title=type_txt)
+        try:
+            type = QuestionType.objects.get(title=type_txt)
+        except:
+            type = QuestionType.objects.get(signature=type_txt)
     except:
         return render(request, 't.html', {
             'msg': json.dumps({'error': 'POST error'}, cls=CustomJSONEncoder)

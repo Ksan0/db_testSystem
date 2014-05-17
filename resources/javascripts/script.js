@@ -70,11 +70,18 @@ $(function(){
 
 //Проверка у админа 
     $(".ajax-check-sql-admin").click(function(e) {
+        var type_txt = null;
+        if (typeof($("#id_type")[0]) === "undefined") {
+            type_txt = $(".question_type")[0].innerHTML;
+        } else {
+            type_txt = $("#id_type :selected").text();
+        }
+
 		$.post(
             "/custom-admin/test_question/", //url
             {
 				message: $("#id_answer")[0].value,
-				type_txt: $("#id_type :selected").text(),
+				type_txt: type_txt,
 				csrfmiddlewaretoken: $("#question_form")[0][0].value
 			}, function(data) {
 				if ($("#id_type :selected").attr('value') == 3) {
