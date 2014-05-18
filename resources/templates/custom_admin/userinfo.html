@@ -47,11 +47,13 @@
             	        	<tr>
 								<th style="width:150px;border-bottom:2px solid black;">#</th>
                                 {% with session_output.session_questions|first as fssque  %}
-	                	        {% if fssque.question.type.isSQLQuery %}
-                                    <th style="border-bottom:2px solid black;">Запрос</th>
-                                {% endif %}
+                                    {% if fssque.question.type.isSQLQuery or fssque.question.type.isNoSQLQuery %}
+                                        <th style="border-bottom:2px solid black;">Запрос</th>
+                                    {% endif %}
+                                    {% if not fssque.question.type.isNoSQLQuery %}
+                                        <th style="border-bottom:2px solid black;">Результат</th>
+                                    {% endif %}
                                 {% endwith %}
-    	                	    <th style="border-bottom:2px solid black;">Результат</th>
 	        	            </tr>
     	        	    </thead>
         	        	<tbody>
@@ -62,17 +64,21 @@
 							</tr>
     		                <tr class="info hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 								<td>Преподаватель</td>
-								{% if session_question.question.type.isSQLQuery %}
+								{% if session_question.question.type.isSQLQuery or session_question.question.type.isNoSQLQuery %}
                                     <td>{{ session_question.question.answer_html|safe }}</td>
                                 {% endif %}
-            					<td class="answer">{{ session_question.get_right_records }} </td>
+                                {% if not session_question.question.type.isNoSQLQuery %}
+            					    <td class="answer">{{ session_question.get_right_records }} </td>
+                                {% endif %}
 							</tr>
 		                    <tr class="warning hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 								<td>Студент</td>
-                                {% if session_question.question.type.isSQLQuery %}
+                                {% if session_question.question.type.isSQLQuery or session_question.question.type.isNoSQLQuery %}
         		    			    <td>{{ session_question.last_answer_html|safe }} </td>
                                 {% endif %}
-								<td class="answer">{{ session_question.get_user_records }} </td>	
+								{% if not session_question.question.type.isNoSQLQuery %}
+            					    <td class="answer">{{ session_question.get_user_records }} </td>
+                                {% endif %}
 							</tr>
 								<tr id="RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" class={% if session_question.is_right %}"success">
 								<td colspan=3 style="border-bottom:2px double black;"><h4 style="text-align:center">Совпадение</h4></td>
