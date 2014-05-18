@@ -77,7 +77,7 @@
                                     <li class=""><a href="{{ tests_url }}">Тесты</a></li>
                                 {% endif %}
                                 {% if have_time > 0 %}
-                          	        <li class="session_timer"><a> Осталось: {{ have_time }} min</a></li>
+                          	        <li class="session_timer"><a> Осталось: {% if have_time %} {{ have_time }} {% else %} 999 {% endif %} min</a></li>
                                 {% endif %}
                             {% endif %}
 

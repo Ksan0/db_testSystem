@@ -50,60 +50,66 @@ class NoSqlDB:  # with pymongo
         self.client.close()
 
     def execute(self, query):
-        jscode = """
-            var getType = function (obj) {
-                var _getClassType = function (obj) {
-                    // if (obj instanceof DBQuery)
-                    //     return "dbquery";   // find
-                    // if (obj instanceof DBCommandCursor)
-                    //     return "dbcommandcursor";   // aggregate
-                    return "Uclass";
-                };
-                var _getInlineType = function (obj) {
-                    switch(typeof(obj)) {
-                        case "undefined":
-                        case "number":
-                        case "string":
-                        case "boolean":
-                        case "function":
-                            return typeof(obj);
-                        default:
-                            return "Uinline";
-                    }
-                };
-
-                if (obj == null)
-                    return "null";
-                if (typeof(obj) == "object")
-                    return _getClassType(obj);
-                return _getInlineType(obj);
-            };
-
-            var cursor = eval(\"""" + query + """\");
-            var type = getType(cursor);
-
-            switch(type) {
-                case "number":
-                case "string":
-                case "boolean":
-                    return cursor;
-                case "null":
-                    return "Empty set";
-                case "Uclass":
-                    return cursor.toArray();
-            }
-
-            throw "mongo-eval-JS cursor-type error: " + type.toString();
-        """
-
         try:
+
+            query = query.replace('"', '\\"').replace("'", "\\'")
+
+            jscode = """
+                var getType = function (obj) {
+                    var _getInlineType = function (obj) {
+                        switch(typeof(obj)) {
+                            case "undefined":
+                            case "number":
+                            case "string":
+                            case "boolean":
+                            case "function":
+                                return typeof(obj);
+                            default:
+                                return "Uinline";
+                        }
+                    };
+
+                    if (obj == null)
+                        return "null";
+                    if (typeof(obj) == "object")
+                        return "object";
+                    return _getInlineType(obj);
+                };
+
+                var cursor = eval(\"""" + query + """\");
+                var type = getType(cursor);
+
+                switch(type) {
+                    case "number":
+                    case "string":
+                    case "boolean":
+                        return cursor;
+                    case "null":
+                        return "Empty set";
+                    case "object":
+                        try {
+                            return cursor.toArray();
+                        }
+                        catch(e) {}
+                        return cursor;
+                }
+
+                throw "mongo-eval-JS cursor-type error: " + type.toString();
+            """
+
             res = self.db.eval(jscode)
         except Exception, errmsg:
-            err = str(errmsg).split('exception: ')[1]
+            try:
+                err = str(errmsg).split('exception: ')[1]
+            except:
+                err = str(errmsg)
             return [], err
 
         if type(res) is not list:
             res = [res]
+
+        #return str(type(res[0]["_id"])), False
+
         return res, False
 
 
