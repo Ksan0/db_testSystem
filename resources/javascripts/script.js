@@ -21,6 +21,7 @@ $(function(){
 //Timer
 	if ($(".session_timer > a:nth-child(1)").length) {
 		var Interval = setInterval(function(){
+			console.log("Time");
 			var timer = parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/));
 			if (timer-1 > 0)	{
 				$(".session_timer > a:nth-child(1)").html("Осталось "+(timer-1)+" min");
@@ -28,8 +29,8 @@ $(function(){
 				$(".session_timer > a:nth-child(1)").html("Время вышло");
 				clearInterval(Interval);
 			}
+		$(".session_timer > a:nth-child(1)").html("Осталось: "+parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/))+" min");
 		}, 60000);
-		$(".session_timer > a:nth-child(1)").html("Осталось "+parseInt($(".session_timer > a:nth-child(1)")[0].text.match(/\d+/))+" min");
 	}
 
 //выпадающее меню на профайл
@@ -230,7 +231,7 @@ function dataToTable(data, elem, clear) {      //success method
 			if(clear) $(elem).empty;
             if(data.query_error != "empty_query") result = "query_error: \"" + data.query_error+"\"";
 		} else if(data[0]) {
-       		result = "<table class=\"table\" back>\n<thead>\n<tr>\n";
+       		result = "<div class= 'my-inner-table'><table class=\"table\" back>\n<thead>\n<tr>\n";
         	for(var k in data[0]){
         		result+="<th>"+k+"</th>\n";
    			}
@@ -242,7 +243,7 @@ function dataToTable(data, elem, clear) {      //success method
        	 		}
         		result+="</tr>\n";
     		}
-   			result +="</tbody>\n</table>";
+   			result +="</tbody>\n</table> <div class='my-inner-table'>";
    		}
 		if(clear) $(elem).empty();
     	if(!result) $(elem).append("<h4>Empty set</h4>");
