@@ -19,44 +19,42 @@
 		<div class="sql-check-table-admin"></div>
 		{% if not answers %}<h3>Тут жизни нет:(</h3>{% endif %}
 		<h3>Результат</h3>
-		<div class="attempt-view">
-			<table class="question-table table table-bordered" style="border: 0px">
-        		<thead>
-		        	<tr>
-    	    	        <th style="width:150px">Имя</th>
-        	    	    <th style="width:200px">Фамилия</th>
-						<th>Запрос</th>
-	            	</tr>
-	    	    </thead>
-    	    	<tbody>
-				{% for answer in answers %}
-					<tr>
-						<td style="cursor:pointer; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.session.user.first_name }}</td>
-						<td style="cursor:pointer; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.session.user.last_name }}</td>
-						<td style="cursor:pointer; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.last_answer_html|safe }}</td>
-						{% if not answer.is_right %}<td class="btn btn-success" data-target="#R{{ answer.session.rk.id }}A{{ answer.session.attempt }}Q{{ question.id }}U{{ answer.session.user.id }}" data-toggle="modal" style="margin-left:5px; border: 0px none; width: 90px">Засчитать</td>{% endif %}
-					</tr>
-					<tr class="hided" style="display:none; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">
-						<td style="cursor:pointer; border-bottom:2px double black; ">Результат</td>
-						<td colspan="2" style="cursor:pointer; border-bottom:2px double black;" class="answer">{{ answer.get_user_records }}</td>
-					</tr>
-					<div class="modal hide fade" id="R{{ answer.session.rk.id }}A{{ answer.session.attempt }}Q{{ question.id }}U{{ answer.session.user.id }}">
-						<div class="modal-header">
-            	    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                		    <h3>Изменить статус?</h3>
-                    	</div>
-	                	<div class="modal-body">
-    	            		<p>Вы уверены, что ваш ответ верен?</p>
-        	        		<div class="confirm_link" style="margin-top:-5px;float:right">
-            	        		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
-                				<a href="/custom-admin/user_action/?type=answer_is_right&att={{ answer.session.attempt }}&queid={{ question.id }}&rkid={{ answer.session.rk.id }}&uid={{ answer.session.user.id }}" class="btn btn-primary make-right-question_stat-quest" data-dismiss="modal" aria-hidden="true" style="margin-left:10px">ДА!</a>
-                			</div>
-	                	</div>
-    	            </div>
-				{% endfor %}
-				</tbody>
-			</table>
-		</div>
+		<table class="question-table table table-bordered" style="border: 0px">
+    		<thead>
+		    	<tr>
+    		        <th style="width:150px">Имя</th>
+        		    <th style="width:200px">Фамилия</th>
+					<th>Запрос</th>
+		    	</tr>
+		    </thead>
+    		<tbody>
+			{% for answer in answers %}
+			<tr>
+				<td style="cursor:pointer; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.session.user.first_name }}</td>
+				<td style="cursor:pointer; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.session.user.last_name }}</td>
+				<td style="cursor:pointer; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">{{ answer.last_answer_html|safe }}</td>
+				{% if not answer.is_right %}<td class="btn btn-success" data-target="#R{{ answer.session.rk.id }}A{{ answer.session.attempt }}Q{{ question.id }}U{{ answer.session.user.id }}" data-toggle="modal" style="margin-left:5px; border: 0px none; width: 90px">Засчитать</td>{% endif %}
+			</tr>
+			<tr class="hided" style="display:none; background:{% if answer.is_right %}#DFF0D8{% else %}#D18F8F{% endif %}">
+				<td style="cursor:pointer; border-bottom:2px double black; ">Результат</td>
+				<td colspan="2" style="cursor:pointer; border-bottom:2px double black;" class="answer">{{ answer.get_user_records }}</td>
+			</tr>
+			<div class="modal hide fade" id="R{{ answer.session.rk.id }}A{{ answer.session.attempt }}Q{{ question.id }}U{{ answer.session.user.id }}">
+				<div class="modal-header">
+    	    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        		    <h3>Изменить статус?</h3>
+            	</div>
+	        	<div class="modal-body">
+            		<p>Вы уверены, что ваш ответ верен?</p>
+            		<div class="confirm_link" style="margin-top:-5px;float:right">
+    	        		<a href="" class="btn" data-dismiss="modal" aria-hidden="true">Отмена</a>
+        				<a href="/custom-admin/user_action/?type=answer_is_right&att={{ answer.session.attempt }}&queid={{ question.id }}&rkid={{ answer.session.rk.id }}&uid={{ answer.session.user.id }}" class="btn btn-primary make-right-question_stat-quest" data-dismiss="modal" aria-hidden="true" style="margin-left:10px">ДА!</a>
+        			</div>
+	        	</div>
+            </div>
+		{% endfor %}
+		</tbody>
+	</table>
 	</div>
 </section>
 {% endblock %}
