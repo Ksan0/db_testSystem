@@ -236,10 +236,10 @@ def question(request):
         })
         return render(request, tmpl, context)
 
-    if True:
-    #try:
+    try:
         if question.type.isSQLQuery() or question.type.isNoSQLQuery():
             form = AnswerForm(request.POST)
+            user_query = form.data['answer'].strip()
             context.update({'form': form})
 
             if question.type.isSQLQuery():
@@ -247,9 +247,9 @@ def question(request):
             elif question.type.isNoSQLQuery():
                 model = NoSQLReviewer
             with model() as reviewer:
-                back = reviewer.execute_double(right_query=question.answer, user_query=form.data['answer'])
+                back = reviewer.execute_double(right_query=question.answer, user_query=user_query)
 
-            session_question.last_answer = form.data['answer']
+            session_question.last_answer = user_query
             session_question.check()
             session_question.save()
         elif question.type.isTestMultianswer():
@@ -268,7 +268,7 @@ def question(request):
             session_question.save()
 
         return HttpResponseRedirect('/tests/?testid={0}'.format(rk_id))
-    #except:
+    except:
         return HttpResponseRedirect('/')
 
 
