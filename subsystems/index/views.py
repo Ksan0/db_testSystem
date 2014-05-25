@@ -146,6 +146,7 @@ def test_answer(request):
 
     try:
         form = AnswerForm(request.POST)
+        user_query = form.data['answer'].strip()
 
         if question.type.isSQLQuery():
             model = MySQLReviewer
@@ -153,7 +154,7 @@ def test_answer(request):
             model = NoSQLReviewer
 
         with model() as reviewer:
-            back = reviewer.execute(form.data['answer'])
+            back = reviewer.execute(user_query)
 
         if back['error']:
             msg = {'query_error': back['error']}
