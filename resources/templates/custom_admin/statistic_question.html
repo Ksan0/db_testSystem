@@ -7,11 +7,9 @@
 <section class="section section-alt section-padded">
     <div class="container-fluid">
         <div class='question_type' style="display: none;">{{ question.type.signature }}</div>
-        <div class="section-header">
-            <h3>{{ question.title }}</h3>
-			<h4>{{ question.desqription_html|safe }}</h4>
-        </div>
-		<h3>Ответ преподавателя:</h3>
+        <div class="section-header" style="font-size: 20pt;">Вопрос</div>
+        <div>{{ question.description_html|safe }}</div> <br/> <br/>
+        <div class="section-header" style="font-size: 20pt;">Ответ преподавателя</div>
 		<form id="question_form" method="post" action="" enctype="multipart/form-data">
 			{% csrf_token %}
 			<textarea rows="3" id="id_answer" style="width: 80%; height: 250px;">{{ question.answer|safe }}</textarea><br>
