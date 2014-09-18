@@ -3,7 +3,6 @@ import random
 import string
 
 # run from "scripts" folder
-# mail@mail.ru  last_name  first_name
 
 # last_name  first_name  mail(=login)  pass
 

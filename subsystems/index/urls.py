@@ -5,6 +5,7 @@ urlpatterns = patterns('',
     url(r'^$', index),
     url(r'^login/$', login_view),
     url(r'^logout/$', logout_view),  # no GUI
+    url(r'^self_statistic/', self_statistic_view),
     url(r'^tests/$', test),
     url(r'^question/$', question),
     url(r'^test_answer/$', test_answer),  # ajax

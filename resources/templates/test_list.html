@@ -22,10 +22,11 @@
                         	{{ test.description }}
                         </p>
                         <small>
-                        	Осталось попыток: {{ test.attemptes_amount }} <br/>
+                            Ваш лучший результат: {{ test.best_result }} / 20 <br/>
                         </small>
                         <small>
-                            Ваш лучший результат: {{ test.best_result }} / 20
+                        	{# Осталось попыток: {{ test.attemptes_amount }} <br/> #}
+                            <a href="/self_statistic">Посмотреть статистику</a>
                         </small>
                     </blockquote>
 					</a>

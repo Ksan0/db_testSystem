@@ -12,6 +12,7 @@ from output_models import *
 from random import choice
 import string
 from datetime import timedelta
+from subsystems.custom_admin.output_models import UserSessionOutputModel
 from user_messages import *
 from classes import CustomJSONEncoder
 
@@ -406,3 +407,20 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+@login_required(redirect_field_name='')
+def self_statistic_view(request):
+    user_time_update(request.user)
+    user_sessions = UserSession.objects.filter(user=request.user).order_by('rk', 'attempt')
+    user_sessions_output = []
+    for usr_sess in user_sessions:
+        user_sessions_output.append(UserSessionOutputModel(usr_sess))
+
+    return render(request, 'custom_admin/userinfo.html', {
+        'user_sessions': user_sessions_output,
+        'student': request.user,
+        'is_admin': False,
+        'hide_tests_url': False,
+        'tests_url': '/'
+    })
