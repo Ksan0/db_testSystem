@@ -25,8 +25,15 @@
 			{% with user_sessions|first as firstus %}
 				{% if not firstus == session_output %}</div>{% endif %}
 			{% endwith %}
-			<div class="rk-view" id="RK{{ session_output.session.rk.id }}"><h3>{{ session_output.session.rk.title }}
-				<a href="#add_attempt" data-target="#add_attempt{{ session_output.session.rk.id }}" data-toggle="modal"><small style="color:blue"> (Нужно больше попыток?)</small></a></h3>
+			<div class="rk-view" id="RK{{ session_output.session.rk.id }}">
+                <h3>
+                    {{ session_output.session.rk.title }}
+				    {% if is_admin %}
+                        <a href="#add_attempt" data-target="#add_attempt{{ session_output.session.rk.id }}" data-toggle="modal">
+                            <small style="color:blue"> (Нужно больше попыток?)</small>
+                        </a>
+                    {% endif %}
+                </h3>
 				<div class="modal hide fade" id="add_attempt{{ session_output.session.rk.id }}">
     	        	<div class="modal-header">
         	    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -83,15 +90,19 @@
 								<tr id="RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" class={% if session_question.is_right %}"success">
 								<td colspan=3 style="border-bottom:2px double black;"><h4 style="text-align:center">Совпадение</h4></td>
 								{% elif session_question.get_user_records %}"error">
-								<td colspan=3 style="border-bottom:2px solid black;"><h4 style="text-align:center">Расхождение
-									{% if not session_question.is_right == 1 %}
-										<a href="#make_rightRK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" data-target="#make_rightRK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" data-toggle="modal" style="color:green"> (Верный ответ?)</a>
-									{% endif %}
-									</h4></td>
+								<td colspan=3 style="border-bottom:2px solid black;">
+                                    <h4 style="text-align:center">
+                                        Расхождение
+                                        {% if not session_question.is_right == 1 and is_admin %}
+                                            <a href="#make_rightRK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" data-target="#make_rightRK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}" data-toggle="modal" style="color:green"> (Верный ответ?)</a>
+                                        {% endif %}
+									</h4>
+                                </td>
 								{% else %}>
 								<td colspan=3><h4 style="text-align:center">Нет ответа</h4></td>
 								{% endif %}
 							<!--Modals block-->
+                               {% if is_admin %}
 									<div class="modal hide fade" id="make_rightRK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 										<div class="modal-header">
 							    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -105,6 +116,7 @@
 								    		</div>
 										</div>
 									</div>
+                               {% endif %}
 						{% endfor %}
 						</tbody>
 	            	</table>
