@@ -69,15 +69,17 @@
 								<td>Вопрос</td>
 								<td colspan="2" style="">{{ session_question.question.description_html|safe }}</td>
 							</tr>
-    		                <tr class="info hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
-								<td>Преподаватель</td>
-								{% if session_question.question.type.isSQLQuery or session_question.question.type.isNoSQLQuery %}
-                                    <td>{{ session_question.question.answer_html|safe }}</td>
-                                {% endif %}
-                                {% if not session_question.question.type.isNoSQLQuery %}
-            					    <td class="answer">{{ session_question.get_right_records }} </td>
-                                {% endif %}
-							</tr>
+                            {% if is_admin %}
+                                <tr class="info hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
+                                    <td>Преподаватель</td>
+                                    {% if session_question.question.type.isSQLQuery or session_question.question.type.isNoSQLQuery %}
+                                        <td>{{ session_question.question.answer_html|safe }}</td>
+                                    {% endif %}
+                                    {% if not session_question.question.type.isNoSQLQuery %}
+                                        <td class="answer">{{ session_question.get_right_records }} </td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
 		                    <tr class="warning hided RK{{ session_output.session.rk.id }}Att{{ session_output.session.attempt }}Que{{session_question.question.id}}">
 								<td>Студент</td>
                                 {% if session_question.question.type.isSQLQuery or session_question.question.type.isNoSQLQuery %}
